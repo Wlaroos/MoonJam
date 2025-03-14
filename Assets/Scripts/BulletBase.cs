@@ -2,34 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerBullets : MonoBehaviour
+public class BulletBase : MonoBehaviour
 {
 
     [SerializeField] private float _shotSpeed = 5;
     [SerializeField] private int _damage = 1;
     [SerializeField] private float _knockback = 3;
     [SerializeField] private float _size = 1;
+    [SerializeField] private float _lifetime = 3;
     [SerializeField] private GameObject ps;
     private Rigidbody2D _rb;
 
-    bool _once;
+    private bool _once = false;
     
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
     }
-
-    private void Start()
-    {
-        StartCoroutine(DestroyBullet(8.0f));   
-    }
-
-    public void BulletSetup(Vector3 shootDir, float angle, float shotSpeed, int damage, float knockback, float size)
+    
+    public void BulletSetup(Vector3 shootDir, float angle, float shotSpeed, int damage, float knockback, float size, float lifetime)
     {
         _shotSpeed = shotSpeed;
         _damage = damage;
         _knockback = knockback;
         _size = size;
+        _lifetime = lifetime;
 
         Rigidbody2D rb = GetComponent<Rigidbody2D>();
         transform.localScale = new Vector3(_size, _size, _size);
@@ -38,18 +35,19 @@ public class PlayerBullets : MonoBehaviour
 
         float vel = _shotSpeed;
         rb.AddForce(shootDir * vel, ForceMode2D.Impulse);
+        
+        StartCoroutine(DestroyBullet(_lifetime));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {   
-        if(collision.tag == "BulletBounds" && !_once)
+        if(collision.CompareTag("BulletBounds") && !_once)
         {
-            _once = true;
-            StartCoroutine(DestroyBullet(0f));
+            Destroy();
         }
     }
 
-    public IEnumerator DestroyBullet(float delay)
+    private IEnumerator DestroyBullet(float delay)
     {
         
         yield return new WaitForSeconds(delay);
@@ -65,15 +63,17 @@ public class PlayerBullets : MonoBehaviour
         Destroy(gameObject); 
     }
 
-    public void Destroy()
+    private void Destroy()
     {
         if (!_once)
         {
             _once = true;
-            StartCoroutine(DestroyBullet(0f));
+            StopAllCoroutines();
+            Destroy(gameObject);
         }
     }
 
+    // Check for enemy collision and apply damage and knockback.
     /* 
             if (collision.GetComponent<Enemy>() != null && gameObject.name == "NormalBullet(Clone)")
             {

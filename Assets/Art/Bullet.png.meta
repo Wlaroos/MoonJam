@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: b12f4e7dde03340429ad1231ee5213c2
+guid: ce7484f78278227448d56db53016398c
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,76 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ImpDirections_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 11
-        width: 6
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 1277e70b9bff285418e603c6aaedff98
-      internalID: 2000547179
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ImpDirections_1
-      rect:
-        serializedVersion: 2
-        x: 10
-        y: 11
-        width: 7
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: dee05d9243b44cb46bdbfd6e6301425e
-      internalID: 390483285
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ImpDirections_2
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 11
-        width: 6
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a23fa09e7f4d33b46bf0c65a7c0f0a06
-      internalID: 1985776636
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ImpDirections_3
+      name: Bullet_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 6
-        height: 10
+        width: 4
+        height: 4
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1a8fbb51a344b38429378c645c4fde9a
-      internalID: 1994863136
+      spriteID: c88ccd86e8e794045bfa6d10b34952ee
+      internalID: -190963736
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: ImpDirections_4
+      name: Bullet_1
       rect:
         serializedVersion: 2
-        x: 10
+        x: 5
         y: 0
-        width: 7
-        height: 10
+        width: 4
+        height: 4
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,29 +145,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7163cdaedd669e3469dbbccf068f78bb
-      internalID: -1685215960
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: ImpDirections_5
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 0
-        width: 6
-        height: 10
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0e1bbe73d00f75a4bbeaf2591c51fd18
-      internalID: 76427979
+      spriteID: 37129b949f71544428e91360235ffb2b
+      internalID: -1838594954
       vertices: []
       indices: 
       edges: []
@@ -246,12 +162,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      ImpDirections_0: 2000547179
-      ImpDirections_1: 390483285
-      ImpDirections_2: 1985776636
-      ImpDirections_3: 1994863136
-      ImpDirections_4: -1685215960
-      ImpDirections_5: 76427979
+      Bullet_0: -190963736
+      Bullet_1: -1838594954
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
