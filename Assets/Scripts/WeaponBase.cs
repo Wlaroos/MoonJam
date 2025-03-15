@@ -1,12 +1,41 @@
 using UnityEngine;
+using System;
 
 public abstract class WeaponBase : MonoBehaviour
 {
+    public event Action Fired = delegate { };
+
+    [Header("Weapon Properties")]
     [SerializeField] private string weaponName = "Default Weapon";
     public string WeaponName => weaponName;
 
     public bool IsEquipped { get; private set; } = false;
     public Transform Owner { get; private set; }
+    [SerializeField] private Transform shootTransform;
+
+    [Header("Fire Type")]
+    [SerializeField] private bool isAutomatic = false;
+    // Expose isAutomatic via a public property.
+    public bool IsAutomatic => isAutomatic;
+
+    // Change fireDelay to fireRate (bullets per second).
+    [Tooltip("Bullets per second")]
+    [SerializeField] private float fireRate = 4f; // Default to 4 bullets per second.
+    private float FireDelay => 1f / fireRate; // Calculate delay dynamically.
+
+    [Header("Bullet Properties")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletParticlePrefab;
+    [SerializeField] private float bulletSize = 1f;
+    [SerializeField] private float bulletSpeed = 20f;
+    [SerializeField] private int bulletDamage = 1;
+    [SerializeField] private float bulletKnockback = 1f;
+    [SerializeField] private float bulletLifetime = 3f;
+
+    private float lastFireTime;
+    private Animator _anim;
+    private SpriteRenderer _sr;
+    private Rigidbody2D _rb;
     
     // Called to pick up the weapon. Re-parents it to the new owner’s hold position.
     public virtual void Pickup(Transform newOwner)
@@ -72,5 +101,22 @@ public abstract class WeaponBase : MonoBehaviour
     }
     
     // Abstract method to shoot the weapon.
-    public abstract void Shoot(Vector3 aimDirection);
+    public virtual void Shoot(Vector3 aimDirection)
+    {
+        if (Time.time < lastFireTime + FireDelay) return;
+
+        Vector3 spawnPosition = shootTransform.position;
+        Transform bulletInstance = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity).transform;
+        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+
+        // Assuming BulletBase has a BulletSetup method that takes these parameters.
+        BulletBase bullet = bulletInstance.GetComponent<BulletBase>();
+        if (bullet != null)
+        {
+            bullet.BulletSetup(aimDirection, angle, bulletSpeed, bulletDamage, bulletKnockback, bulletSize, bulletLifetime);
+        }
+
+        lastFireTime = Time.time;
+        Fired?.Invoke();
+    }
 }
