@@ -89,12 +89,19 @@ public class EnemyHealth : MonoBehaviour
     private void Downed()
     {
         StopAllCoroutines();
+
         _isDowned = true;
+
         _sr.color = Color.white;
         _sr.sprite = _downedSprites[_spriteIndex];
+
         transform.rotation = Quaternion.Euler(0, 0, 90);
+
         _anim.SetBool("isMoving", false);
-        //_rb.velocity = Vector2.zero;
+
+        gameObject.layer = 11;
+        _sr.sortingOrder = -1;
+
         //SFXManager.Instance.PlayEnemyDownSFX();
     }
 
