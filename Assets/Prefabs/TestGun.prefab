@@ -163,16 +163,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponName: TestGun
+  _weaponSprite: {fileID: 0}
   shootTransform: {fileID: 1869050069726448668}
-  isAutomatic: 0
-  fireRate: 4
-  bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
-  bulletParticlePrefab: {fileID: 0}
-  bulletSize: 1
-  bulletSpeed: 20
-  bulletDamage: 1
-  bulletKnockback: 1
-  bulletLifetime: 3
+  _maxAmmo: 100
+  _maxMagSize: 10
+  _reloadTime: 2
+  _isAutomatic: 0
+  _fireRate: 4
+  _bulletPrefab: {fileID: 0}
+  _bulletParticlePrefab: {fileID: 0}
+  _bulletSize: 1
+  _bulletSpeed: 20
+  _bulletDamage: 1
+  _bulletKnockback: 1
+  _bulletLifetime: 3
 --- !u!58 &3291633421826942908
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -202,7 +206,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.75, y: 0}
