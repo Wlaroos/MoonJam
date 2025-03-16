@@ -28,6 +28,7 @@ public class EnemyMovement : MonoBehaviour
     {
         // Use tag lookup to find the player (ensure your player GameObject has the "Player" tag)
         _playerTransform = GameObject.FindWithTag("Player").transform;
+        
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponentInChildren<SpriteRenderer>();
         _enemyHealth = GetComponent<EnemyHealth>();
@@ -138,29 +139,11 @@ public class EnemyMovement : MonoBehaviour
         // Combine flocking forces with the direction toward the player
         Vector2 flockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
-        // Avoid obstacles in the "Wall" layer
-        flockingForce = AvoidObstacles(flockingForce);
-
         // Move the enemy using the combined force
         _rb.MovePosition(_rb.position + flockingForce * _speed * Time.fixedDeltaTime);
 
         // Flip sprite based on movement direction
         _sr.flipX = flockingForce.x < 0;
-    }
-
-    private Vector2 AvoidObstacles(Vector2 desiredDirection)
-    {
-        // Cast a ray in the desired direction to detect obstacles
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, desiredDirection, _flockRadius, LayerMask.GetMask("Wall"));
-
-        if (hit.collider != null)
-        {
-            // Calculate a direction to avoid the obstacle
-            Vector2 obstacleNormal = hit.normal; // Normal vector of the obstacle surface
-            desiredDirection = (desiredDirection + obstacleNormal).normalized; // Steer away from the obstacle
-        }
-
-        return desiredDirection;
     }
 
     private void OnDrawGizmosSelected()
