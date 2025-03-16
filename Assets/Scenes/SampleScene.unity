@@ -560,7 +560,8 @@ GameObject:
   - component: {fileID: 530899296}
   - component: {fileID: 530899297}
   - component: {fileID: 530899298}
-  m_Layer: 0
+  - component: {fileID: 530899299}
+  m_Layer: 7
   m_Name: EnemySprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -655,6 +656,41 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!70 &530899299
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 530899295}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.625, y: 0.8125}
+  m_Direction: 0
 --- !u!1 &574264838
 GameObject:
   m_ObjectHideFlags: 0
@@ -794,7 +830,7 @@ GameObject:
   - component: {fileID: 713799874}
   - component: {fileID: 713799876}
   - component: {fileID: 713799875}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2029,7 +2065,7 @@ GameObject:
   - component: {fileID: 1426348529}
   - component: {fileID: 1426348533}
   - component: {fileID: 1426348534}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2389,10 +2425,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1565731387}
-  - component: {fileID: 1565731386}
   - component: {fileID: 1565731384}
   - component: {fileID: 1565731388}
-  m_Layer: 0
+  - component: {fileID: 1565731390}
+  - component: {fileID: 1565731389}
+  m_Layer: 7
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2426,18 +2463,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &1565731386
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1565731383}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d12875647f4d0dc4dbb02b8edaa2bf17, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1565731387
 Transform:
   m_ObjectHideFlags: 0
@@ -2489,6 +2514,46 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 0.5, y: 1}
   m_Direction: 0
+--- !u!114 &1565731389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565731383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e077479dc443c9046a8567c3b59600f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 3
+  force: 5
+  startDelay: 0
+--- !u!114 &1565731390
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1565731383}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c914d971b4ebb1547a618a9389f761a2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
+  maxDownedHealth: 3
+  normalSprites:
+  - {fileID: 21300000, guid: bf6b229ab51a6974bbeaa04b1e5189d5, type: 3}
+  downedSprites:
+  - {fileID: 21300000, guid: bf6b229ab51a6974bbeaa04b1e5189d5, type: 3}
+  deathParticles: {fileID: 0}
+  OnEnemyDowned:
+    m_PersistentCalls:
+      m_Calls: []
+  OnEnemyDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1614144317
 GameObject:
   m_ObjectHideFlags: 0

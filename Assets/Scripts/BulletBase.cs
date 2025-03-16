@@ -10,7 +10,7 @@ public class BulletBase : MonoBehaviour
     [SerializeField] private float _knockback = 3;
     [SerializeField] private float _size = 1;
     [SerializeField] private float _lifetime = 3;
-    [SerializeField] private GameObject ps;
+    [SerializeField] private GameObject _ps;
     private Rigidbody2D _rb;
 
     private bool _once = false;
@@ -36,7 +36,7 @@ public class BulletBase : MonoBehaviour
         float vel = _shotSpeed;
         rb.AddForce(shootDir * vel, ForceMode2D.Impulse);
         
-        StartCoroutine(DestroyBullet(_lifetime));
+        StartCoroutine(DelayedDestroy(_lifetime));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -45,47 +45,34 @@ public class BulletBase : MonoBehaviour
         {
             Destroy();
         }
-    }
 
-    private IEnumerator DestroyBullet(float delay)
+        // If the bullet hits an enemy
+        else if (collision.GetComponent<EnemyHealth>() != null)
+        {
+            collision.GetComponent<EnemyHealth>().TakeDamage(_rb.velocity.normalized * _knockback, _damage);
+            Destroy();
+        }
+    }
+    private IEnumerator DelayedDestroy(float delay)
     {
         
         yield return new WaitForSeconds(delay);
-        
-        if(ps != null)
-        {
-            Instantiate(ps,transform.position,Quaternion.identity);
-        }
-        
-        //CameraShaker.Instance.ShakeOnce(2f,2f,0.2f,0.2f);
-        //AudioManager.PlaySound("PoisonBullet");
-
-        Destroy(gameObject); 
+        Destroy();
     }
 
     private void Destroy()
     {
         if (!_once)
         {
+            if(_ps != null)
+            {
+                Instantiate(_ps,transform.position,Quaternion.identity);
+            }
+
+            //ADD SFX
             _once = true;
             StopAllCoroutines();
             Destroy(gameObject);
         }
     }
-
-    // Check for enemy collision and apply damage and knockback.
-    /* 
-            if (collision.GetComponent<Enemy>() != null && gameObject.name == "NormalBullet(Clone)")
-            {
-                Instantiate(ps, transform.position, Quaternion.identity);
-                collision.GetComponent<Enemy>().TakeDamage(_rb.velocity.normalized * _knockback, _damage);
-                Destroy(gameObject);
-            }
-
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Walls"))
-            {
-                Instantiate(ps, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-            }
-    */
 }
