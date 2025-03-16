@@ -8,7 +8,7 @@ public class PlayerUI : MonoBehaviour
 {
     private Image _hpIcon;
     private Image _heartIcon;
-    private Image _ammoIcon;
+    private Image _weaponIcon;
     private Image _bulletIcon;
     private Image _healthBarStart;
     private Image _healthBarMid;
@@ -24,6 +24,7 @@ public class PlayerUI : MonoBehaviour
 
     private Transform _healthBarContainer; // Parent container for the health bar
     private Transform _ammoBarContainer; // Parent container for the ammo bar
+    private TextMeshProUGUI _weaponText; // UI element for total ammo.
     private TextMeshProUGUI _ammoText; // UI element for total ammo.
 
     private PlayerHealth _playerHealth;
@@ -31,11 +32,15 @@ public class PlayerUI : MonoBehaviour
     private List<Image> _healthBarMids = new List<Image>();
     private List<Image> _ammoBarMids = new List<Image>();
 
+    [SerializeField] private bool _showWeaponIcon = true; // Toggle to show weapon icon
+    [SerializeField] private bool _showWeaponName = true; // Toggle to show weapon name
+    [SerializeField] private bool _isIconFirst = true; // Toggle to show weapon icon first
+
     void Awake()
     {
         _hpIcon = FindInChildren(transform, "HP_Icon").GetComponent<Image>();
         _heartIcon = FindInChildren(transform, "Heart_Icon").GetComponent<Image>();
-        _ammoIcon = FindInChildren(transform, "Ammo_Icon").GetComponent<Image>();
+        _weaponIcon = FindInChildren(transform, "Weapon_Icon").GetComponent<Image>();
         //_bulletIcon = FindInChildren(transform, "Bullet_Icon").GetComponent<Image>();
         _healthBarStart = FindInChildren(transform, "HealthBar_Start").GetComponent<Image>();
         _healthBarMid = FindInChildren(transform, "HealthBar_Mid").GetComponent<Image>();
@@ -47,6 +52,7 @@ public class PlayerUI : MonoBehaviour
 
         _healthBarContainer = FindInChildren(transform, "HP_Bar_Container");
         _ammoBarContainer = FindInChildren(transform, "Ammo_Bar_Container");
+        _weaponText = FindInChildren(transform, "Weapon_Text").GetComponent<TextMeshProUGUI>();
         _ammoText = FindInChildren(transform, "Ammo_Text").GetComponent<TextMeshProUGUI>();
 
         _playerHealth = FindObjectOfType<PlayerHealth>(); // Get reference to PlayerHealth
@@ -58,8 +64,8 @@ public class PlayerUI : MonoBehaviour
         if (_heartIcon != null)
             _heartIcon.color = _hpColor;
 
-        if (_ammoIcon != null)
-            _ammoIcon.color = _ammoColor;
+        if (_weaponIcon != null)
+            _weaponIcon.color = _ammoColor;
 
         if (_bulletIcon != null)    
             _bulletIcon.color = _ammoColor;
@@ -75,6 +81,24 @@ public class PlayerUI : MonoBehaviour
 
         if (_ammoBarContainer == null)
             Debug.LogWarning("Ammo bar container not assigned. Ammo bar will not be displayed.");
+
+        if (_isIconFirst)
+        {
+            _weaponIcon.transform.SetAsFirstSibling();
+        }
+        else
+        {
+            _weaponText.transform.SetAsFirstSibling();
+        }
+
+        if(!_showWeaponIcon)
+        {
+            _weaponIcon.gameObject.SetActive(false);
+        }
+        if(!_showWeaponName)
+        {
+            _weaponText.gameObject.SetActive(false);
+        }
     }
 
     void OnEnable()
@@ -221,20 +245,27 @@ public class PlayerUI : MonoBehaviour
     {
         InitializeAmmoBar(); // Reinitialize the ammo bar for the new weapon
 
-        // Update the AmmoIcon sprite to match the new weapon's sprite
-        if (_ammoIcon != null)
-        {
-            _ammoIcon.sprite = newWeapon != null ? newWeapon.WeaponSprite : null;
-            _ammoIcon.color = newWeapon != null ? Color.white : Color.clear; // Show or hide the icon
-
-            // Adjust the width to match the height using the sprite's aspect ratio
-            if (newWeapon != null && newWeapon.WeaponSprite != null)
+            if (_showWeaponIcon)
             {
-                float aspectRatio = (float)newWeapon.WeaponSprite.texture.width / newWeapon.WeaponSprite.texture.height;
-                RectTransform rectTransform = _ammoIcon.GetComponent<RectTransform>();
-                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.y * aspectRatio, rectTransform.sizeDelta.y);
+                // Show the weapon icon
+                _weaponIcon.sprite = newWeapon != null ? newWeapon.WeaponSprite : null;
+                _weaponIcon.color = newWeapon != null ? Color.white : Color.clear; // Show or hide the icon
+
+                // Adjust the width to match the height using the sprite's aspect ratio
+                if (newWeapon != null && newWeapon.WeaponSprite != null)
+                {
+                    float aspectRatio = (float)newWeapon.WeaponSprite.texture.width / newWeapon.WeaponSprite.texture.height;
+                    RectTransform rectTransform = _weaponIcon.GetComponent<RectTransform>();
+                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.y * aspectRatio, rectTransform.sizeDelta.y);
+                }
             }
-        }
+            if (_showWeaponName)
+            {
+                if (_weaponText != null)
+                {
+                    _weaponText.text = newWeapon != null ? newWeapon.WeaponName : ""; // Display weapon name
+                }
+            }
     }
 
     private void UpdateAmmoUI(int currentAmmo)
