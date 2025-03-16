@@ -10,6 +10,9 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] private string weaponName = "Default Weapon";
     public string WeaponName => weaponName;
 
+    [SerializeField] private Sprite _weaponSprite; // Sprite for the weapon
+    public Sprite WeaponSprite => _weaponSprite;
+
     public bool IsEquipped { get; private set; } = false;
     public Transform Owner { get; private set; }
     [SerializeField] private Transform shootTransform;
@@ -61,6 +64,7 @@ public abstract class WeaponBase : MonoBehaviour
         _col = GetComponent<Collider2D>();
         _anim = GetComponentInChildren<Animator>();
         _sr = GetComponentInChildren<SpriteRenderer>();
+        _weaponSprite = _sr.sprite;
 
         if (!_rb) Debug.LogWarning($"Rigidbody2D component is missing on {gameObject.name}");
         if (!_col) Debug.LogWarning($"Collider2D component is missing on {gameObject.name}");

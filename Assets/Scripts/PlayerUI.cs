@@ -220,6 +220,21 @@ public class PlayerUI : MonoBehaviour
     private void OnWeaponChanged(WeaponBase newWeapon)
     {
         InitializeAmmoBar(); // Reinitialize the ammo bar for the new weapon
+
+        // Update the AmmoIcon sprite to match the new weapon's sprite
+        if (_ammoIcon != null)
+        {
+            _ammoIcon.sprite = newWeapon != null ? newWeapon.WeaponSprite : null;
+            _ammoIcon.color = newWeapon != null ? Color.white : Color.clear; // Show or hide the icon
+
+            // Adjust the width to match the height using the sprite's aspect ratio
+            if (newWeapon != null && newWeapon.WeaponSprite != null)
+            {
+                float aspectRatio = (float)newWeapon.WeaponSprite.texture.width / newWeapon.WeaponSprite.texture.height;
+                RectTransform rectTransform = _ammoIcon.GetComponent<RectTransform>();
+                rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.y * aspectRatio, rectTransform.sizeDelta.y);
+            }
+        }
     }
 
     private void UpdateAmmoUI(int currentAmmo)
