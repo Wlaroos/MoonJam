@@ -1,8 +1,5 @@
-﻿using System.Diagnostics;
-using Unity.VisualScripting;
+﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
-using Debug = System.Diagnostics.Debug;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,31 +8,46 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Sprite[] _sprites;
     
     private Animator _anim;
-    // PLAYER HEALTH REF
-    //private PlayerHealth _ph;
-    
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
+    private PlayerHealth _ph;
 
     private Vector2 _moveDirection;
     private Vector3 _mousePos;
-    
+    private bool _isKnockback;
+
     void Awake()
     {
         // Assigning Refs
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponentInChildren<SpriteRenderer>();
         _anim = GetComponentInChildren<Animator>();
-        // ASSIGN PLAYER HEALTH REF
-        //_ph = GetComponent<PlayerHealth>();
+        _ph = GetComponent<PlayerHealth>();
+    }
+
+    void OnEnable()
+    {
+        // Subscribe to the PlayerDeathEvent
+        if (_ph != null)
+        {
+            _ph.PlayerDeathEvent.AddListener(PlayerDowned);
+        }
+    }
+
+    void OnDisable()
+    {
+        // Unsubscribe from the PlayerDeathEvent
+        if (_ph != null)
+        {
+            _ph.PlayerDeathEvent.RemoveListener(PlayerDowned);
+        }
     }
     
     void Update()
     {
         // Getting Movement From Inputs
-        
         // IF PLAYER IS IN DOWNED STATE
-        //if (_ph.IsDowned) return;
+        if (_ph.IsDowned) return;
         _moveDirection.x = Input.GetAxisRaw("Horizontal");
         _moveDirection.y = Input.GetAxisRaw("Vertical");
         
@@ -62,10 +74,10 @@ public class PlayerMovement : MonoBehaviour
         }
         
         // STOP ANIM WHEN DOWNED
-        //if (!_ph.IsDowned)
-        //{
+        if (!_ph.IsDowned)
+        {
             _anim.SetBool("isMoving", _moveDirection != Vector2.zero);
-        //}
+        }
 
         // Actual Movement
         _rb.MovePosition(_rb.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
@@ -92,25 +104,26 @@ public class PlayerMovement : MonoBehaviour
         }
     }
     
-    /*public void Knockback(Vector2 force, float duration)
+    public void Knockback(Vector2 force, float duration)
     {
         StartCoroutine(KnockbackStart(force, duration));
-    }*/
+    }
     
     // Player can't move while knocked back
     // Red is when player can't move, magenta is for iFrames since that code turns the sprite white again
-    /*private IEnumerator KnockbackStart(Vector2 force, float duration)
+    private IEnumerator KnockbackStart(Vector2 force, float duration)
     {
         _isKnockback = true;
         _rb.AddForce(force * 10, ForceMode2D.Impulse);
         _sr.color = Color.red;
         yield return new WaitForSeconds(duration);
-        _sr.color = Color.white;
+        _sr.color = Color.magenta;
         _isKnockback = false;
-    }*/
+    }
     
     private void PlayerDowned()
     {
+        // Freeze player movement and animations
         _rb.constraints = RigidbodyConstraints2D.FreezeAll;
         _anim.SetBool("isMoving", false);
     }

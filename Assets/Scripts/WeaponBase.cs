@@ -1,5 +1,6 @@
 using UnityEngine;
 using System;
+using UnityEngine.Rendering;
 
 public abstract class WeaponBase : MonoBehaviour
 {
@@ -13,30 +14,65 @@ public abstract class WeaponBase : MonoBehaviour
     public Transform Owner { get; private set; }
     [SerializeField] private Transform shootTransform;
 
+    [Header("Reload and Ammo Properties")]
+    [SerializeField] private int _maxAmmo = 100; // Total ammo the weapon can hold.
+    [SerializeField] private int _maxMagSize = 10; // Ammo capacity of the magazine.
+    [SerializeField] private float _reloadTime = 2f; // Time it takes to reload.
+    private int _currentAmmo; // Total ammo left.
+    private int _currentMagAmmo; // Ammo left in the magazine.
+
+    public int MaxAmmo {get => _maxAmmo;}
+    public int MaxMagSize {get => _maxMagSize;}
+    public int CurrentAmmo {get => _currentAmmo; set => _currentAmmo = value;}
+    public int CurrentMagAmmo {get => _currentMagAmmo; set => _currentMagAmmo = value;}
+
     [Header("Fire Type")]
-    [SerializeField] private bool isAutomatic = false;
+    [SerializeField] private bool _isAutomatic = false;
     // Expose isAutomatic via a public property.
-    public bool IsAutomatic => isAutomatic;
+    public bool IsAutomatic => _isAutomatic;
 
     // Change fireDelay to fireRate (bullets per second).
     [Tooltip("Bullets per second")]
-    [SerializeField] private float fireRate = 4f; // Default to 4 bullets per second.
-    private float FireDelay => 1f / fireRate; // Calculate delay dynamically.
+    [SerializeField] private float _fireRate = 4f; // Default to 4 bullets per second.
+    private float FireDelay => 1f / _fireRate; // Calculate delay dynamically.
 
     [Header("Bullet Properties")]
-    [SerializeField] private GameObject bulletPrefab;
-    [SerializeField] private GameObject bulletParticlePrefab;
-    [SerializeField] private float bulletSize = 1f;
-    [SerializeField] private float bulletSpeed = 20f;
-    [SerializeField] private int bulletDamage = 1;
-    [SerializeField] private float bulletKnockback = 1f;
-    [SerializeField] private float bulletLifetime = 3f;
-
-    private float lastFireTime;
+    [SerializeField] private GameObject _bulletPrefab;
+    [SerializeField] private GameObject _bulletParticlePrefab;
+    [SerializeField] private float _bulletSize = 1f;
+    [SerializeField] private float _bulletSpeed = 20f;
+    [SerializeField] private int _bulletDamage = 1;
+    [SerializeField] private float _bulletKnockback = 1f;
+    [SerializeField] private float _bulletLifetime = 3f;
+    private bool _isReloading = false;
+    public bool IsReloading => _isReloading;
+    private float _lastFireTime;
     private Animator _anim;
     private SpriteRenderer _sr;
     private Rigidbody2D _rb;
-    
+    private Collider2D _col;
+
+    private void Awake()
+    {
+        _currentAmmo = _maxAmmo;
+        _currentMagAmmo = _maxMagSize;
+
+        _rb = GetComponent<Rigidbody2D>();
+        _col = GetComponent<Collider2D>();
+        _anim = GetComponentInChildren<Animator>();
+        _sr = GetComponentInChildren<SpriteRenderer>();
+
+        if (!_rb) Debug.LogWarning($"Rigidbody2D component is missing on {gameObject.name}");
+        if (!_col) Debug.LogWarning($"Collider2D component is missing on {gameObject.name}");
+        if (!_anim) Debug.LogWarning($"Animator component is missing in children of {gameObject.name}");
+        if (!_sr) Debug.LogWarning($"SpriteRenderer component is missing in children of {gameObject.name}");
+    }
+
+    public bool CanShoot()
+    {
+        return _currentMagAmmo > 0 && !_isReloading;
+    }
+
     // Called to pick up the weapon. Re-parents it to the new owner’s hold position.
     public virtual void Pickup(Transform newOwner)
     {
@@ -47,15 +83,13 @@ public abstract class WeaponBase : MonoBehaviour
         transform.position = newOwner.position;
 
         // Optionally disable physics and collider for the equipped weapon.
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (_rb != null)
         {
-            rb.isKinematic = true;
+            _rb.isKinematic = true;
         }
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
+        if (_col != null)
         {
-            col.enabled = false;
+            _col.enabled = false;
         }
         
         transform.Find("GunSprite").localRotation = Quaternion.Euler(0, 0, 0);
@@ -69,15 +103,13 @@ public abstract class WeaponBase : MonoBehaviour
         transform.SetParent(null);
 
         // Optionally re-enable physics and collider.
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        if (rb != null)
+        if (_rb != null)
         {
-            rb.isKinematic = false;
+            _rb.isKinematic = false;
         }
-        Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
+        if (_col != null)
         {
-            col.enabled = true;
+            _col.enabled = true;
         }
 
         // Set rotation to a random angle when dropped.
@@ -103,20 +135,64 @@ public abstract class WeaponBase : MonoBehaviour
     // Abstract method to shoot the weapon.
     public virtual void Shoot(Vector3 aimDirection)
     {
-        if (Time.time < lastFireTime + FireDelay) return;
+        if (Time.time < _lastFireTime + FireDelay) return;
 
-        Vector3 spawnPosition = shootTransform.position;
-        Transform bulletInstance = Instantiate(bulletPrefab, spawnPosition, Quaternion.identity).transform;
-        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-
-        // Assuming BulletBase has a BulletSetup method that takes these parameters.
-        BulletBase bullet = bulletInstance.GetComponent<BulletBase>();
-        if (bullet != null)
+        if (CanShoot())
         {
-            bullet.BulletSetup(aimDirection, angle, bulletSpeed, bulletDamage, bulletKnockback, bulletSize, bulletLifetime);
-        }
+            _currentMagAmmo--;
+            Vector3 spawnPosition = shootTransform.position;
+            Transform bulletInstance = Instantiate(_bulletPrefab, spawnPosition, Quaternion.identity).transform;
+            float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 
-        lastFireTime = Time.time;
-        Fired?.Invoke();
+            // Assuming BulletBase has a BulletSetup method that takes these parameters.
+            BulletBase bullet = bulletInstance.GetComponent<BulletBase>();
+            if (bullet != null)
+            {
+                bullet.BulletSetup(aimDirection, angle, _bulletSpeed, _bulletDamage, _bulletKnockback, _bulletSize, _bulletLifetime);
+            }
+
+            _lastFireTime = Time.time;
+            Fired?.Invoke();
+        }
+    }
+
+    public void Reload()
+    {
+        if (_isReloading || _currentAmmo <= 0 || _currentMagAmmo == _maxMagSize) return;
+
+        _isReloading = true;
+        Invoke(nameof(FinishReload), _reloadTime);
+    }
+
+    private void FinishReload()
+    {
+        int ammoNeeded = _maxMagSize - _currentMagAmmo;
+        int ammoToReload = Mathf.Min(ammoNeeded, _currentAmmo);
+
+        _currentMagAmmo += ammoToReload;
+        _currentAmmo -= ammoToReload;
+        _isReloading = false;
+    }
+
+    public void Reload(int ammoToReload)
+    {
+        if (_isReloading || ammoToReload <= 0 || _currentMagAmmo == _maxMagSize) return;
+
+        _isReloading = true;
+        Invoke(nameof(FinishReload), _reloadTime);
+
+        void FinishReload()
+        {
+            int ammoNeeded = _maxMagSize - _currentMagAmmo;
+            int ammoToAdd = Mathf.Min(ammoNeeded, ammoToReload);
+
+            _currentMagAmmo += ammoToAdd;
+            _isReloading = false;
+        }
+    }
+
+    public void SetCurrentAmmo(int ammo)
+    {
+        _currentAmmo = Mathf.Clamp(ammo, 0, _maxAmmo);
     }
 }
