@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
+using System.Collections;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
-    [SerializeField] private Transform weaponHold; // The transform where the weapon will be parented when picked up.
-    [SerializeField] private float pickupRadius = 1f;  // Radius to check for nearby weapons.
-    private TextMeshPro pickupText;
+    [SerializeField] private Transform _weaponHolder; // The transform where the weapon will be parented when picked up.
+    [SerializeField] private float _pickupRadius = 1f;  // Radius to check for nearby weapons.
+    private TextMeshPro _pickupText;
 
     public UnityEvent<int> AmmoChangeEvent = new UnityEvent<int>(); // Event for ammo changes
     public UnityEvent<WeaponBase> WeaponChangeEvent = new UnityEvent<WeaponBase>(); // Event for weapon changes
@@ -18,26 +19,30 @@ public class PlayerWeaponManager : MonoBehaviour
     public int MaxMagAmmo => _currentWeapon != null ? _currentWeapon.MaxMagSize : 0;
     public int CurrentAmmo => _currentWeapon != null ? _currentWeapon.CurrentAmmo : 0;
 
-    private Camera mainCamera;
+    private Camera _mainCamera;
 
-    private float globalAmmoPercentage = 1f; // Global ammo percentage (1.0 = 100%).
+    private float _globalAmmoPercentage = 1f; // Global ammo percentage (1.0 = 100%).
 
-    public float GlobalAmmoPercentage => globalAmmoPercentage;
+    public float GlobalAmmoPercentage => _globalAmmoPercentage;
 
-    private PlayerUI playerUI; // Reference to PlayerUI for updating the ammo bar.
+    private PlayerUI _playerUI; // Reference to PlayerUI for updating the ammo bar.
+
+    [SerializeField] private Transform _reloadBar; // The Transform of the ReloadBar sprite.
+
+    private Coroutine _reloadCoroutine; // To track the reload coroutine.
 
     private void Awake()
     {
-        mainCamera = Camera.main;
+        _mainCamera = Camera.main;
         // Find the child object named "PickupText" and get its TMP_Text component.
         Transform pickupTextTransform = transform.Find("PickupText");
         if (pickupTextTransform != null)
         {
-            pickupText = pickupTextTransform.GetComponent<TextMeshPro>();
+            _pickupText = pickupTextTransform.GetComponent<TextMeshPro>();
         }
 
-        playerUI = FindObjectOfType<PlayerUI>(); // Find the PlayerUI in the scene.
-        if (playerUI == null)
+        _playerUI = FindObjectOfType<PlayerUI>(); // Find the PlayerUI in the scene.
+        if (_playerUI == null)
         {
             Debug.LogWarning("PlayerUI component not found in the scene. Ammo bar will not be updated.");
         }
@@ -51,12 +56,10 @@ public class PlayerWeaponManager : MonoBehaviour
         HandleReloading();
         UpdateAmmoUI();
     }
-    
-    // Checks for a nearby weapon and updates the pickup prompt text accordingly.
+
     private void UpdatePickupText()
     {
-        // Look for weapons in the pickup radius.
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, pickupRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
         WeaponBase weaponInRange = null;
 
         foreach (Collider2D col in colliders)
@@ -69,22 +72,20 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
 
-        if (pickupText != null)
+        if (_pickupText != null)
         {
             if (weaponInRange != null)
-                pickupText.text = "[E] Swap to " + weaponInRange.WeaponName;
+                _pickupText.text = "[E] Swap to " + weaponInRange.WeaponName;
             else
-                pickupText.text = "";
+                _pickupText.text = "";
         }
     }
-    
-    // Checks if the player presses the E key to pick up a nearby weapon or drop the current one.
+
     private void HandleWeaponPickupAndDrop()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            // Look for weapons in the pickup radius.
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, pickupRadius);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
             WeaponBase weaponToPickup = null;
 
             foreach (Collider2D col in colliders)
@@ -99,15 +100,13 @@ public class PlayerWeaponManager : MonoBehaviour
 
             if (weaponToPickup != null)
             {
-                // Drop current weapon if one exists.
                 if (_currentWeapon != null)
                 {
                     _currentWeapon.Drop();
                 }
 
-                // Pickup the new weapon and apply global ammo percentage.
-                weaponToPickup.Pickup(weaponHold);
-                int newAmmo = Mathf.FloorToInt(globalAmmoPercentage * weaponToPickup.MaxAmmo);
+                weaponToPickup.Pickup(_weaponHolder);
+                int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * weaponToPickup.MaxAmmo);
                 weaponToPickup.SetCurrentAmmo(newAmmo);
 
                 _currentWeapon = weaponToPickup;
@@ -116,7 +115,6 @@ public class PlayerWeaponManager : MonoBehaviour
             }
             else if (_currentWeapon != null)
             {
-                // If no weapon is nearby, drop the current weapon.
                 _currentWeapon.Drop();
                 _currentWeapon = null;
                 WeaponChangeEvent.Invoke(_currentWeapon);
@@ -124,20 +122,16 @@ public class PlayerWeaponManager : MonoBehaviour
             }
         }
     }
-    
-    // Aims the equipped weapon toward the mouse and fires when the appropriate shoot button is pressed.
+
     private void HandleAimingAndShooting()
     {
         if (_currentWeapon == null) return;
 
-        // Convert mouse position to world space.
-        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0f;
 
-        // Use the base Aim method.
         _currentWeapon.Aim(mousePosition);
 
-        // Determine input type based on whether the weapon is automatic.
         bool canShoot = false;
         TestGun testGun = _currentWeapon as TestGun;
         if (testGun != null)
@@ -146,7 +140,6 @@ public class PlayerWeaponManager : MonoBehaviour
         }
         else
         {
-            // Default to one shot per click if not a TestGun.
             canShoot = Input.GetMouseButtonDown(0);
         }
 
@@ -163,17 +156,21 @@ public class PlayerWeaponManager : MonoBehaviour
         if (_currentWeapon != null && Input.GetKeyDown(KeyCode.R) && !_currentWeapon.IsReloading)
         {
             int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
-            float availableAmmo = globalAmmoPercentage * _currentWeapon.MaxAmmo;
+            float availableAmmo = _globalAmmoPercentage * _currentWeapon.MaxAmmo;
+            int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(availableAmmo));
 
-            if (ammoNeeded > 0 && availableAmmo > 0)
+            if (ammoNeeded > 0 && availableAmmo > 0 && ammoToReload > 0)
             {
-                int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(availableAmmo));
+                
                 Debug.Log("Reloading " + ammoToReload + " ammo.");
-                _currentWeapon.Reload(ammoToReload);
-                globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
-                globalAmmoPercentage = Mathf.Clamp01(globalAmmoPercentage); // Ensure it stays between 0 and 1.
-                globalAmmoPercentage = Mathf.Round(globalAmmoPercentage * 100f) / 100f; // Round to 2 decimals.
                 UpdateAmmoUI(); // Update the ammo bar after reloading.
+
+
+                if (_reloadCoroutine != null)
+                {
+                    StopCoroutine(_reloadCoroutine);
+                }
+                _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
             }
             else
             {
@@ -182,15 +179,53 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
+    private IEnumerator ReloadWithBar(float reloadTime, int ammoToReload)
+    {
+        if (_reloadBar != null)
+        {
+            _reloadBar.localScale = new Vector3(0, _reloadBar.localScale.y, _reloadBar.localScale.z); // Reset bar.
+            _reloadBar.gameObject.SetActive(true); // Show the bar.
+        }
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < reloadTime)
+        {
+            elapsedTime += Time.deltaTime;
+            float progress = elapsedTime / reloadTime;
+
+            if (_reloadBar != null)
+            {
+                // Scale the bar from the middle.
+                _reloadBar.localScale = new Vector3(progress, _reloadBar.localScale.y, _reloadBar.localScale.z);
+            }
+
+            yield return null;
+        }
+
+        if (_reloadBar != null)
+        {
+            _reloadBar.localScale = new Vector3(1, _reloadBar.localScale.y, _reloadBar.localScale.z); // Ensure bar is full.
+            _reloadBar.gameObject.SetActive(false); // Hide the bar after reload.
+        }
+
+        _globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
+        _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage); // Ensure it stays between 0 and 1.
+        _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f; // Round to 2 decimals.
+
+        // Complete the reload process.
+        _currentWeapon.Reload();
+        UpdateAmmoUI(); // Update the ammo UI after reloading.
+    }
+
     private void UpdateAmmoUI()
     {
-        // Notify PlayerUI of ammo changes via events.
         if (_currentWeapon != null)
         {
             AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
 
             int currentMagAmmo = _currentWeapon.CurrentMagAmmo;
-            playerUI.UpdateAmmoBar(currentMagAmmo); // Pass the current magazine ammo to PlayerUI.
+            _playerUI.UpdateAmmoBar(currentMagAmmo);
         }
         else
         {
@@ -214,10 +249,9 @@ public class PlayerWeaponManager : MonoBehaviour
         AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
     }
 
-    // (Optional) Visualize the pickup radius in the editor.
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, pickupRadius);
+        Gizmos.DrawWireSphere(transform.position, _pickupRadius);
     }
 }

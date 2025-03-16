@@ -21,6 +21,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] private int _maxAmmo = 100; // Total ammo the weapon can hold.
     [SerializeField] private int _maxMagSize = 10; // Ammo capacity of the magazine.
     [SerializeField] private float _reloadTime = 2f; // Time it takes to reload.
+    public float ReloadTime => _reloadTime;
     private int _currentAmmo; // Total ammo left.
     private int _currentMagAmmo; // Ammo left in the magazine.
 
@@ -165,34 +166,13 @@ public abstract class WeaponBase : MonoBehaviour
         if (_isReloading || _currentAmmo <= 0 || _currentMagAmmo == _maxMagSize) return;
 
         _isReloading = true;
-        Invoke(nameof(FinishReload), _reloadTime);
-    }
 
-    private void FinishReload()
-    {
         int ammoNeeded = _maxMagSize - _currentMagAmmo;
         int ammoToReload = Mathf.Min(ammoNeeded, _currentAmmo);
 
         _currentMagAmmo += ammoToReload;
         _currentAmmo -= ammoToReload;
         _isReloading = false;
-    }
-
-    public void Reload(int ammoToReload)
-    {
-        if (_isReloading || ammoToReload <= 0 || _currentMagAmmo == _maxMagSize) return;
-
-        _isReloading = true;
-        Invoke(nameof(FinishReload), _reloadTime);
-
-        void FinishReload()
-        {
-            int ammoNeeded = _maxMagSize - _currentMagAmmo;
-            int ammoToAdd = Mathf.Min(ammoNeeded, ammoToReload);
-
-            _currentMagAmmo += ammoToAdd;
-            _isReloading = false;
-        }
     }
 
     public void SetCurrentAmmo(int ammo)
