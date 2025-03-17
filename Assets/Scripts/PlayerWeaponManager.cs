@@ -38,6 +38,8 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private int _currentWeaponIndex = 0; // 0 for starter weapon, 1 for secondary weapon
 
+    private bool _isInputEnabled = true;
+
     private void Awake()
     {
         InitializeReferences();
@@ -49,14 +51,42 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+{
+    PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+    if (playerHealth != null)
+    {
+        playerHealth.PlayerDeathEvent.AddListener(DisableInput);
+    }
+}
+
+private void OnDisable()
+{
+    PlayerHealth playerHealth = FindObjectOfType<PlayerHealth>();
+    if (playerHealth != null)
+    {
+        playerHealth.PlayerDeathEvent.RemoveListener(DisableInput);
+    }
+}
+
     private void Update()
     {
+        if (!_isInputEnabled) return;
+
         UpdatePickupText();
         HandleWeaponPickupAndDrop();
-        HandleWeaponSwitching(); // Add this for mouse wheel switching
+        HandleWeaponSwitching();
         HandleAimingAndShooting();
         HandleReloading();
         UpdateAmmoUI();
+    }
+
+    public void DisableInput()
+    {
+        _isInputEnabled = false;
+        HideReloadBar();
+        _pickupText.gameObject.SetActive(false);
+        _currentWeapon.gameObject.SetActive(false);
     }
 
     private void InitializeReferences()
