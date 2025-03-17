@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-
+    [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed = 5f;
+
+    [Header("Sprites")]
     [SerializeField] private Sprite[] _sprites;
-    
+
     private Animator _anim;
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
@@ -16,114 +18,102 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _mousePos;
     private bool _isKnockback;
 
-    void Awake()
+    private void Awake()
     {
-        // Assigning Refs
+        // Cache component references
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponentInChildren<SpriteRenderer>();
         _anim = GetComponentInChildren<Animator>();
         _ph = GetComponent<PlayerHealth>();
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        // Subscribe to the PlayerDeathEvent
+        // Subscribe to PlayerDeathEvent
         if (_ph != null)
         {
             _ph.PlayerDeathEvent.AddListener(PlayerDowned);
         }
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
-        // Unsubscribe from the PlayerDeathEvent
+        // Unsubscribe from PlayerDeathEvent
         if (_ph != null)
         {
             _ph.PlayerDeathEvent.RemoveListener(PlayerDowned);
         }
     }
-    
-    void Update()
+
+    private void Update()
     {
-        // Getting Movement From Inputs
-        // IF PLAYER IS IN DOWNED STATE
-        if (_ph.IsDowned) return;
-        _moveDirection.x = Input.GetAxisRaw("Horizontal");
-        _moveDirection.y = Input.GetAxisRaw("Vertical");
-        
+        if (_ph.IsDowned || _isKnockback) return;
+
+        HandleMovementInput();
         Aim();
     }
 
     private void FixedUpdate()
     {
-        // Changing Direction Sprites
-        if (_moveDirection != Vector2.zero)
-        {
-            /*switch (_moveDirection.x)
-            {
-                case < 0:
-                    _sr.sprite = _moveDirection.y > 0 ? _sprites[0] : _sprites[3];
-                    break;
-                case > 0:
-                    _sr.sprite = _moveDirection.y > 0 ? _sprites[2] : _sprites[5];
-                    break;
-                default:
-                    _sr.sprite = _moveDirection.y > 0 ? _sprites[1] : _sprites[4];
-                    break;
-            }*/
-        }
-        
-        // STOP ANIM WHEN DOWNED
-        if (!_ph.IsDowned)
-        {
-            _anim.SetBool("isMoving", _moveDirection != Vector2.zero);
-        }
+        if (_ph.IsDowned) return;
 
-        // Actual Movement
+        HandleMovement();
+        UpdateAnimation();
+    }
+
+    private void HandleMovementInput()
+    {
+        // Get movement input
+        _moveDirection.x = Input.GetAxisRaw("Horizontal");
+        _moveDirection.y = Input.GetAxisRaw("Vertical");
+    }
+
+    private void HandleMovement()
+    {
+        // Move the player
         _rb.MovePosition(_rb.position + _moveDirection * _moveSpeed * Time.fixedDeltaTime);
     }
-    
+
+    private void UpdateAnimation()
+    {
+        // Update movement animation
+        _anim.SetBool("isMoving", _moveDirection != Vector2.zero);
+    }
+
     private void Aim()
     {
-        // Mouse position from screen to world point
+        // Convert mouse position to world point
         _mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _mousePos.z = 0f;
 
-        // Aiming calculations
+        // Calculate aiming direction
         Vector3 aimDir = (_mousePos - transform.position).normalized;
         float angle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
-        
-        // Flip sprite based on where you are aiming
-        if (angle > 90 || angle < -90)
-        {
-            _sr.flipX = true;
-        }
-        else
-        {
-            _sr.flipX = false;
-        }
+
+        // Flip sprite based on aiming direction
+        _sr.flipX = angle > 90 || angle < -90;
     }
-    
+
     public void Knockback(Vector2 force, float duration)
     {
-        StartCoroutine(KnockbackStart(force, duration));
+        StartCoroutine(KnockbackCoroutine(force, duration));
     }
-    
-    // Player can't move while knocked back
-    // Red is when player can't move, magenta is for iFrames since that code turns the sprite white again
-    private IEnumerator KnockbackStart(Vector2 force, float duration)
+
+    private IEnumerator KnockbackCoroutine(Vector2 force, float duration)
     {
         _isKnockback = true;
         _rb.AddForce(force * 10, ForceMode2D.Impulse);
         _sr.color = Color.red;
+
         yield return new WaitForSeconds(duration);
+
         _sr.color = Color.magenta;
         _isKnockback = false;
     }
-    
+
     private void PlayerDowned()
     {
-        // Freeze player movement and animations
+        // Freeze player movement and stop animations
         _rb.constraints = RigidbodyConstraints2D.FreezeAll;
         _anim.SetBool("isMoving", false);
     }

@@ -1,59 +1,39 @@
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using TMPro;
-using System.Collections;
 
 public class PlayerWeaponManager : MonoBehaviour
 {
-    [SerializeField] private Transform _weaponHolder; // The transform where the weapon will be parented when picked up.
-    [SerializeField] private float _pickupRadius = 1f;  // Radius to check for nearby weapons.
-    private TextMeshPro _pickupText;
+    [Header("Weapon Settings")]
+    [SerializeField] private Transform _weaponHolder;
+    [SerializeField] private float _pickupRadius = 1f;
 
-    public UnityEvent<int> AmmoChangeEvent = new UnityEvent<int>(); // Event for ammo changes
-    public UnityEvent<WeaponBase> WeaponChangeEvent = new UnityEvent<WeaponBase>(); // Event for weapon changes
+    [Header("UI References")]
+    private TextMeshPro _pickupText;
+    private PlayerUI _playerUI;
+    private SpriteRenderer _reloadBar;
+    private SpriteRenderer _reloadBarBG;
+
+    [Header("Events")]
+    public UnityEvent<int> AmmoChangeEvent = new UnityEvent<int>();
+    public UnityEvent<WeaponBase> WeaponChangeEvent = new UnityEvent<WeaponBase>();
 
     private WeaponBase _currentWeapon;
+    private Camera _mainCamera;
+    private Coroutine _reloadCoroutine;
+    private bool _canDropWeapon = true;
+
+    private float _globalAmmoPercentage = 1f;
+    public float GlobalAmmoPercentage => _globalAmmoPercentage;
 
     public int MaxMagAmmo => _currentWeapon != null ? _currentWeapon.MaxMagSize : 0;
     public int CurrentAmmo => _currentWeapon != null ? _currentWeapon.CurrentAmmo : 0;
 
-    private Camera _mainCamera;
-
-    private float _globalAmmoPercentage = 1f; // Global ammo percentage (1.0 = 100%).
-
-    public float GlobalAmmoPercentage => _globalAmmoPercentage;
-
-    private PlayerUI _playerUI; // Reference to PlayerUI for updating the ammo bar.
-
-    private SpriteRenderer _reloadBar; // The Transform of the ReloadBar sprite.
-    private SpriteRenderer _reloadBarBG; // The Transform of the ReloadBar sprite.
-
-    private Coroutine _reloadCoroutine; // To track the reload coroutine.
-
-    private bool _canDropWeapon = true;
-
     private void Awake()
     {
-        _mainCamera = Camera.main;
-        // Find the child object named "PickupText" and get its TMP_Text component.
-        Transform pickupTextTransform = transform.Find("PickupText");
-        if (pickupTextTransform != null)
-        {
-            _pickupText = pickupTextTransform.GetComponent<TextMeshPro>();
-        }
-
-        _playerUI = FindObjectOfType<PlayerUI>(); // Find the PlayerUI in the scene.
-        if (_playerUI == null)
-        {
-            Debug.LogWarning("PlayerUI component not found in the scene. Ammo bar will not be updated.");
-        }
-
-        _reloadBar = GameObject.Find("ReloadBar")?.GetComponent<SpriteRenderer>();
-        _reloadBarBG = GameObject.Find("ReloadBarBG")?.GetComponent<SpriteRenderer>();
-
-        _reloadBar.enabled = false; // Hide the bar by default.
-        _reloadBarBG.enabled = false; // Hide the bar background by default.
+        InitializeReferences();
+        InitializeUI();
     }
 
     private void Update()
@@ -65,104 +45,119 @@ public class PlayerWeaponManager : MonoBehaviour
         UpdateAmmoUI();
     }
 
+    private void InitializeReferences()
+    {
+        _mainCamera = Camera.main;
+
+        Transform pickupTextTransform = transform.Find("PickupText");
+        if (pickupTextTransform != null)
+        {
+            _pickupText = pickupTextTransform.GetComponent<TextMeshPro>();
+        }
+
+        _playerUI = FindObjectOfType<PlayerUI>();
+        if (_playerUI == null)
+        {
+            Debug.LogWarning("PlayerUI component not found in the scene. Ammo bar will not be updated.");
+        }
+    }
+
+    private void InitializeUI()
+    {
+        _reloadBar = GameObject.Find("ReloadBar")?.GetComponent<SpriteRenderer>();
+        _reloadBarBG = GameObject.Find("ReloadBarBG")?.GetComponent<SpriteRenderer>();
+
+        HideReloadBar();
+    }
+
     private void UpdatePickupText()
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
-        WeaponBase weaponInRange = null;
+        WeaponBase weaponInRange = GetWeaponInRange();
+        if (_pickupText != null)
+        {
+            _pickupText.text = weaponInRange != null ? $"[E] Swap to {weaponInRange.WeaponName}" : "";
+        }
+    }
 
+    private WeaponBase GetWeaponInRange()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
         foreach (Collider2D col in colliders)
         {
             WeaponBase weapon = col.GetComponent<WeaponBase>();
             if (weapon != null && !weapon.IsEquipped)
             {
-                weaponInRange = weapon;
-                break;
+                return weapon;
             }
         }
-
-        if (_pickupText != null)
-        {
-            if (weaponInRange != null)
-                _pickupText.text = "[E] Swap to " + weaponInRange.WeaponName;
-            else
-                _pickupText.text = "";
-        }
+        return null;
     }
 
     private void HandleWeaponPickupAndDrop()
     {
-        if (!_canDropWeapon) return; // Prevent weapon dropping if disabled.
-
-        // Check if the player is over a pickup
-        bool isOverPickup = IsOverPickup();
+        if (!_canDropWeapon) return;
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (isOverPickup)
+            if (IsOverPickup())
             {
-                // Handle weapon or consumable pickup
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
-                WeaponBase weaponToPickup = null;
-
-                foreach (Collider2D col in colliders)
-                {
-                    WeaponBase weapon = col.GetComponent<WeaponBase>();
-                    if (weapon != null && !weapon.IsEquipped)
-                    {
-                        weaponToPickup = weapon;
-                        break;
-                    }
-                }
-
-                if (weaponToPickup != null)
-                {
-                    // Stop any ongoing reload coroutine before swapping weapons.
-                    if (_reloadCoroutine != null)
-                    {
-                        StopCoroutine(_reloadCoroutine);
-                        _reloadCoroutine = null;
-                        if (_currentWeapon != null)
-                        {
-                            _currentWeapon.IsReloading = false;
-                        }
-                    }
-
-                    if (_currentWeapon != null)
-                    {
-                        _currentWeapon.Drop();
-                    }
-
-                    weaponToPickup.Pickup(_weaponHolder);
-                    int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * weaponToPickup.MaxAmmo);
-                    weaponToPickup.SetCurrentAmmo(newAmmo);
-
-                    _currentWeapon = weaponToPickup;
-                    WeaponChangeEvent.Invoke(_currentWeapon);
-                    AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-                }
+                PickupWeapon();
+                HideReloadBar();
             }
             else if (_currentWeapon != null)
             {
-                // Stop any ongoing reload coroutine before dropping the weapon.
-                if (_reloadCoroutine != null)
-                {
-                    StopCoroutine(_reloadCoroutine);
-                    _reloadCoroutine = null;
-                    _currentWeapon.IsReloading = false;
-                }
-
-                _currentWeapon.Drop();
-                _currentWeapon = null;
-                WeaponChangeEvent.Invoke(_currentWeapon);
-                AmmoChangeEvent.Invoke(0);
+                DropCurrentWeapon();
+                HideReloadBar();
             }
-
-            _reloadBar.enabled = false; // Hide the bar
-            _reloadBarBG.enabled = false; // Hide the bar
         }
     }
 
-    // Helper method to check if the player is over a pickup
+    private void PickupWeapon()
+    {
+        WeaponBase weaponToPickup = GetWeaponInRange();
+        if (weaponToPickup != null)
+        {
+            StopReloadCoroutine();
+
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.Drop();
+            }
+
+            weaponToPickup.Pickup(_weaponHolder);
+            int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * weaponToPickup.MaxAmmo);
+            weaponToPickup.SetCurrentAmmo(newAmmo);
+
+            _currentWeapon = weaponToPickup;
+            WeaponChangeEvent.Invoke(_currentWeapon);
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        }
+    }
+
+    private void DropCurrentWeapon()
+    {
+        StopReloadCoroutine();
+
+        _currentWeapon.Drop();
+        _currentWeapon = null;
+
+        WeaponChangeEvent.Invoke(null);
+        AmmoChangeEvent.Invoke(0);
+    }
+
+    private void StopReloadCoroutine()
+    {
+        if (_reloadCoroutine != null)
+        {
+            StopCoroutine(_reloadCoroutine);
+            _reloadCoroutine = null;
+            if (_currentWeapon != null)
+            {
+                _currentWeapon.IsReloading = false;
+            }
+        }
+    }
+
     private bool IsOverPickup()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
@@ -170,7 +165,7 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             if (col.GetComponent<ConsumablePickup>() != null || col.GetComponent<WeaponBase>() != null)
             {
-                return true; // Player is over a pickup
+                return true;
             }
         }
         return false;
@@ -185,26 +180,10 @@ public class PlayerWeaponManager : MonoBehaviour
 
         _currentWeapon.Aim(mousePosition);
 
-        bool canShoot = false;
-        TestGun testGun = _currentWeapon as TestGun;
-        if (testGun != null)
+        if (CanShoot())
         {
-            canShoot = testGun.IsAutomatic ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0);
-        }
-        else
-        {
-            canShoot = Input.GetMouseButtonDown(0);
-        }
-
-        if (canShoot && _currentWeapon.CurrentMagAmmo > 0)
-        {
-            // Stop any ongoing reload coroutine before shooting.
-            if (_reloadCoroutine != null)
-            {
-                StopCoroutine(_reloadCoroutine);
-                _reloadCoroutine = null;
-                _currentWeapon.IsReloading = false;
-            }
+            StopReloadCoroutine();
+            HideReloadBar();
 
             Vector3 aimDirection = (mousePosition - _currentWeapon.transform.position).normalized;
             _currentWeapon.Shoot(aimDirection);
@@ -212,83 +191,96 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
+    private bool CanShoot()
+    {
+        if (_currentWeapon == null || _currentWeapon.CurrentMagAmmo <= 0) return false;
+
+        TestGun testGun = _currentWeapon as TestGun;
+        if (testGun != null)
+        {
+            return testGun.IsAutomatic ? Input.GetMouseButton(0) : Input.GetMouseButtonDown(0);
+        }
+        return Input.GetMouseButtonDown(0);
+    }
+
     private void HandleReloading()
     {
-        if (_currentWeapon != null && Input.GetKeyDown(KeyCode.R) && !_currentWeapon.IsReloading)
+        if (_currentWeapon == null || !Input.GetKeyDown(KeyCode.R) || _currentWeapon.IsReloading || _reloadCoroutine != null) return;
+
+        int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
+        int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo));
+
+        if (ammoNeeded > 0 && ammoToReload > 0)
         {
-            int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
-            float availableAmmo = _globalAmmoPercentage * _currentWeapon.MaxAmmo;
-            int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(availableAmmo));
+            Debug.Log($"Reloading {ammoToReload} ammo.");
+            UpdateAmmoUI();
 
-            if (ammoNeeded > 0 && availableAmmo > 0 && ammoToReload > 0)
-            {
-                
-                Debug.Log("Reloading " + ammoToReload + " ammo.");
-                UpdateAmmoUI(); // Update the ammo bar after reloading.
-
-
-                if (_reloadCoroutine != null)
-                {
-                    StopCoroutine(_reloadCoroutine);
-                }
-                _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
-            }
-            else
-            {
-                Debug.Log("Not enough ammo to reload.");
-            }
+            _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
+        }
+        else
+        {
+            Debug.Log("Not enough ammo to reload.");
         }
     }
 
     private IEnumerator ReloadWithBar(float reloadTime, int ammoToReload)
     {
-        if (_reloadBar != null)
-        {
-            _reloadBar.transform.localScale = new Vector3(0, _reloadBar.transform.localScale.y, _reloadBar.transform.localScale.z); // Reset bar.
-            _reloadBar.enabled = true; // Show the bar when reloading.
-            _reloadBarBG.enabled = true; // Show the bar background when reloading.
-        }
+        ShowReloadBar();
 
         float elapsedTime = 0f;
-
         while (elapsedTime < reloadTime)
         {
             elapsedTime += Time.deltaTime;
-            float progress = elapsedTime / reloadTime;
+            UpdateReloadBar(elapsedTime / reloadTime);
 
-            if (_reloadBar != null)
-            {
-                // Scale the bar from the middle.
-                _reloadBar.transform.localScale = new Vector3(progress, _reloadBar.transform.localScale.y, _reloadBar.transform.localScale.z);
-            }
-
-            // Check if the weapon is still valid during the reload process.
             if (_currentWeapon == null)
             {
                 Debug.LogWarning("Weapon was dropped or swapped during reload. Stopping reload coroutine.");
-                yield break; // Exit the coroutine if the weapon is no longer valid.
+                yield break;
             }
 
             yield return null;
         }
 
+        CompleteReload(ammoToReload);
+    }
+
+    private void HideReloadBar()
+    {
+        if (_reloadBar != null) _reloadBar.enabled = false;
+        if (_reloadBarBG != null) _reloadBarBG.enabled = false;
+    }
+    
+    private void ShowReloadBar()
+    {
         if (_reloadBar != null)
         {
-            _reloadBar.transform.localScale = new Vector3(1, _reloadBar.transform.localScale.y, _reloadBar.transform.localScale.z); // Ensure bar is full.
-            _reloadBar.enabled = false; // Hide the bar after reloading.
-            _reloadBarBG.enabled = false; // Hide the bar background after reloading.
+            _reloadBar.transform.localScale = new Vector3(0, _reloadBar.transform.localScale.y, _reloadBar.transform.localScale.z);
+            _reloadBar.enabled = true;
         }
+        if (_reloadBarBG != null) _reloadBarBG.enabled = true;
+    }
+
+    private void UpdateReloadBar(float progress)
+    {
+        if (_reloadBar != null)
+        {
+            _reloadBar.transform.localScale = new Vector3(progress, _reloadBar.transform.localScale.y, _reloadBar.transform.localScale.z);
+        }
+    }
+
+    private void CompleteReload(int ammoToReload)
+    {
+        HideReloadBar();
 
         if (_currentWeapon != null)
         {
             _globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
-            _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage); // Ensure it stays between 0 and 1.
-            _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f; // Round to 2 decimals.
+            _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
 
-            // Complete the reload process.
             _currentWeapon.Reload();
-            _currentWeapon.IsReloading = false; // Set reloading to false after the coroutine finishes.
-            UpdateAmmoUI(); // Update the ammo UI after reloading.
+            _currentWeapon.IsReloading = false;
+            UpdateAmmoUI();
         }
     }
 
@@ -297,9 +289,7 @@ public class PlayerWeaponManager : MonoBehaviour
         if (_currentWeapon != null)
         {
             AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-
-            int currentMagAmmo = _currentWeapon.CurrentMagAmmo;
-            _playerUI.UpdateAmmoBar(currentMagAmmo);
+            _playerUI?.UpdateAmmoBar(_currentWeapon.CurrentMagAmmo);
         }
         else
         {
@@ -307,28 +297,15 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void EquipWeapon(WeaponBase weapon)
-    {
-        _currentWeapon = weapon;
-        WeaponChangeEvent.Invoke(_currentWeapon);
-        AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-    }
-
     public void AddAmmo(int percentAmount)
     {
-        // Convert the percentage amount to a decimal and add it to _globalAmmoPercentage.
-        _globalAmmoPercentage += percentAmount / 100f;
+        _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage + percentAmount / 100f);
 
-        // Clamp the value to ensure it stays between 0 and 1.
-        _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
-
-        // If there's a current weapon, update its ammo based on the new global ammo percentage.
         if (_currentWeapon != null)
         {
             int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo);
             _currentWeapon.SetCurrentAmmo(newAmmo);
-            UpdateAmmoUI(); // Update the ammo UI to reflect the new ammo count.
-            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+            UpdateAmmoUI();
         }
     }
 
@@ -340,7 +317,7 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private IEnumerator ReenableWeaponDrop()
     {
-        yield return new WaitForSeconds(1f); // Adjust the duration as needed.
+        yield return new WaitForSeconds(1f);
         _canDropWeapon = true;
     }
 

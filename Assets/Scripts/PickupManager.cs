@@ -1,52 +1,52 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
 
 public class PickupManager : MonoBehaviour
 {
     [SerializeField] private float _pickupRadius = 1f; // Radius to check for nearby items.
 
-    private void Awake()
-    {
-
-    }
-
     private void Update()
-    {
-        HandleConsumablePickup();
-    }
-
-    private void HandleConsumablePickup()
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
-            ConsumablePickup consumableToPickup = null;
+            TryPickupConsumable();
+        }
+    }
 
-            foreach (Collider2D col in colliders)
+    private void TryPickupConsumable()
+    {
+        ConsumablePickup consumableToPickup = FindNearestConsumable();
+
+        if (consumableToPickup != null)
+        {
+            PickupConsumable(consumableToPickup);
+        }
+    }
+
+    private ConsumablePickup FindNearestConsumable()
+    {
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
+
+        foreach (Collider2D col in colliders)
+        {
+            ConsumablePickup consumable = col.GetComponent<ConsumablePickup>();
+            if (consumable != null)
             {
-                ConsumablePickup consumable = col.GetComponent<ConsumablePickup>();
-                if (consumable != null)
-                {
-                    consumableToPickup = consumable;
-                    break;
-                }
-            }
-
-            if (consumableToPickup != null)
-            {
-                // Pick up the consumable.
-                consumableToPickup.PickedUp();
-
-                // Prevent weapon dropping by notifying the PlayerWeaponManager.
-                PlayerWeaponManager weaponManager = FindObjectOfType<PlayerWeaponManager>();
-                if (weaponManager != null)
-                {
-                    weaponManager.DisableWeaponDropTemporarily();
-                }
+                return consumable;
             }
         }
+
+        return null;
+    }
+
+    private void PickupConsumable(ConsumablePickup consumable)
+    {
+        // Pick up the consumable.
+        consumable.PickedUp();
+
+        // Notify the PlayerWeaponManager to disable weapon dropping temporarily.
+        PlayerWeaponManager weaponManager = FindObjectOfType<PlayerWeaponManager>();
+        weaponManager?.DisableWeaponDropTemporarily();
     }
 
     private void OnDrawGizmosSelected()

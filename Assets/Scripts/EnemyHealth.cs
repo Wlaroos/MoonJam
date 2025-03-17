@@ -8,7 +8,7 @@ public class EnemyHealth : MonoBehaviour
     [Header("Health Settings")]
     [SerializeField] private int _maxHealth = 3;
     [SerializeField] private int _maxDownedHealth = 3;
-    
+
     [Header("References")]
     [SerializeField] private Sprite[] _normalSprites;
     [SerializeField] private Sprite[] _downedSprites;
@@ -16,7 +16,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private GameObject _deathChunkParticles;
 
     [SerializeField] private float _knockbackDuration = 0.25f;
-    
+
     public UnityEvent OnEnemyDowned;
     public UnityEvent OnEnemyDeath;
 
@@ -48,7 +48,6 @@ public class EnemyHealth : MonoBehaviour
 
     public void TakeDamage(Vector2 force, int damage)
     {
-        
         StopAllCoroutines();
         StartCoroutine(FlashRed());
 

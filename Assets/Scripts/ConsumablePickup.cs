@@ -25,19 +25,47 @@ public class ConsumablePickup : MonoBehaviour
     private SpriteRenderer _sr;
     private SpriteRenderer _textSr;
     private Collider2D _col;
-    
+
     private void Awake()
+    {
+        InitializeComponents();
+        SetInitialSprite();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            ShowHoverState();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            ResetSprite();
+        }
+    }
+
+    public void PickedUp()
+    {
+        ApplyEffect();
+        Destroy(gameObject);
+    }
+
+    private void InitializeComponents()
     {
         _sr = GetComponent<SpriteRenderer>();
         _col = GetComponent<Collider2D>();
         _ph = FindObjectOfType<PlayerHealth>();
         _pwm = FindObjectOfType<PlayerWeaponManager>();
-
         _textSr = transform.GetChild(0).GetComponent<SpriteRenderer>();
-
         _textSr.color = Color.clear;
+    }
 
-        // Set the sprite based on the consumable type.
+    private void SetInitialSprite()
+    {
         switch (_consumableType)
         {
             case ConsumableType.Ammo:
@@ -49,47 +77,39 @@ public class ConsumablePickup : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void ShowHoverState()
     {
-        if (collision.CompareTag("Player"))
+        switch (_consumableType)
         {
-            // Change the sprite to the hover sprite.
-            switch (_consumableType)
-            {
-                case ConsumableType.Ammo:
-                    _sr.sprite = _consumableHoverSprite[0];
-                    _textSr.sprite = _consumableTextSprite[0];
-                    _textSr.color = Color.white;
-                    break;
-                case ConsumableType.Health:
-                    _sr.sprite = _consumableHoverSprite[1];
-                    _textSr.sprite = _consumableTextSprite[1];
-                    _textSr.color = Color.white;
-                    break;
-            }
+            case ConsumableType.Ammo:
+                _sr.sprite = _consumableHoverSprite[0];
+                _textSr.sprite = _consumableTextSprite[0];
+                _textSr.color = Color.white;
+                break;
+            case ConsumableType.Health:
+                _sr.sprite = _consumableHoverSprite[1];
+                _textSr.sprite = _consumableTextSprite[1];
+                _textSr.color = Color.white;
+                break;
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void ResetSprite()
     {
-        if (other.CompareTag("Player"))
+        switch (_consumableType)
         {
-            // Change the sprite back to the original sprite.
-            switch (_consumableType)
-            {
-                case ConsumableType.Ammo:
-                    _sr.sprite = _consumableSprite[0];
-                    _textSr.color = Color.clear;
-                    break;
-                case ConsumableType.Health:
-                    _sr.sprite = _consumableSprite[1];
-                    _textSr.color = Color.clear;
-                    break;
-            }
+            case ConsumableType.Ammo:
+                _sr.sprite = _consumableSprite[0];
+                _textSr.color = Color.clear;
+                break;
+            case ConsumableType.Health:
+                _sr.sprite = _consumableSprite[1];
+                _textSr.color = Color.clear;
+                break;
         }
     }
 
-    public void PickedUp()
+    private void ApplyEffect()
     {
         switch (_consumableType)
         {
@@ -100,7 +120,5 @@ public class ConsumablePickup : MonoBehaviour
                 _ph.Heal(_healthAmount);
                 break;
         }
-
-        Destroy(gameObject);
     }
 }

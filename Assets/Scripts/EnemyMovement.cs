@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    [Header("Movement Settings")]
     [SerializeField] private float _speed = 3f;
     [SerializeField] private float _startDelay = 1f;
 
@@ -28,29 +29,13 @@ public class EnemyMovement : MonoBehaviour
 
     private void Awake()
     {
-        // Use tag lookup to find the player (ensure your player GameObject has the "Player" tag)
-        _playerTransform = GameObject.FindWithTag("Player").transform;
-        
-        _rb = GetComponent<Rigidbody2D>();
-        _sr = GetComponentInChildren<SpriteRenderer>();
-        _enemyHealth = GetComponent<EnemyHealth>();
-        _anim = GetComponentInChildren<Animator>();
-
-        _speed = Random.Range(_speed - 1, _speed + 1);
+        InitializeComponents();
+        RandomizeSpeed();
     }
 
     private void Start()
     {
         StartCoroutine(StartDelay());
-    }
-
-    private void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.GetComponent<PlayerHealth>() != null && !_enemyHealth.IsDowned)
-        {
-            Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
-            other.GetComponent<PlayerHealth>().TakeDamage(directionTowardsTarget, 1);
-        }
     }
 
     private void FixedUpdate()
@@ -68,19 +53,47 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        HandlePlayerCollision(other);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_enableFlocking)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(transform.position, _flockRadius);
+        }
+    }
+
+    private void InitializeComponents()
+    {
+        _playerTransform = GameObject.FindWithTag("Player").transform;
+        _rb = GetComponent<Rigidbody2D>();
+        _sr = GetComponentInChildren<SpriteRenderer>();
+        _enemyHealth = GetComponent<EnemyHealth>();
+        _anim = GetComponentInChildren<Animator>();
+    }
+
+    private void RandomizeSpeed()
+    {
+        _speed = Random.Range(_speed - 1, _speed + 1);
+    }
+
     private void MoveTowardsPlayer()
     {
-        // Calculate direction and move
         Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
         _sr.flipX = directionTowardsTarget.x < 0;
         _rb.MovePosition(_rb.position + directionTowardsTarget * _speed * Time.fixedDeltaTime);
     }
+
     private IEnumerator StartDelay()
     {
         _canMove = false;
         yield return new WaitForSeconds(_startDelay);
         _canMove = true;
-        _anim.Play ("Sway", 0, Random.value);
+        _anim.Play("Sway", 0, Random.value);
     }
 
     public void Knockback(Vector2 force, float duration)
@@ -109,23 +122,16 @@ public class EnemyMovement : MonoBehaviour
 
         foreach (var enemy in nearbyEnemies)
         {
-            // Check if the object is on the "Enemy" layer
             if (enemy.gameObject != gameObject && enemy.gameObject.layer == LayerMask.NameToLayer("Enemy") && enemy.TryGetComponent(out EnemyMovement otherEnemy))
             {
-                // Ignore downed enemies or enemies in knockback state
                 if (otherEnemy._enemyHealth.IsDowned || otherEnemy._isKnockback)
                     continue;
 
                 Vector2 toOther = (Vector2)enemy.transform.position - (Vector2)transform.position;
 
-                // Alignment: Match velocity
                 alignment += otherEnemy._rb.velocity;
-
-                // Cohesion: Move towards the center of the group
                 cohesion += (Vector2)enemy.transform.position;
-
-                // Separation: Avoid crowding
-                separation -= toOther.normalized / Mathf.Max(toOther.magnitude, 0.1f); // Avoid division by zero
+                separation -= toOther.normalized / Mathf.Max(toOther.magnitude, 0.1f);
 
                 count++;
             }
@@ -138,28 +144,21 @@ public class EnemyMovement : MonoBehaviour
             separation /= count;
         }
 
-        // Add a vector toward the player to make the group chase the player
         Vector2 directionTowardsPlayer = (_playerTransform.position - transform.position).normalized;
-
-        // Combine flocking forces with the direction toward the player
         Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
-        // Smooth the force using linear interpolation
-        _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f); // Smoothing factor (Lower for more smooth, slower response)
+        _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f);
 
-        // Move the enemy using the smoothed force
         _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);
-
-        // Flip sprite based on movement direction
         _sr.flipX = _smoothedFlockingForce.x < 0;
     }
 
-    private void OnDrawGizmosSelected()
+    private void HandlePlayerCollision(Collider2D other)
     {
-        if (_enableFlocking)
+        if (other.GetComponent<PlayerHealth>() != null && !_enemyHealth.IsDowned)
         {
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawWireSphere(transform.position, _flockRadius);
+            Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
+            other.GetComponent<PlayerHealth>().TakeDamage(directionTowardsTarget, 1);
         }
     }
 }

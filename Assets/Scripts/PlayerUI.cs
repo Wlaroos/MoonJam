@@ -1,136 +1,214 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Ensure TextMeshPro is included.
+using TMPro;
 
 public class PlayerUI : MonoBehaviour
 {
-    private Image _hpIcon;
-    private Image _heartIcon;
-    private Image _weaponIcon;
-    private Image _bulletIcon;
-    private Image _healthBarStart;
-    private Image _healthBarMid;
-    private Image _healthBarEnd;
+    [Header("UI Elements")]
+    private Image _hpIcon, _heartIcon, _weaponIcon, _bulletIcon;
+    private Image _healthBarStart, _healthBarMid, _healthBarEnd;
+    private Image _ammoBarStart, _ammoBarMid, _ammoBarEnd;
+    private TextMeshProUGUI _weaponText, _ammoText;
 
-    private Image _ammoBarStart;
-    private Image _ammoBarMid;
-    private Image _ammoBarEnd;
+    [Header("Containers")]
+    private Transform _healthBarContainer, _ammoBarContainer;
 
-    private Color _hpColor = Color.red;
-    private Color _emptyColor = Color.gray;
-    private Color _ammoColor = new Color(1f, 0.5f, 0f, 1f);
+    [Header("Colors")]
+    private readonly Color _hpColor = Color.red;
+    private readonly Color _emptyColor = Color.gray;
+    private readonly Color _ammoColor = new Color(1f, 0.5f, 0f, 1f);
 
-    private Transform _healthBarContainer; // Parent container for the health bar
-    private Transform _ammoBarContainer; // Parent container for the ammo bar
-    private TextMeshProUGUI _weaponText; // UI element for total ammo.
-    private TextMeshProUGUI _ammoText; // UI element for total ammo.
-
+    [Header("References")]
     private PlayerHealth _playerHealth;
-    private PlayerWeaponManager _playerWeaponManager; // Reference to PlayerAmmo component
+    private PlayerWeaponManager _playerWeaponManager;
+
     private List<Image> _healthBarMids = new List<Image>();
     private List<Image> _ammoBarMids = new List<Image>();
 
-    [SerializeField] private bool _showWeaponIcon = true; // Toggle to show weapon icon
-    [SerializeField] private bool _showWeaponName = true; // Toggle to show weapon name
-    [SerializeField] private bool _isIconFirst = true; // Toggle to show weapon icon first
+    [Header("Settings")]
+    [SerializeField] private bool _showWeaponIcon = true;
+    [SerializeField] private bool _showWeaponName = true;
+    [SerializeField] private bool _isIconFirst = true;
 
-    void Awake()
+    private void Awake()
     {
-        _hpIcon = FindInChildren(transform, "HP_Icon").GetComponent<Image>();
-        _heartIcon = FindInChildren(transform, "Heart_Icon").GetComponent<Image>();
-        _weaponIcon = FindInChildren(transform, "Weapon_Icon").GetComponent<Image>();
-        //_bulletIcon = FindInChildren(transform, "Bullet_Icon").GetComponent<Image>();
-        _healthBarStart = FindInChildren(transform, "HealthBar_Start").GetComponent<Image>();
-        _healthBarMid = FindInChildren(transform, "HealthBar_Mid").GetComponent<Image>();
-        _healthBarEnd = FindInChildren(transform, "HealthBar_End").GetComponent<Image>();
-
-        _ammoBarStart = FindInChildren(transform, "AmmoBar_Start").GetComponent<Image>();
-        _ammoBarMid = FindInChildren(transform, "AmmoBar_Mid").GetComponent<Image>();
-        _ammoBarEnd = FindInChildren(transform, "AmmoBar_End").GetComponent<Image>();
-
-        _healthBarContainer = FindInChildren(transform, "HP_Bar_Container");
-        _ammoBarContainer = FindInChildren(transform, "Ammo_Bar_Container");
-        _weaponText = FindInChildren(transform, "Weapon_Text").GetComponent<TextMeshProUGUI>();
-        _ammoText = FindInChildren(transform, "Ammo_Text").GetComponent<TextMeshProUGUI>();
-
-        _playerHealth = FindObjectOfType<PlayerHealth>(); // Get reference to PlayerHealth
-        _playerWeaponManager = FindObjectOfType<PlayerWeaponManager>(); // Get reference to PlayerWeaponManager
-
-        if (_hpIcon != null)
-            _hpIcon.color = _hpColor;
-
-        if (_heartIcon != null)
-            _heartIcon.color = _hpColor;
-
-        if (_weaponIcon != null)
-            _weaponIcon.color = _ammoColor;
-
-        if (_bulletIcon != null)    
-            _bulletIcon.color = _ammoColor;
-
-        if (_playerHealth == null)
-            Debug.LogWarning("PlayerHealth component not found in scene. Health bar will not be displayed.");
-
-        if (_healthBarContainer == null)
-            Debug.LogWarning("Bar container not assigned. Health bar will not be displayed.");
-
-        if (_playerWeaponManager == null)
-            Debug.LogWarning("PlayerAmmo component not found in scene. Ammo bar will not be displayed.");
-
-        if (_ammoBarContainer == null)
-            Debug.LogWarning("Ammo bar container not assigned. Ammo bar will not be displayed.");
-
-        if (_isIconFirst)
-        {
-            _weaponIcon.transform.SetAsFirstSibling();
-        }
-        else
-        {
-            _weaponText.transform.SetAsFirstSibling();
-        }
-
-        if(!_showWeaponIcon)
-        {
-            _weaponIcon.gameObject.SetActive(false);
-        }
-        if(!_showWeaponName)
-        {
-            _weaponText.gameObject.SetActive(false);
-        }
+        InitializeUIElements();
+        InitializePlayerReferences();
+        ConfigureWeaponDisplay();
     }
 
-    void OnEnable()
+    private void OnEnable()
+    {
+        SubscribeToEvents();
+    }
+
+    private void OnDisable()
+    {
+        UnsubscribeFromEvents();
+    }
+
+    private void InitializeUIElements()
+    {
+        _hpIcon = FindUIElement<Image>("HP_Icon");
+        _heartIcon = FindUIElement<Image>("Heart_Icon");
+        _weaponIcon = FindUIElement<Image>("Weapon_Icon");
+        _healthBarStart = FindUIElement<Image>("HealthBar_Start");
+        _healthBarMid = FindUIElement<Image>("HealthBar_Mid");
+        _healthBarEnd = FindUIElement<Image>("HealthBar_End");
+        _ammoBarStart = FindUIElement<Image>("AmmoBar_Start");
+        _ammoBarMid = FindUIElement<Image>("AmmoBar_Mid");
+        _ammoBarEnd = FindUIElement<Image>("AmmoBar_End");
+        _healthBarContainer = FindUIElement<Transform>("HP_Bar_Container");
+        _ammoBarContainer = FindUIElement<Transform>("Ammo_Bar_Container");
+        _weaponText = FindUIElement<TextMeshProUGUI>("Weapon_Text");
+        _ammoText = FindUIElement<TextMeshProUGUI>("Ammo_Text");
+
+        SetInitialColors();
+    }
+
+    private void InitializePlayerReferences()
+    {
+        _playerHealth = FindObjectOfType<PlayerHealth>();
+        _playerWeaponManager = FindObjectOfType<PlayerWeaponManager>();
+
+        if (_playerHealth == null)
+            Debug.LogWarning("PlayerHealth component not found. Health bar will not be displayed.");
+
+        if (_playerWeaponManager == null)
+            Debug.LogWarning("PlayerWeaponManager component not found. Ammo bar will not be displayed.");
+    }
+
+    private void SetInitialColors()
+    {
+        SetImageColor(_hpIcon, _hpColor);
+        SetImageColor(_heartIcon, _hpColor);
+        SetImageColor(_weaponIcon, _ammoColor);
+    }
+
+    private void ConfigureWeaponDisplay()
+    {
+        if (_isIconFirst)
+            _weaponIcon.transform.SetAsFirstSibling();
+        else
+            _weaponText.transform.SetAsFirstSibling();
+
+        _weaponIcon.gameObject.SetActive(_showWeaponIcon);
+        _weaponText.gameObject.SetActive(_showWeaponName);
+    }
+
+    private void SubscribeToEvents()
     {
         if (_playerHealth != null)
         {
             InitializeHealthBar();
-            _playerHealth.HealthChangeEvent.AddListener(UpdateHealthBar); // Listen for health changes
+            _playerHealth.HealthChangeEvent.AddListener(UpdateHealthBar);
         }
 
         if (_playerWeaponManager != null)
         {
             InitializeAmmoBar();
-            _playerWeaponManager.AmmoChangeEvent.AddListener(UpdateAmmoBar); // Listen for ammo changes
-            _playerWeaponManager.AmmoChangeEvent.AddListener(UpdateAmmoUI); // Listen for ammo changes.
-            _playerWeaponManager.WeaponChangeEvent.AddListener(OnWeaponChanged); // Listen for weapon changes
+            _playerWeaponManager.AmmoChangeEvent.AddListener(UpdateAmmoBar);
+            _playerWeaponManager.AmmoChangeEvent.AddListener(UpdateAmmoUI);
+            _playerWeaponManager.WeaponChangeEvent.AddListener(OnWeaponChanged);
         }
     }
 
-    void OnDisable()
+    private void UnsubscribeFromEvents()
     {
         if (_playerHealth != null)
-        {
-            _playerHealth.HealthChangeEvent.RemoveListener(UpdateHealthBar); // Stop listening for health changes
-        }
+            _playerHealth.HealthChangeEvent.RemoveListener(UpdateHealthBar);
 
         if (_playerWeaponManager != null)
         {
-            _playerWeaponManager.AmmoChangeEvent.RemoveListener(UpdateAmmoBar); // Stop listening for ammo changes
-            _playerWeaponManager.AmmoChangeEvent.RemoveListener(UpdateAmmoUI); // Stop listening for ammo changes.
-            _playerWeaponManager.WeaponChangeEvent.RemoveListener(OnWeaponChanged); // Stop listening for weapon changes
+            _playerWeaponManager.AmmoChangeEvent.RemoveListener(UpdateAmmoBar);
+            _playerWeaponManager.AmmoChangeEvent.RemoveListener(UpdateAmmoUI);
+            _playerWeaponManager.WeaponChangeEvent.RemoveListener(OnWeaponChanged);
         }
+    }
+
+    private void InitializeHealthBar()
+    {
+        ClearBarSegments(_healthBarMids);
+        _healthBarStart.gameObject.SetActive(true);
+        _healthBarMid.gameObject.SetActive(_playerHealth.MaxHealth > 1);
+        _healthBarEnd.gameObject.SetActive(true);
+
+        if (_playerHealth.MaxHealth > 1)
+        {
+            AddBarSegments(_healthBarMids, _healthBarMid, _healthBarContainer, _playerHealth.MaxHealth - 2);
+            _healthBarEnd.transform.SetAsLastSibling();
+        }
+
+        UpdateHealthBar();
+    }
+
+    private void UpdateHealthBar()
+    {
+        int currentHealth = _playerHealth.CurrentHealth;
+
+        _healthBarStart.color = currentHealth > 0 ? _hpColor : _emptyColor;
+
+        for (int i = 0; i < _healthBarMids.Count; i++)
+        {
+            _healthBarMids[i].color = i < currentHealth - 1 ? _hpColor : _emptyColor;
+        }
+    }
+
+    private void InitializeAmmoBar()
+    {
+        ClearBarSegments(_ammoBarMids);
+
+        if (_playerWeaponManager.MaxMagAmmo > 1)
+        {
+            AddBarSegments(_ammoBarMids, _ammoBarMid, _ammoBarContainer, _playerWeaponManager.MaxMagAmmo - 2);
+            _ammoBarEnd.transform.SetAsLastSibling();
+        }
+        else
+        {
+            _ammoBarMid.color = Color.clear;
+        }
+    }
+
+    public void UpdateAmmoBar(int currentMagAmmo)
+    {
+        _ammoBarStart.color = currentMagAmmo > 0 ? _ammoColor : _emptyColor;
+
+        for (int i = 0; i < _ammoBarMids.Count; i++)
+        {
+            _ammoBarMids[i].color = i < currentMagAmmo - 1 ? _ammoColor : _emptyColor;
+        }
+    }
+
+    private void UpdateAmmoUI(int currentAmmo)
+    {
+        if (_ammoText != null)
+            _ammoText.text = $"x{currentAmmo}";
+
+        SetCanvasGroupAlpha(_ammoBarContainer, currentAmmo > 0 ? 1f : 0f);
+    }
+
+    private void OnWeaponChanged(WeaponBase newWeapon)
+    {
+        InitializeAmmoBar();
+
+        if (_showWeaponIcon && _weaponIcon != null)
+        {
+            _weaponIcon.sprite = newWeapon?.WeaponSprite;
+            _weaponIcon.color = newWeapon != null ? Color.white : Color.clear;
+
+            if (newWeapon?.WeaponSprite != null)
+                AdjustIconAspectRatio(_weaponIcon, newWeapon.WeaponSprite);
+        }
+
+        if (_showWeaponName && _weaponText != null)
+            _weaponText.text = newWeapon?.WeaponName ?? "";
+    }
+
+    private T FindUIElement<T>(string name) where T : Component
+    {
+        Transform element = FindInChildren(transform, name);
+        return element != null ? element.GetComponent<T>() : null;
     }
 
     private Transform FindInChildren(Transform parent, string name)
@@ -147,155 +225,46 @@ public class PlayerUI : MonoBehaviour
         return null;
     }
 
-    private void InitializeHealthBar()
+    private void SetImageColor(Image image, Color color)
     {
-        // Clear existing dynamically created barMids
-        for (int i = 1; i < _healthBarMids.Count; i++) // Start from index 1 to skip the original _barMid
-        {
-            Destroy(_healthBarMids[i].gameObject);
-        }
-
-        _healthBarMids.Clear();
-
-        // Ensure _barStart and _barEnd are active and _barMid is inactive
-        _healthBarStart.gameObject.SetActive(true);
-        _healthBarMid.gameObject.SetActive(_playerHealth.MaxHealth > 1); // Hide _barEnd if MaxHealth is 1
-        _healthBarEnd.gameObject.SetActive(true);
-
-        if (_playerHealth.MaxHealth > 1)
-        {
-            _healthBarMids.Add(_healthBarMid); // Keep the original _barMid as the first element
-
-            // Add barMid segments based on max health
-            int midCount = Mathf.Max(0, _playerHealth.MaxHealth - 2); // Subtract 2 for _barStart and _barEnd
-            for (int i = 0; i < midCount; i++)
-            {
-                Image newBarMid = Instantiate(_healthBarMid, _healthBarContainer);
-                newBarMid.gameObject.SetActive(true);
-                _healthBarMids.Add(newBarMid);
-            }
-
-            // Ensure _barEnd is always at the end of the horizontal group
-            _healthBarEnd.transform.SetAsLastSibling();
-        }
-
-        UpdateHealthBar(); // Initialize the health bar colors
+        if (image != null)
+            image.color = color;
     }
 
-    private void UpdateHealthBar()
+    private void SetCanvasGroupAlpha(Transform container, float alpha)
     {
-        int currentHealth = _playerHealth.CurrentHealth;
-
-        // Update _barStart color
-        _healthBarStart.color = currentHealth > 0 ? _hpColor : _emptyColor;
-
-        // Update _barMid colors
-        for (int i = 0; i < _healthBarMids.Count; i++)
+        if (container != null)
         {
-            _healthBarMids[i].color = i < currentHealth - 1 ? _hpColor : _emptyColor; // Offset by 1 for _barStart
+            CanvasGroup canvasGroup = container.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+                canvasGroup.alpha = alpha;
         }
     }
 
-    private void InitializeAmmoBar()
+    private void AdjustIconAspectRatio(Image icon, Sprite sprite)
     {
-        // Clear existing dynamically created ammoBarMids
-        for (int i = 1; i < _ammoBarMids.Count; i++) // Start from index 1 to skip the original _ammoBarMid
-        {
-            Destroy(_ammoBarMids[i].gameObject);
-        }
-
-        _ammoBarMids.Clear();
-
-        if (_playerWeaponManager.MaxMagAmmo > 1)
-        {
-            _ammoBarMids.Add(_ammoBarMid); // Keep the original _ammoBarMid as the first element
-
-            // Add ammoBarMid segments based on max ammo
-            int midCount = Mathf.Max(0, _playerWeaponManager.MaxMagAmmo - 2); // Subtract 2 for _ammoBarStart and _ammoBarEnd
-            for (int i = 0; i < midCount; i++)
-            {
-                Image newAmmoBarMid = Instantiate(_ammoBarMid, _ammoBarContainer);
-                _ammoBarMids.Add(newAmmoBarMid);
-            }
-
-            // Ensure _ammoBarEnd is always at the end of the horizontal group
-            _ammoBarMid.GetComponent<Image>().color = _ammoColor;
-            _ammoBarEnd.transform.SetAsLastSibling();
-        }
-        else
-        {
-            _ammoBarMid.GetComponent<Image>().color = Color.clear;
-            _ammoBarMid.transform.SetAsLastSibling();
-        }
+        RectTransform rectTransform = icon.GetComponent<RectTransform>();
+        float aspectRatio = (float)sprite.texture.width / sprite.texture.height;
+        rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.y * aspectRatio, rectTransform.sizeDelta.y);
     }
 
-    public void UpdateAmmoBar(int currentMagAmmo)
+    private void ClearBarSegments(List<Image> barSegments)
     {
-        // Update _ammoBarStart color
-        _ammoBarStart.color = currentMagAmmo > 0 ? _ammoColor : _emptyColor;
+        for (int i = 1; i < barSegments.Count; i++)
+            Destroy(barSegments[i].gameObject);
 
-        // Update _ammoBarMid colors
-        for (int i = 0; i < _ammoBarMids.Count; i++)
-        {
-            _ammoBarMids[i].color = i < currentMagAmmo - 1 ? _ammoColor : _emptyColor; // Offset by 1 for _ammoBarStart
-        }
+        barSegments.Clear();
     }
 
-    private void OnWeaponChanged(WeaponBase newWeapon)
+    private void AddBarSegments(List<Image> barSegments, Image template, Transform container, int count)
     {
-        InitializeAmmoBar(); // Reinitialize the ammo bar for the new weapon
+        barSegments.Add(template);
 
-            if (_showWeaponIcon)
-            {
-                // Show the weapon icon
-                _weaponIcon.sprite = newWeapon != null ? newWeapon.WeaponSprite : null;
-                _weaponIcon.color = newWeapon != null ? Color.white : Color.clear; // Show or hide the icon
-
-                // Adjust the width to match the height using the sprite's aspect ratio
-                if (newWeapon != null && newWeapon.WeaponSprite != null)
-                {
-                    float aspectRatio = (float)newWeapon.WeaponSprite.texture.width / newWeapon.WeaponSprite.texture.height;
-                    RectTransform rectTransform = _weaponIcon.GetComponent<RectTransform>();
-                    rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.y * aspectRatio, rectTransform.sizeDelta.y);
-                }
-            }
-            if (_showWeaponName)
-            {
-                if (_weaponText != null)
-                {
-                    _weaponText.text = newWeapon != null ? newWeapon.WeaponName : ""; // Display weapon name
-                }
-            }
-    }
-
-    private void UpdateAmmoUI(int currentAmmo)
-    {
-        if (_playerWeaponManager != null && _playerWeaponManager.MaxMagAmmo > 0)
+        for (int i = 0; i < count; i++)
         {
-            // Update ammo text.
-            if (_ammoText != null)
-            {
-                _ammoText.text = $"x{currentAmmo}";
-            }
-
-            // Update magazine bar visibility.
-            if (_ammoBarContainer != null)
-            {
-                _ammoBarContainer.GetComponent<CanvasGroup>().alpha = 1f;
-            }
-        }
-        else
-        {
-            // Clear ammo text and hide magazine bar if no weapon is equipped.
-            if (_ammoText != null)
-            {
-                _ammoText.text = "";
-            }
-
-            if (_ammoBarContainer != null)
-            {
-                _ammoBarContainer.GetComponent<CanvasGroup>().alpha = 0f;
-            }
+            Image newSegment = Instantiate(template, container);
+            newSegment.gameObject.SetActive(true);
+            barSegments.Add(newSegment);
         }
     }
 }
