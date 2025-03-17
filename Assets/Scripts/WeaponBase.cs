@@ -49,7 +49,7 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] private float _bulletKnockback = 1f;
     [SerializeField] private float _bulletLifetime = 3f;
     private bool _isReloading = false;
-    public bool IsReloading => _isReloading;
+    public bool IsReloading { get => _isReloading; set => _isReloading = value; }
     private float _lastFireTime;
     private Animator _anim;
     private SpriteRenderer _sr;
@@ -172,7 +172,6 @@ public abstract class WeaponBase : MonoBehaviour
 
         _currentMagAmmo += ammoToReload;
         _currentAmmo -= ammoToReload;
-        _isReloading = false;
     }
 
     public void SetCurrentAmmo(int ammo)

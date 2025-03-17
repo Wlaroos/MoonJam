@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6546768116544070547}
   - component: {fileID: 5747776246915244594}
+  - component: {fileID: 996789122396453761}
   m_Layer: 0
   m_Name: GunSprite
   m_TagString: Untagged
@@ -85,6 +86,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &996789122396453761
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2001615825140713023}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ede7dc4a5d880314290a3a6dc50d311a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2976512099493750202
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +132,7 @@ Transform:
   m_GameObject: {fileID: 2976512099493750202}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4, y: 0.10000001, z: 0}
+  m_LocalPosition: {x: 0.742, y: 0.188, z: 0}
   m_LocalScale: {x: 0.050000004, y: 0.050000004, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -167,15 +189,15 @@ MonoBehaviour:
   shootTransform: {fileID: 1869050069726448668}
   _maxAmmo: 250
   _maxMagSize: 25
-  _reloadTime: 2
+  _reloadTime: 1
   _isAutomatic: 1
   _fireRate: 10
-  _bulletPrefab: {fileID: 0}
+  _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
   _bulletSize: 1
   _bulletSpeed: 20
   _bulletDamage: 1
-  _bulletKnockback: 1
+  _bulletKnockback: 3
   _bulletLifetime: 3
 --- !u!58 &3291633421826942908
 CircleCollider2D:

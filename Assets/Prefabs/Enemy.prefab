@@ -259,7 +259,7 @@ MonoBehaviour:
   _downedSprites:
   - {fileID: 21300000, guid: bf6b229ab51a6974bbeaa04b1e5189d5, type: 3}
   _deathBloodParticles: {fileID: 6009536360408007042, guid: ec1467be08318634186665177f7b9481, type: 3}
-  _deathChunckParticles: {fileID: 6009536360408007042, guid: 34ab9b0385847c240903005af8e6d8c2, type: 3}
+  _deathChunkParticles: {fileID: 6009536360408007042, guid: 34ab9b0385847c240903005af8e6d8c2, type: 3}
   _knockbackDuration: 0.25
   OnEnemyDowned:
     m_PersistentCalls:

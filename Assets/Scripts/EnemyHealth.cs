@@ -13,7 +13,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Sprite[] _normalSprites;
     [SerializeField] private Sprite[] _downedSprites;
     [SerializeField] private GameObject _deathBloodParticles;
-    [SerializeField] private GameObject _deathChunckParticles;
+    [SerializeField] private GameObject _deathChunkParticles;
 
     [SerializeField] private float _knockbackDuration = 0.25f;
     
@@ -109,7 +109,7 @@ public class EnemyHealth : MonoBehaviour
     private void Death()
     {
         Instantiate(_deathBloodParticles, transform.position, Quaternion.identity);
-        Instantiate(_deathChunckParticles, transform.position, Quaternion.identity);
+        Instantiate(_deathChunkParticles, transform.position, Quaternion.identity);
 
         _cc.enabled = false;
         DestroyEnemy();
