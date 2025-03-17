@@ -21,8 +21,10 @@ public class EnemyMovement : MonoBehaviour
     private Rigidbody2D _rb;
     private SpriteRenderer _sr;
     private EnemyHealth _enemyHealth;
+    private Animator _anim;
     private bool _canMove = false;
     private bool _isKnockback = false; // Track knockback state
+    private Vector2 _smoothedFlockingForce = Vector2.zero; // Store the smoothed force
 
     private void Awake()
     {
@@ -32,6 +34,7 @@ public class EnemyMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _sr = GetComponentInChildren<SpriteRenderer>();
         _enemyHealth = GetComponent<EnemyHealth>();
+        _anim = GetComponentInChildren<Animator>();
 
         _speed = Random.Range(_speed - 1, _speed + 1);
     }
@@ -77,6 +80,7 @@ public class EnemyMovement : MonoBehaviour
         _canMove = false;
         yield return new WaitForSeconds(_startDelay);
         _canMove = true;
+        _anim.Play ("Sway", 0, Random.value);
     }
 
     public void Knockback(Vector2 force, float duration)
@@ -105,7 +109,8 @@ public class EnemyMovement : MonoBehaviour
 
         foreach (var enemy in nearbyEnemies)
         {
-            if (enemy.gameObject != gameObject && enemy.TryGetComponent(out EnemyMovement otherEnemy))
+            // Check if the object is on the "Enemy" layer
+            if (enemy.gameObject != gameObject && enemy.gameObject.layer == LayerMask.NameToLayer("Enemy") && enemy.TryGetComponent(out EnemyMovement otherEnemy))
             {
                 // Ignore downed enemies or enemies in knockback state
                 if (otherEnemy._enemyHealth.IsDowned || otherEnemy._isKnockback)
@@ -137,13 +142,16 @@ public class EnemyMovement : MonoBehaviour
         Vector2 directionTowardsPlayer = (_playerTransform.position - transform.position).normalized;
 
         // Combine flocking forces with the direction toward the player
-        Vector2 flockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
+        Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
-        // Move the enemy using the combined force
-        _rb.MovePosition(_rb.position + flockingForce * _speed * Time.fixedDeltaTime);
+        // Smooth the force using linear interpolation
+        _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f); // Adjust the smoothing factor (0.1f) as needed
+
+        // Move the enemy using the smoothed force
+        _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);
 
         // Flip sprite based on movement direction
-        _sr.flipX = flockingForce.x < 0;
+        _sr.flipX = _smoothedFlockingForce.x < 0;
     }
 
     private void OnDrawGizmosSelected()

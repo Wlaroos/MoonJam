@@ -14,7 +14,6 @@ public class PlayerWeaponManager : MonoBehaviour
     public UnityEvent<WeaponBase> WeaponChangeEvent = new UnityEvent<WeaponBase>(); // Event for weapon changes
 
     private WeaponBase _currentWeapon;
-    private List<WeaponBase> _weapons = new List<WeaponBase>();
 
     public int MaxMagAmmo => _currentWeapon != null ? _currentWeapon.MaxMagSize : 0;
     public int CurrentAmmo => _currentWeapon != null ? _currentWeapon.CurrentAmmo : 0;
@@ -30,6 +29,8 @@ public class PlayerWeaponManager : MonoBehaviour
     [SerializeField] private Transform _reloadBar; // The Transform of the ReloadBar sprite.
 
     private Coroutine _reloadCoroutine; // To track the reload coroutine.
+
+    private bool _canDropWeapon = true;
 
     private void Awake()
     {
@@ -83,6 +84,8 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void HandleWeaponPickupAndDrop()
     {
+        if (!_canDropWeapon) return; // Prevent weapon dropping if disabled.
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, _pickupRadius);
@@ -233,20 +236,41 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    public void AddWeapon(WeaponBase weapon)
-    {
-        _weapons.Add(weapon);
-        if (_currentWeapon == null)
-        {
-            EquipWeapon(weapon);
-        }
-    }
-
     public void EquipWeapon(WeaponBase weapon)
     {
         _currentWeapon = weapon;
         WeaponChangeEvent.Invoke(_currentWeapon);
         AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+    }
+
+    public void AddAmmo(int percentAmount)
+    {
+        // Convert the percentage amount to a decimal and add it to _globalAmmoPercentage.
+        _globalAmmoPercentage += percentAmount / 100f;
+
+        // Clamp the value to ensure it stays between 0 and 1.
+        _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
+
+        // If there's a current weapon, update its ammo based on the new global ammo percentage.
+        if (_currentWeapon != null)
+        {
+            int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo);
+            _currentWeapon.SetCurrentAmmo(newAmmo);
+            UpdateAmmoUI(); // Update the ammo UI to reflect the new ammo count.
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        }
+    }
+
+    public void DisableWeaponDropTemporarily()
+    {
+        _canDropWeapon = false;
+        StartCoroutine(ReenableWeaponDrop());
+    }
+
+    private IEnumerator ReenableWeaponDrop()
+    {
+        yield return new WaitForSeconds(1f); // Adjust the duration as needed.
+        _canDropWeapon = true;
     }
 
     private void OnDrawGizmosSelected()
