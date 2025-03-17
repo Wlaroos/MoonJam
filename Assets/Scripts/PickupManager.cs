@@ -6,16 +6,10 @@ using TMPro;
 public class PickupManager : MonoBehaviour
 {
     [SerializeField] private float _pickupRadius = 1f; // Radius to check for nearby items.
-    private TextMeshPro _pickupText;
 
     private void Awake()
     {
-        // Find the child object named "PickupText" and get its TMP_Text component.
-        Transform pickupTextTransform = transform.Find("PickupText");
-        if (pickupTextTransform != null)
-        {
-            _pickupText = pickupTextTransform.GetComponent<TextMeshPro>();
-        }
+
     }
 
     private void Update()

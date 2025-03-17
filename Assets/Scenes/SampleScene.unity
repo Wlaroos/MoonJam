@@ -953,7 +953,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: b9f33765664d27244b69424300141596, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2506,7 +2506,6 @@ MonoBehaviour:
   WeaponChangeEvent:
     m_PersistentCalls:
       m_Calls: []
-  _reloadBar: {fileID: 1868891650}
 --- !u!114 &1426348534
 MonoBehaviour:
   m_ObjectHideFlags: 0
