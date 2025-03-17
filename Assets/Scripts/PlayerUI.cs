@@ -155,20 +155,21 @@ public class PlayerUI : MonoBehaviour
         }
     }
 
-    private void InitializeAmmoBar()
-    {
-        ClearBarSegments(_ammoBarMids);
+private void InitializeAmmoBar()
+{
+    ClearBarSegments(_ammoBarMids);
 
-        if (_playerWeaponManager.MaxMagAmmo > 1)
-        {
-            AddBarSegments(_ammoBarMids, _ammoBarMid, _ammoBarContainer, _playerWeaponManager.MaxMagAmmo - 2);
-            _ammoBarEnd.transform.SetAsLastSibling();
-        }
-        else
-        {
-            _ammoBarMid.color = Color.clear;
-        }
+    // Add mid segments if there is more than one bullet in the magazine
+    AddBarSegments(_ammoBarMids, _ammoBarMid, _ammoBarContainer, _playerWeaponManager.MaxMagAmmo - 2);
+    _ammoBarEnd.transform.SetAsLastSibling();
+    _ammoBarMid.gameObject.SetActive(true); // Ensure midBar is active
+
+    if (_playerWeaponManager.MaxMagAmmo == 1)
+    {
+      // Disable the midBar if there is only one bullet in the magazine
+        _ammoBarMid.gameObject.SetActive(false);
     }
+}
 
     public void UpdateAmmoBar(int currentMagAmmo)
     {
@@ -183,9 +184,17 @@ public class PlayerUI : MonoBehaviour
     private void UpdateAmmoUI(int currentAmmo)
     {
         if (_ammoText != null)
-            _ammoText.text = $"x{currentAmmo}";
-
-        SetCanvasGroupAlpha(_ammoBarContainer, currentAmmo > 0 ? 1f : 0f);
+        {
+            // Check if the current weapon is the starter weapon
+            if (_playerWeaponManager != null && _playerWeaponManager.CurrentWeapon == _playerWeaponManager.StarterWeapon)
+            {
+                _ammoText.text = "xINF"; // Display infinite ammo for the starter weapon
+            }
+            else
+            {
+                _ammoText.text = $"x{currentAmmo}"; // Display regular ammo count for other weapons
+            }
+        }
     }
 
     private void OnWeaponChanged(WeaponBase newWeapon)

@@ -8,6 +8,10 @@ public class PlayerWeaponManager : MonoBehaviour
     [Header("Weapon Settings")]
     [SerializeField] private Transform _weaponHolder;
     [SerializeField] private float _pickupRadius = 1f;
+    [SerializeField] private WeaponBase _starterWeapon; // Assign this in the Unity Inspector
+    public WeaponBase StarterWeapon => _starterWeapon;
+
+    private WeaponBase _secondaryWeapon; // Secondary weapon (picked up weapon)
 
     [Header("UI References")]
     private TextMeshPro _pickupText;
@@ -20,26 +24,36 @@ public class PlayerWeaponManager : MonoBehaviour
     public UnityEvent<WeaponBase> WeaponChangeEvent = new UnityEvent<WeaponBase>();
 
     private WeaponBase _currentWeapon;
+    public WeaponBase CurrentWeapon => _currentWeapon;
     private Camera _mainCamera;
     private Coroutine _reloadCoroutine;
     private bool _canDropWeapon = true;
 
     private float _globalAmmoPercentage = 1f;
+
     public float GlobalAmmoPercentage => _globalAmmoPercentage;
 
     public int MaxMagAmmo => _currentWeapon != null ? _currentWeapon.MaxMagSize : 0;
     public int CurrentAmmo => _currentWeapon != null ? _currentWeapon.CurrentAmmo : 0;
 
+    private int _currentWeaponIndex = 0; // 0 for starter weapon, 1 for secondary weapon
+
     private void Awake()
     {
         InitializeReferences();
         InitializeUI();
+
+        if (_starterWeapon != null)
+        {
+            EquipStarterWeapon();
+        }
     }
 
     private void Update()
     {
         UpdatePickupText();
         HandleWeaponPickupAndDrop();
+        HandleWeaponSwitching(); // Add this for mouse wheel switching
         HandleAimingAndShooting();
         HandleReloading();
         UpdateAmmoUI();
@@ -95,8 +109,6 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void HandleWeaponPickupAndDrop()
     {
-        if (!_canDropWeapon) return;
-
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (IsOverPickup())
@@ -104,9 +116,9 @@ public class PlayerWeaponManager : MonoBehaviour
                 PickupWeapon();
                 HideReloadBar();
             }
-            else if (_currentWeapon != null)
+            else if (_secondaryWeapon != null && _canDropWeapon)
             {
-                DropCurrentWeapon();
+                DropSecondaryWeapon();
                 HideReloadBar();
             }
         }
@@ -119,30 +131,43 @@ public class PlayerWeaponManager : MonoBehaviour
         {
             StopReloadCoroutine();
 
-            if (_currentWeapon != null)
+            // If a secondary weapon already exists, drop it
+            if (_secondaryWeapon != null)
             {
-                _currentWeapon.Drop();
+                _secondaryWeapon.Drop();
             }
 
+            // Assign the new weapon to the secondary slot
             weaponToPickup.Pickup(_weaponHolder);
             int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * weaponToPickup.MaxAmmo);
             weaponToPickup.SetCurrentAmmo(newAmmo);
 
-            _currentWeapon = weaponToPickup;
-            WeaponChangeEvent.Invoke(_currentWeapon);
-            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+            _secondaryWeapon = weaponToPickup;
+
+            // If the starter weapon is currently equipped, keep it equipped
+            if (_currentWeapon == _starterWeapon)
+            {
+                _currentWeaponIndex = 0; // Keep the starter weapon equipped
+            }
+            else
+            {
+                _currentWeaponIndex = 1; // Switch to the new secondary weapon
+            }
+
+            UpdateCurrentWeapon();
         }
     }
 
-    private void DropCurrentWeapon()
+    private void DropSecondaryWeapon()
     {
         StopReloadCoroutine();
 
-        _currentWeapon.Drop();
-        _currentWeapon = null;
+        _secondaryWeapon.Drop();
+        _secondaryWeapon = null;
 
-        WeaponChangeEvent.Invoke(null);
-        AmmoChangeEvent.Invoke(0);
+        _currentWeapon = _starterWeapon; // Switch back to the starter weapon
+        WeaponChangeEvent.Invoke(_currentWeapon);
+        AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
     }
 
     private void StopReloadCoroutine()
@@ -155,6 +180,7 @@ public class PlayerWeaponManager : MonoBehaviour
             {
                 _currentWeapon.IsReloading = false;
             }
+            HideReloadBar();
         }
     }
 
@@ -173,6 +199,19 @@ public class PlayerWeaponManager : MonoBehaviour
 
     private void HandleAimingAndShooting()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _currentWeapon = _starterWeapon;
+            WeaponChangeEvent.Invoke(_currentWeapon);
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && _secondaryWeapon != null)
+        {
+            _currentWeapon = _secondaryWeapon;
+            WeaponChangeEvent.Invoke(_currentWeapon);
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        }
+
         if (_currentWeapon == null) return;
 
         Vector3 mousePosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
@@ -183,7 +222,6 @@ public class PlayerWeaponManager : MonoBehaviour
         if (CanShoot())
         {
             StopReloadCoroutine();
-            HideReloadBar();
 
             Vector3 aimDirection = (mousePosition - _currentWeapon.transform.position).normalized;
             _currentWeapon.Shoot(aimDirection);
@@ -203,10 +241,22 @@ public class PlayerWeaponManager : MonoBehaviour
         return Input.GetMouseButtonDown(0);
     }
 
-    private void HandleReloading()
-    {
-        if (_currentWeapon == null || !Input.GetKeyDown(KeyCode.R) || _currentWeapon.IsReloading || _reloadCoroutine != null) return;
+private void HandleReloading()
+{
+    if (_currentWeapon == null || !Input.GetKeyDown(KeyCode.R) || _currentWeapon.IsReloading || _reloadCoroutine != null) return;
 
+    if (_currentWeapon == _starterWeapon)
+    {
+        // Reload starter weapon without affecting global ammo
+        if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
+        {
+            Debug.Log("Reloading starter weapon.");
+            _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo));
+        }
+    }
+    else
+    {
+        // Reload secondary weapon using global ammo
         int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
         int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo));
 
@@ -222,6 +272,7 @@ public class PlayerWeaponManager : MonoBehaviour
             Debug.Log("Not enough ammo to reload.");
         }
     }
+}
 
     private IEnumerator ReloadWithBar(float reloadTime, int ammoToReload)
     {
@@ -269,37 +320,50 @@ public class PlayerWeaponManager : MonoBehaviour
         }
     }
 
-    private void CompleteReload(int ammoToReload)
+private void CompleteReload(int ammoToReload)
+{
+    HideReloadBar();
+
+    if (_currentWeapon != null)
     {
-        HideReloadBar();
-
-        if (_currentWeapon != null)
+        if (_currentWeapon == _starterWeapon)
         {
-            _globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
-            _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
-
-            _currentWeapon.Reload();
-            _currentWeapon.IsReloading = false;
-            UpdateAmmoUI();
-        }
-    }
-
-    private void UpdateAmmoUI()
-    {
-        if (_currentWeapon != null)
-        {
-            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-            _playerUI?.UpdateAmmoBar(_currentWeapon.CurrentMagAmmo);
+            // Reload starter weapon without affecting global ammo
+            _currentWeapon.CurrentMagAmmo += ammoToReload;
+            _currentWeapon.CurrentMagAmmo = Mathf.Clamp(_currentWeapon.CurrentMagAmmo, 0, _currentWeapon.MaxMagSize);
         }
         else
         {
-            AmmoChangeEvent.Invoke(0);
+            // Reload secondary weapon and update global ammo
+            _globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
+            _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
+            _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f;
+
+            _currentWeapon.Reload();
         }
+
+        _currentWeapon.IsReloading = false;
+        UpdateAmmoUI();
     }
+}
+
+private void UpdateAmmoUI()
+{
+    if (_currentWeapon != null)
+    {
+        AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        _playerUI?.UpdateAmmoBar(_currentWeapon.CurrentMagAmmo);
+    }
+    else
+    {
+        AmmoChangeEvent.Invoke(0);
+    }
+}
 
     public void AddAmmo(int percentAmount)
     {
         _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage + percentAmount / 100f);
+        _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f;
 
         if (_currentWeapon != null)
         {
@@ -321,9 +385,86 @@ public class PlayerWeaponManager : MonoBehaviour
         _canDropWeapon = true;
     }
 
+private void EquipStarterWeapon()
+{
+    _starterWeapon.Pickup(_weaponHolder);
+
+    // Set infinite ammo for the starter weapon
+    _starterWeapon.SetCurrentAmmo(int.MaxValue); // Infinite ammo
+    _starterWeapon.CurrentMagAmmo = _starterWeapon.MaxMagSize; // Limited mag size
+
+    _currentWeapon = _starterWeapon; // Default to starter weapon
+    _currentWeaponIndex = 0; // Ensure starter weapon is selected
+    UpdateWeaponVisibility();
+    WeaponChangeEvent.Invoke(_starterWeapon);
+    AmmoChangeEvent.Invoke(_starterWeapon.CurrentMagAmmo); // Use mag ammo for UI
+}
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, _pickupRadius);
+    }
+
+    // Add a new method to handle weapon switching with the mouse wheel
+    private void HandleWeaponSwitching()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0f) // Scroll up
+        {
+            SwitchToNextWeapon();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0f) // Scroll down
+        {
+            SwitchToPreviousWeapon();
+        }
+    }
+
+    private void SwitchToNextWeapon()
+    {
+        if (_secondaryWeapon == null) return; // No secondary weapon to switch to
+
+        _currentWeaponIndex = (_currentWeaponIndex + 1) % 2; // Toggle between 0 and 1
+        UpdateCurrentWeapon();
+    }
+
+    private void SwitchToPreviousWeapon()
+    {
+        if (_secondaryWeapon == null) return; // No secondary weapon to switch to
+
+        _currentWeaponIndex = (_currentWeaponIndex - 1 + 2) % 2; // Toggle between 0 and 1
+        UpdateCurrentWeapon();
+    }
+
+    private void UpdateCurrentWeapon()
+    {
+        if (_currentWeaponIndex == 0)
+        {
+            _currentWeapon = _starterWeapon;
+        }
+        else if (_currentWeaponIndex == 1)
+        {
+            _currentWeapon = _secondaryWeapon;
+        }
+
+        // Update weapon visibility
+        UpdateWeaponVisibility();
+
+        // Trigger events for UI updates
+        WeaponChangeEvent.Invoke(_currentWeapon);
+        AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        StopReloadCoroutine();
+    }
+
+    private void UpdateWeaponVisibility()
+    {
+        if (_starterWeapon != null)
+        {
+            _starterWeapon.gameObject.SetActive(_currentWeaponIndex == 0);
+        }
+
+        if (_secondaryWeapon != null)
+        {
+            _secondaryWeapon.gameObject.SetActive(_currentWeaponIndex == 1);
+        }
     }
 }

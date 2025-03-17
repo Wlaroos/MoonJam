@@ -82,38 +82,76 @@ public abstract class WeaponBase : MonoBehaviour
     {
         Owner = newOwner;
         IsEquipped = true;
-        transform.SetParent(newOwner);
-        transform.position = newOwner.position;
 
+        // Parent the weapon to the new owner (weapon holder)
+        transform.SetParent(newOwner);
+
+        // Reset the weapon's local position and rotation relative to the weapon holder
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        // Disable physics and collision
         if (_rb != null) _rb.isKinematic = true;
         if (_col != null) _col.enabled = false;
 
-        transform.Find("GunSprite").localRotation = Quaternion.Euler(0, 0, 0);
+        // Ensure the sprite child (GunSprite) has no local rotation
+        Transform gunSprite = transform.Find("GunSprite");
+        if (gunSprite != null)
+        {
+            gunSprite.localRotation = Quaternion.identity;
+        }
     }
 
     public virtual void Drop()
     {
         IsEquipped = false;
         Owner = null;
+
+        // Unparent the weapon from the weapon holder
         transform.SetParent(null);
 
-        if (_rb != null) _rb.isKinematic = false;
-        if (_col != null) _col.enabled = true;
+        // Re-enable physics and collision
+        if (_rb != null)
+        {
+            _rb.isKinematic = false; // Allow the weapon to interact with physics
+        }
+        if (_col != null)
+        {
+            _col.enabled = true; // Enable the collider
+        }
 
+        // Reset the weapon's rotation for a natural drop
         float randomAngle = UnityEngine.Random.Range(0f, 360f);
-        transform.Find("GunSprite").localRotation = Quaternion.Euler(0, 0, randomAngle);
+        transform.rotation = Quaternion.Euler(0, 0, randomAngle);
+
+        // Ensure the sprite child (GunSprite) rotates naturally with the weapon
+        Transform gunSprite = transform.Find("GunSprite");
+        if (gunSprite != null)
+        {
+            gunSprite.localRotation = Quaternion.identity; // Keep the sprite's local rotation consistent
+        }
+
+        // Ensure the weapon is visible and active
+        gameObject.SetActive(true);
     }
 
-    public virtual void Aim(Vector3 targetPosition)
+public virtual void Aim(Vector3 targetPosition)
+{
+    Vector3 aimDirection = (targetPosition - transform.position).normalized;
+    float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
+
+    // Rotate the weapon holder to aim at the target
+    transform.rotation = Quaternion.Euler(0, 0, angle);
+
+    // Flip the sprite vertically if aiming backward
+    Transform gunSprite = transform.Find("GunSprite");
+    if (gunSprite != null)
     {
-        Vector3 aimDirection = (targetPosition - transform.position).normalized;
-        float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-
-        Vector3 localScale = Vector3.one;
+        Vector3 localScale = gunSprite.localScale;
         localScale.y = (angle > 90 || angle < -90) ? -1f : 1f;
-        transform.localScale = localScale;
+        gunSprite.localScale = localScale;
     }
+}
 
     public virtual void Shoot(Vector3 aimDirection)
     {
