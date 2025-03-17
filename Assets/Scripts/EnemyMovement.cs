@@ -145,7 +145,7 @@ public class EnemyMovement : MonoBehaviour
         Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
         // Smooth the force using linear interpolation
-        _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f); // Adjust the smoothing factor (0.1f) as needed
+        _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f); // Smoothing factor (Lower for more smooth, slower response)
 
         // Move the enemy using the smoothed force
         _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);

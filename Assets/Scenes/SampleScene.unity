@@ -817,6 +817,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1222,6 +1230,14 @@ PrefabInstance:
     - target: {fileID: 4197633544828147481, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
       propertyPath: m_Name
       value: Enemy (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2164,6 +2180,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2286,6 +2310,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2342,6 +2374,14 @@ PrefabInstance:
     - target: {fileID: 4197633544828147481, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
       propertyPath: m_Name
       value: Enemy
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3391,6 +3431,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3792,6 +3840,14 @@ PrefabInstance:
     - target: {fileID: 4197633544828147481, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
       propertyPath: m_Name
       value: Enemy (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _cohesionWeight
+      value: 0.33
+      objectReference: {fileID: 0}
+    - target: {fileID: 6233139975123407483, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+      propertyPath: _alignmentWeight
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
