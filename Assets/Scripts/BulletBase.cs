@@ -11,8 +11,9 @@ public class BulletBase : MonoBehaviour
     [SerializeField] private float _knockback = 3;
     [SerializeField] private float _size = 1;
     [SerializeField] private float _lifetime = 3;
-    [SerializeField] private GameObject _psDirectional;
-    [SerializeField] private GameObject _psCircle;
+    [SerializeField] private GameObject _psBloodDirectional;
+    [SerializeField] private GameObject _psBloodCircle;
+    [SerializeField] private GameObject _psBrainDirectional;
     private Rigidbody2D _rb;
 
     private bool _once = false;
@@ -57,8 +58,13 @@ public class BulletBase : MonoBehaviour
             Vector3 hitPoint = collision.ClosestPoint(transform.position);
             Vector3 bulletDirection = _rb.velocity.normalized;
             float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
-            GameObject particle = Instantiate(_psDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
-            GameObject particle2 = Instantiate(_psCircle, collision.transform.position, Quaternion.identity);
+            GameObject particle = Instantiate(_psBloodDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            GameObject particle2 = Instantiate(_psBloodCircle, collision.transform.position, Quaternion.identity);
+
+            if (Random.value < 0.2f)
+            {
+                Instantiate(_psBrainDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            }
 
             Destroy();
         }

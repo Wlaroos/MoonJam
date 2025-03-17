@@ -12,7 +12,8 @@ public class EnemyHealth : MonoBehaviour
     [Header("References")]
     [SerializeField] private Sprite[] _normalSprites;
     [SerializeField] private Sprite[] _downedSprites;
-    [SerializeField] private GameObject _deathParticles;
+    [SerializeField] private GameObject _deathBloodParticles;
+    [SerializeField] private GameObject _deathChunckParticles;
 
     [SerializeField] private float _knockbackDuration = 0.25f;
     
@@ -107,9 +108,12 @@ public class EnemyHealth : MonoBehaviour
 
     private void Death()
     {
-        //Instantiate(deathParticles, transform.position, Quaternion.identity);
+        Instantiate(_deathBloodParticles, transform.position, Quaternion.identity);
+        Instantiate(_deathChunckParticles, transform.position, Quaternion.identity);
+
         _cc.enabled = false;
-        StartCoroutine(StaticCoroutines.Fade(0.5f, _sr, DestroyEnemy));
+        DestroyEnemy();
+        //StartCoroutine(StaticCoroutines.Fade(0.5f, _sr, DestroyEnemy));
         //SFXManager.Instance.PlayEnemyDownSFX();
     }
 
