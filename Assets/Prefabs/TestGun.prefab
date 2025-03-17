@@ -165,11 +165,11 @@ MonoBehaviour:
   weaponName: TestGun
   _weaponSprite: {fileID: 0}
   shootTransform: {fileID: 1869050069726448668}
-  _maxAmmo: 100
-  _maxMagSize: 10
+  _maxAmmo: 250
+  _maxMagSize: 25
   _reloadTime: 2
-  _isAutomatic: 0
-  _fireRate: 4
+  _isAutomatic: 1
+  _fireRate: 10
   _bulletPrefab: {fileID: 0}
   _bulletParticlePrefab: {fileID: 0}
   _bulletSize: 1

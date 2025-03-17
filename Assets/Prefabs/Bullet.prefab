@@ -131,7 +131,8 @@ MonoBehaviour:
   _knockback: 3
   _size: 0.5
   _lifetime: 3
-  ps: {fileID: 0}
+  _psDirectional: {fileID: 1703956455698199224, guid: 250ba3dba5a00ca409de1f3955c50714, type: 3}
+  _psCircle: {fileID: 6009536360408007042, guid: d8fa2384e2f3e504ea180456016391a2, type: 3}
 --- !u!61 &6025022254120873584
 BoxCollider2D:
   m_ObjectHideFlags: 0

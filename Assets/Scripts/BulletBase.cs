@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class BulletBase : MonoBehaviour
@@ -10,7 +11,8 @@ public class BulletBase : MonoBehaviour
     [SerializeField] private float _knockback = 3;
     [SerializeField] private float _size = 1;
     [SerializeField] private float _lifetime = 3;
-    [SerializeField] private GameObject _ps;
+    [SerializeField] private GameObject _psDirectional;
+    [SerializeField] private GameObject _psCircle;
     private Rigidbody2D _rb;
 
     private bool _once = false;
@@ -50,6 +52,14 @@ public class BulletBase : MonoBehaviour
         else if (collision.GetComponent<EnemyHealth>() != null)
         {
             collision.GetComponent<EnemyHealth>().TakeDamage(_rb.velocity.normalized * _knockback, _damage);
+
+            // Instantiate particle system at the hit point
+            Vector3 hitPoint = collision.ClosestPoint(transform.position);
+            Vector3 bulletDirection = _rb.velocity.normalized;
+            float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+            GameObject particle = Instantiate(_psDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            GameObject particle2 = Instantiate(_psCircle, collision.transform.position, Quaternion.identity);
+
             Destroy();
         }
     }
@@ -64,10 +74,6 @@ public class BulletBase : MonoBehaviour
     {
         if (!_once)
         {
-            if(_ps != null)
-            {
-                Instantiate(_ps,transform.position,Quaternion.identity);
-            }
 
             //ADD SFX
             _once = true;
