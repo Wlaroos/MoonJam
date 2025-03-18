@@ -535,7 +535,7 @@ GameObject:
   - component: {fileID: 487448872}
   - component: {fileID: 487448874}
   - component: {fileID: 487448873}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (1)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -586,7 +586,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1438,7 +1438,7 @@ GameObject:
   - component: {fileID: 934329994}
   - component: {fileID: 934329993}
   - component: {fileID: 934329992}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (1)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -1474,7 +1474,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1568,7 +1568,7 @@ GameObject:
   - component: {fileID: 941072810}
   - component: {fileID: 941072812}
   - component: {fileID: 941072811}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (2)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -1619,7 +1619,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1773,7 +1773,7 @@ GameObject:
   - component: {fileID: 982906301}
   - component: {fileID: 982906300}
   - component: {fileID: 982906299}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (2)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -1809,7 +1809,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -2151,7 +2151,7 @@ GameObject:
   - component: {fileID: 1125681438}
   - component: {fileID: 1125681437}
   - component: {fileID: 1125681436}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (3)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -2187,7 +2187,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -2356,7 +2356,7 @@ GameObject:
   - component: {fileID: 1256289548}
   - component: {fileID: 1256289550}
   - component: {fileID: 1256289549}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (3)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -2407,7 +2407,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -3332,7 +3332,7 @@ GameObject:
   - component: {fileID: 1606961566}
   - component: {fileID: 1606961568}
   - component: {fileID: 1606961567}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (3)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -3383,7 +3383,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -4036,7 +4036,7 @@ GameObject:
   - component: {fileID: 1826338220}
   - component: {fileID: 1826338222}
   - component: {fileID: 1826338221}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Square (2)
   m_TagString: BulletBounds
   m_Icon: {fileID: 0}
@@ -4087,7 +4087,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}

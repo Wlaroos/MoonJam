@@ -44,7 +44,10 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         InitializeReferences();
         InitializeUI();
+    }
 
+    void Start()
+    {
         if (_starterWeapon != null)
         {
             EquipStarterWeapon();
@@ -425,9 +428,7 @@ private void EquipStarterWeapon()
 
     _currentWeapon = _starterWeapon; // Default to starter weapon
     _currentWeaponIndex = 0; // Ensure starter weapon is selected
-    UpdateWeaponVisibility();
-    WeaponChangeEvent.Invoke(_starterWeapon);
-    AmmoChangeEvent.Invoke(_starterWeapon.CurrentMagAmmo); // Use mag ammo for UI
+    UpdateCurrentWeapon();
 }
 
     private void OnDrawGizmosSelected()
