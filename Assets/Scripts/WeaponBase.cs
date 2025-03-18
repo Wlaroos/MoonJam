@@ -148,7 +148,7 @@ public virtual void Aim(Vector3 targetPosition)
     if (gunSprite != null)
     {
         Vector3 localScale = gunSprite.localScale;
-        localScale.y = (angle > 90 || angle < -90) ? -1f : 1f;
+        localScale.y = Mathf.Abs(localScale.y) * ((angle > 90 || angle < -90) ? -1f : 1f);
         gunSprite.localScale = localScale;
     }
 }
