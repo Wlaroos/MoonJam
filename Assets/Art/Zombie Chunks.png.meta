@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 347f2747491ffe44784f8ea16e28a678
+guid: 75dc4ba3cb560de4cac5861861d5c24a
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Zombie Chunks_0
+      name: Zombie Chunks-sheet_0
       rect:
         serializedVersion: 2
-        x: 19
-        y: 32
-        width: 7
-        height: 4
+        x: 0
+        y: 18
+        width: 12
+        height: 11
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ef35210033a0f24789bd20068a57f5e
-      internalID: -816275858
+      spriteID: a3aa2973ae9d7c6409133f86882426ab
+      internalID: -249735168
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_1
+      name: Zombie Chunks-sheet_1
       rect:
         serializedVersion: 2
-        x: 8
-        y: 24
-        width: 5
-        height: 4
+        x: 14
+        y: 23
+        width: 9
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,62 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a1c05d500ea2d1d47b3aa9dde5cf2ad9
-      internalID: -1215470009
+      spriteID: 2e460ee19f49d454b9d2b542cc6f6abd
+      internalID: -573664960
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_2
+      name: Zombie Chunks-sheet_2
       rect:
         serializedVersion: 2
-        x: 26
+        x: 25
+        y: 22
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3311cb37529268a43b048836048554d9
+      internalID: 799577637
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Zombie Chunks-sheet_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 10
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c778f23a33d21349b648340674fa80a
+      internalID: -2137996686
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Zombie Chunks-sheet_4
+      rect:
+        serializedVersion: 2
+        x: 14
         y: 15
-        width: 4
-        height: 3
+        width: 7
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,19 +208,40 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95b02eb7531ad374eb874a7fe6567435
-      internalID: 953070616
+      spriteID: 2820a6d993caa844dac4a827016e7937
+      internalID: 340024690
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_3
+      name: Zombie Chunks-sheet_5
       rect:
         serializedVersion: 2
-        x: 29
-        y: 24
-        width: 4
+        x: 23
+        y: 14
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 15fe434f00d6f8b45b3eef218164d9f7
+      internalID: 1409427780
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Zombie Chunks-sheet_6
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 15
+        width: 5
         height: 5
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -187,20 +250,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af94a5b026327234fadca236abf5db30
-      internalID: -80969207
+      spriteID: a96cfb1a4dbee4640a09668128d53c1a
+      internalID: -1268705132
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_4
+      name: Zombie Chunks-sheet_7
       rect:
         serializedVersion: 2
-        x: 7
-        y: 13
-        width: 4
-        height: 4
+        x: 0
+        y: 3
+        width: 5
+        height: 5
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,20 +271,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 07ad13e403298b844b9343aa40f09921
-      internalID: 1663205792
+      spriteID: ff698b5109b93ee49829b197cc0604a4
+      internalID: 306582778
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_5
+      name: Zombie Chunks-sheet_8
       rect:
         serializedVersion: 2
-        x: 9
-        y: 6
-        width: 4
-        height: 3
+        x: 8
+        y: 7
+        width: 6
+        height: 6
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,104 +292,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f2f12b2d5b9e66e49ad967f35888c25c
-      internalID: 1601692046
+      spriteID: e5a322c839ff43e4482dc6bb92ec663f
+      internalID: 196063992
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_6
-      rect:
-        serializedVersion: 2
-        x: 21
-        y: 8
-        width: 4
-        height: 4
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7db4b5e8d555edf4b926c0332bb45b80
-      internalID: 43503827
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie Chunks_7
-      rect:
-        serializedVersion: 2
-        x: 22
-        y: 27
-        width: 3
-        height: 3
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4652e520b7c756642929f72370c378de
-      internalID: -900561798
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie Chunks_8
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 29
-        width: 3
-        height: 3
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a2f0bf95a5e77554387613ac77c61ca1
-      internalID: -1754229976
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie Chunks_9
-      rect:
-        serializedVersion: 2
-        x: 13
-        y: 19
-        width: 9
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: a5c730c1545732741ba65dcd8dba563a
-      internalID: -969641782
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Zombie Chunks_10
+      name: Zombie Chunks-sheet_9
       rect:
         serializedVersion: 2
         x: 16
-        y: 13
-        width: 3
-        height: 3
+        y: 7
+        width: 6
+        height: 5
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -334,20 +313,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0f0718e8b6a01b2469e214b97d6265e2
-      internalID: -496133214
+      spriteID: f1c3783677693f84d81e94086a364fc7
+      internalID: -869762333
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Zombie Chunks_11
+      name: Zombie Chunks-sheet_10
       rect:
         serializedVersion: 2
-        x: 17
-        y: 3
-        width: 4
-        height: 4
+        x: 24
+        y: 7
+        width: 6
+        height: 5
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -355,8 +334,29 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5ed74371ab1bbd429ff3ffc6ad2e901
-      internalID: 273735682
+      spriteID: ece33882ba79da74da362440dc703c42
+      internalID: 1196327369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Zombie Chunks-sheet_11
+      rect:
+        serializedVersion: 2
+        x: 7
+        y: 0
+        width: 5
+        height: 5
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 476bfd998cf936a428bb65e5da29767d
+      internalID: -1498283765
       vertices: []
       indices: 
       edges: []
@@ -372,18 +372,18 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Zombie Chunks_0: -816275858
-      Zombie Chunks_1: -1215470009
-      Zombie Chunks_10: -496133214
-      Zombie Chunks_11: 273735682
-      Zombie Chunks_2: 953070616
-      Zombie Chunks_3: -80969207
-      Zombie Chunks_4: 1663205792
-      Zombie Chunks_5: 1601692046
-      Zombie Chunks_6: 43503827
-      Zombie Chunks_7: -900561798
-      Zombie Chunks_8: -1754229976
-      Zombie Chunks_9: -969641782
+      Zombie Chunks-sheet_0: -249735168
+      Zombie Chunks-sheet_1: -573664960
+      Zombie Chunks-sheet_10: 1196327369
+      Zombie Chunks-sheet_11: -1498283765
+      Zombie Chunks-sheet_2: 799577637
+      Zombie Chunks-sheet_3: -2137996686
+      Zombie Chunks-sheet_4: 340024690
+      Zombie Chunks-sheet_5: 1409427780
+      Zombie Chunks-sheet_6: -1268705132
+      Zombie Chunks-sheet_7: 306582778
+      Zombie Chunks-sheet_8: 196063992
+      Zombie Chunks-sheet_9: -869762333
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

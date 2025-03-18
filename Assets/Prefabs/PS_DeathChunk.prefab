@@ -287,8 +287,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.5
-      minScalar: 0.4
+      scalar: 0.66
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1545,13 +1545,13 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: -816275858, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: -1215470009, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: -80969207, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: 1663205792, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: -900561798, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: -1754229976, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
-    - sprite: {fileID: -969641782, guid: 347f2747491ffe44784f8ea16e28a678, type: 3}
+    - sprite: {fileID: -249735168, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: -573664960, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: 799577637, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: 340024690, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: 306582778, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: 196063992, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
+    - sprite: {fileID: -1498283765, guid: 75dc4ba3cb560de4cac5861861d5c24a, type: 3}
     flipU: 0
     flipV: 0
   VelocityModule:
