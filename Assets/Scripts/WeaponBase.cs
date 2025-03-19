@@ -67,7 +67,7 @@ public abstract class WeaponBase : MonoBehaviour
         _sr = GetComponentInChildren<SpriteRenderer>();
         _weaponSprite = _sr.sprite;
 
-        if (!_rb) Debug.LogWarning($"Rigidbody2D component is missing on {gameObject.name}");
+        //if (!_rb) Debug.LogWarning($"Rigidbody2D component is missing on {gameObject.name}");
         if (!_col) Debug.LogWarning($"Collider2D component is missing on {gameObject.name}");
         if (!_anim) Debug.LogWarning($"Animator component is missing in children of {gameObject.name}");
         if (!_sr) Debug.LogWarning($"SpriteRenderer component is missing in children of {gameObject.name}");

@@ -2587,7 +2587,7 @@ MonoBehaviour:
   BigZombieCost: 10
   SmallZombiePrefab: {fileID: 3125447741530896508, guid: 09e1e6f88322c974ea3867730ec6049a, type: 3}
   SmallZombieCost: 20
-  MaxPoints: 100
+  MaxPoints: 150
   SpawnDelay: 1
 --- !u!4 &1683697483
 Transform:
@@ -2598,7 +2598,7 @@ Transform:
   m_GameObject: {fileID: 1683697481}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.758556, y: 0.4944854, z: 0.02759436}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3252,8 +3252,9 @@ SceneRoots:
   - {fileID: 1426348531}
   - {fileID: 714729077}
   - {fileID: 1082989521}
-  - {fileID: 2670733952571000130}
+  - {fileID: 620478503}
   - {fileID: 254131612}
+  - {fileID: 2670733952571000130}
   - {fileID: 1651510471}
   - {fileID: 738236248}
   - {fileID: 4327911342440558553}
@@ -3262,4 +3263,3 @@ SceneRoots:
   - {fileID: 794732791}
   - {fileID: 121485121}
   - {fileID: 1609390437}
-  - {fileID: 620478503}

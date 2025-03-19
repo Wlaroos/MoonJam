@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -28,6 +29,8 @@ public class EnemyMovement : MonoBehaviour
     private bool _isKnockback = false; // Track knockback state
     private Vector2 _smoothedFlockingForce = Vector2.zero; // Store the smoothed force
 
+    public static List<EnemyMovement> AllEnemies = new List<EnemyMovement>();
+
     private void Awake()
     {
         InitializeComponents();
@@ -37,6 +40,16 @@ public class EnemyMovement : MonoBehaviour
     private void Start()
     {
         StartCoroutine(StartDelay());
+    }
+
+    private void OnEnable()
+    {
+        AllEnemies.Add(this);
+    }
+
+    private void OnDisable()
+    {
+        AllEnemies.Remove(this);
     }
 
     private void FixedUpdate()
@@ -56,9 +69,12 @@ public class EnemyMovement : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        HandlePlayerCollision(other);
+        if (other.CompareTag("Player"))
+        {
+            HandlePlayerCollision(other);
+        }
     }
 
     private void OnDrawGizmosSelected()
@@ -114,18 +130,22 @@ public class EnemyMovement : MonoBehaviour
 
         _isKnockback = false;
     }
-    private bool Please = false;
     private void ApplyFlockingBehavior()
     {
         Vector2 alignment = Vector2.zero;
         Vector2 cohesion = Vector2.zero;
         Vector2 separation = Vector2.zero;
 
-        Collider2D[] nearbyEnemies = Physics2D.OverlapCircleAll(transform.position, _flockRadius);
-        int count = 0;
+        // Limit the number of objects checked
+        const int maxNearbyEnemies = 3; // Adjust this value as needed
+        Collider2D[] nearbyEnemies = new Collider2D[maxNearbyEnemies];
+        int count = Physics2D.OverlapCircleNonAlloc(transform.position, _flockRadius, nearbyEnemies);
 
-        foreach (var enemy in nearbyEnemies)
+        int validCount = 0;
+
+        for (int i = 0; i < count; i++)
         {
+            var enemy = nearbyEnemies[i];
             if (enemy.gameObject != gameObject && enemy.gameObject.layer == LayerMask.NameToLayer("Enemy") && enemy.TryGetComponent(out EnemyMovement otherEnemy))
             {
                 if (otherEnemy._enemyHealth.IsDowned || otherEnemy._isKnockback)
@@ -137,19 +157,19 @@ public class EnemyMovement : MonoBehaviour
                 cohesion += (Vector2)enemy.transform.position;
                 separation -= toOther.normalized / Mathf.Max(toOther.magnitude, 0.1f);
 
-                count++;
+                validCount++;
             }
         }
 
-        if (count > 0)
+        if (validCount > 0)
         {
-            alignment /= count;
-            cohesion = (cohesion / count - (Vector2)transform.position).normalized;
-            separation /= count;
+            alignment /= validCount;
+            cohesion = (cohesion / validCount - (Vector2)transform.position).normalized;
+            separation /= validCount;
         }
 
         Vector2 directionTowardsPlayer = (_playerTransform.position - transform.position).normalized;
-       
+
         Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
         // Check for walls in the movement direction
@@ -159,7 +179,7 @@ public class EnemyMovement : MonoBehaviour
             // Rotate the direction by 90 degrees
             rawFlockingForce = new Vector2(-rawFlockingForce.y, rawFlockingForce.x).normalized;
         }
- 
+
         _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f);
 
         _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);
