@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
@@ -84,6 +85,7 @@ public class EnemyMovement : MonoBehaviour
     private void MoveTowardsPlayer()
     {
         Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
+        
         _sr.flipX = directionTowardsTarget.x < 0;
         _rb.MovePosition(_rb.position + directionTowardsTarget * _speed * Time.fixedDeltaTime);
     }
@@ -110,7 +112,7 @@ public class EnemyMovement : MonoBehaviour
 
         _isKnockback = false;
     }
-
+    private bool Please = false;
     private void ApplyFlockingBehavior()
     {
         Vector2 alignment = Vector2.zero;
@@ -145,6 +147,7 @@ public class EnemyMovement : MonoBehaviour
         }
 
         Vector2 directionTowardsPlayer = (_playerTransform.position - transform.position).normalized;
+       
         Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
         _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f);
