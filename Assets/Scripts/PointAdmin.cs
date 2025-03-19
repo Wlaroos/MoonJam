@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,7 @@ public class PointAdmin : MonoBehaviour
     Enemy BigZombie = new Enemy();
     Enemy SmallZombie = new Enemy();
     List<Enemy> EnemyList = new List<Enemy>();
+    List<GameObject> LiveEnemyList = new List<GameObject>();
 
     private void Awake()
     {
@@ -51,38 +53,41 @@ public class PointAdmin : MonoBehaviour
 
     private float lastSpawnTime = 0f;
 
-    Enemy Spawnee;
     private void Update()
     {
         while(MaxPoints > 0)
         {
-            if ((Time.time < lastSpawnTime + SpawnDelay))
+            if (Time.time < lastSpawnTime + SpawnDelay)
             {
                 return;
             }
             else
             {
-                float spawnY = Random.Range
+                float spawnY = UnityEngine.Random.Range
                     (Camera.main.ScreenToWorldPoint(new Vector2(0, 0)).y, Camera.main.ScreenToWorldPoint(new Vector2(0, Screen.height)).y);
-                float spawnX = Random.Range
+                float spawnX = UnityEngine.Random.Range
                     (Camera.main.ScreenToWorldPoint(new Vector2(0, 0)).x, Camera.main.ScreenToWorldPoint(new Vector2(Screen.width, 0)).x);
                 Vector2 spawnPosition = new Vector2(spawnX, spawnY);
-                Spawnee = EnemyList[rand.Next(EnemyList.Count)];
+                Enemy Spawnee = EnemyList[rand.Next(EnemyList.Count)];
                 if (MaxPoints >= Spawnee.cost)
                 {
                     GameObject holder = Instantiate(Spawnee.prefab, spawnPosition, Quaternion.identity);
-                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(RestorePoints);
+
+                    LiveEnemyList.Add(holder);
+
+                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RestorePoints(holder, Spawnee.cost));
                     lastSpawnTime = Time.time;
                     MaxPoints -= Spawnee.cost;
-                    Debug.Log("Detracted " + Spawnee.cost + " Total: " + MaxPoints);
+                   //Debug.Log("Detracted " + Spawnee.cost + " Total: " + MaxPoints);
                 }
                 else { break; }
             }
         }
     }
-    private void RestorePoints()
+    private void RestorePoints(GameObject holder, float points)
     {
-        MaxPoints += Spawnee.cost;
-        Debug.Log("Added " + Spawnee.cost + " Total: " + MaxPoints);
+        holder.GetComponent<EnemyHealth>().OnEnemyDowned.RemoveAllListeners();
+        MaxPoints += points;
+        //Debug.Log("Added " + Spawnee.cost + " Total: " + MaxPoints);
     }
 }

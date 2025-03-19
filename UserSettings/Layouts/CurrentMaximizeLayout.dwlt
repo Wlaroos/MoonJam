@@ -24,7 +24,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 9740
+  controlID: 12246
 --- !u!114 &2
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 100}
   m_MaxSize: {x: 16192, y: 16192}
   vertical: 1
-  controlID: 9741
+  controlID: 12209
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -174,7 +174,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 9742
+  controlID: 12156
 --- !u!114 &5
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -238,9 +238,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 747cffff
+      m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 767cffffa47effff5a7fffff5a81ffff8684fffffce7ffff7ee8ffffc0f6ffff1cfbffff026f0000ba6f0000a2730000c4740000
+      m_ExpandedIDs: 1827ffff564dfffff84effffd450ffff767cffffa47effff5a7fffff5a81ffff8684fffffce7ffff7ee8ffffc0f6ffff1cfbffff026f0000ba6f0000a2730000c4740000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -687,9 +687,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -5.2566338, y: -0.07374215, z: 0.0968493}
+    m_Target: {x: -5.8253646, y: 5.6281915, z: -0.02305397}
     speed: 2
-    m_Value: {x: -5.2566338, y: -0.07374215, z: 0.0968493}
+    m_Value: {x: -5.8253646, y: 5.6281915, z: -0.02305397}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -739,9 +739,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 6.007553
+    m_Target: 17.997917
     speed: 2
-    m_Value: 6.007553
+    m_Value: 17.997917
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -877,7 +877,7 @@ MonoBehaviour:
   m_MinSize: {x: 200, y: 50}
   m_MaxSize: {x: 16192, y: 8096}
   vertical: 0
-  controlID: 9887
+  controlID: 12210
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -949,7 +949,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scenes
     m_Globs: []
     m_OriginalText: 
     m_ImportLogFlags: 0
@@ -957,15 +957,15 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Unity\Projects\MoonJam
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 50730000
-    m_LastClickedID: 29520
+    m_SelectedIDs: 52730000
+    m_LastClickedID: 29522
     m_ExpandedIDs: 00000000327300003473000036730000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -1019,10 +1019,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 747cffff
-    m_LastClickedInstanceID: -33676
+    m_SelectedInstanceIDs: 80a40000
+    m_LastClickedInstanceID: 42112
     m_HadKeyboardFocusLastEvent: 0
-    m_ExpandedInstanceIDs: c6230000d86f0000127a00003c6e000072020000d08800002ec001006c5f0300d8810000000000005a90000052710000
+    m_ExpandedInstanceIDs: c6230000d86f0000127a00003c6e000072020000d08800002ec001006c5f0300d8810000000000005a900000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1129,8 +1129,8 @@ MonoBehaviour:
     y: 0
     width: 455
     height: 957
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 16}
   m_Panes:
   - {fileID: 16}
@@ -1151,7 +1151,7 @@ MonoBehaviour:
   m_MinSize: {x: 275, y: 50}
   m_MaxSize: {x: 4000, y: 4000}
   m_TitleContent:
-    m_Text: Inspector
+    m_Text: Debug
     m_Image: {fileID: -2667387946076563598, guid: 0000000000000000d000000000000000, type: 0}
     m_Tooltip: 
   m_Pos:
@@ -1176,10 +1176,10 @@ MonoBehaviour:
     m_CachedPref: 204
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
-  m_LastInspectedObjectInstanceID: -1
+  m_LastInspectedObjectInstanceID: 42112
   m_LastVerticalScrollValue: 0
   m_GlobalObjectId: 
-  m_InspectorMode: 0
+  m_InspectorMode: 1
   m_LockTracker:
     m_IsLocked: 0
   m_PreviewWindow: {fileID: 0}

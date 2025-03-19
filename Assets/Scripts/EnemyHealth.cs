@@ -14,7 +14,6 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Sprite[] _downedSprites;
     [SerializeField] private GameObject _deathBloodParticles;
     [SerializeField] private GameObject _deathChunkParticles;
-
     [SerializeField] private float _knockbackDuration = 0.25f;
 
     public UnityEvent OnEnemyDowned;
@@ -60,8 +59,6 @@ public class EnemyHealth : MonoBehaviour
             if (_currentHealth <= 0)
             {
                 Downed();
-                // Notify a spawner if present
-                OnEnemyDowned?.Invoke();
             }
         }
         else
@@ -73,7 +70,6 @@ public class EnemyHealth : MonoBehaviour
             if (_currentDownHealth <= 0)
             {
                 Death();
-                OnEnemyDeath?.Invoke();
             }
         }
         //SFXManager.Instance.PlayEnemyHitSFX();
@@ -124,5 +120,6 @@ public class EnemyHealth : MonoBehaviour
     private void DestroyEnemy()
     {
         Destroy(gameObject);
+
     }
 }
