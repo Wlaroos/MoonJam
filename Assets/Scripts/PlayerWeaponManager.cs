@@ -284,7 +284,7 @@ private void HandleReloading()
         // Reload starter weapon without affecting global ammo
         if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
         {
-            Debug.Log("Reloading starter weapon.");
+            //Debug.Log("Reloading starter weapon.");
             _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo));
         }
     }
@@ -296,14 +296,14 @@ private void HandleReloading()
 
         if (ammoNeeded > 0 && ammoToReload > 0)
         {
-            Debug.Log($"Reloading {ammoToReload} ammo.");
+            //Debug.Log($"Reloading {ammoToReload} ammo.");
             UpdateAmmoUI();
 
             _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
         }
         else
         {
-            Debug.Log("Not enough ammo to reload.");
+            //Debug.Log("Not enough ammo to reload.");
         }
     }
 }

@@ -2552,58 +2552,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1683697481
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1683697483}
-  - component: {fileID: 1683697482}
-  m_Layer: 0
-  m_Name: PointAdmin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1683697482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683697481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ae71e50721bced48b6918e80f23f4e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ZombiePrefab: {fileID: 4197633544828147481, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
-  ZombieCost: 10
-  BigZombiePrefab: {fileID: 2010993383133134886, guid: c330a6b7b3ce3d04c9638e12b619d19c, type: 3}
-  BigZombieCost: 10
-  SmallZombiePrefab: {fileID: 3125447741530896508, guid: 09e1e6f88322c974ea3867730ec6049a, type: 3}
-  SmallZombieCost: 20
-  MaxPoints: 150
-  SpawnDelay: 1
---- !u!4 &1683697483
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1683697481}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1717947825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2764,8 +2712,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1813353920}
   - component: {fileID: 1813353921}
+  - component: {fileID: 1813353922}
   m_Layer: 0
-  m_Name: CameraHolder
+  m_Name: CameraHolder/Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2802,7 +2751,31 @@ MonoBehaviour:
   _playerRef: {fileID: 1426348531}
   _smoothSpeed: 0.125
   _minY: 0
-  _maxY: 28
+  _maxY: 14
+--- !u!114 &1813353922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813353919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ae71e50721bced48b6918e80f23f4e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AllowZombie: 1
+  ZombiePrefab: {fileID: 4197633544828147481, guid: 435f74a22bcc7cf42b63d40b8c947a13, type: 3}
+  ZombieCost: 10
+  AllowBigZombie: 0
+  BigZombiePrefab: {fileID: 2010993383133134886, guid: c330a6b7b3ce3d04c9638e12b619d19c, type: 3}
+  BigZombieCost: 10
+  AllowSmallZombie: 0
+  SmallZombiePrefab: {fileID: 3125447741530896508, guid: 09e1e6f88322c974ea3867730ec6049a, type: 3}
+  SmallZombieCost: 20
+  MaxPoints: 150
+  SpawnDelay: 1
+  SpawnBorderBuffer: 1
 --- !u!1 &1868891649
 GameObject:
   m_ObjectHideFlags: 0
@@ -3259,7 +3232,6 @@ SceneRoots:
   - {fileID: 738236248}
   - {fileID: 4327911342440558553}
   - {fileID: 1102955211}
-  - {fileID: 1683697483}
   - {fileID: 794732791}
   - {fileID: 121485121}
   - {fileID: 1609390437}

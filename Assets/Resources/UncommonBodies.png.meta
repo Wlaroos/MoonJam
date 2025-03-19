@@ -1,0 +1,567 @@
+fileFormatVersion: 2
+guid: daa6dd0ebe0293647a4e1c8b8f448e66
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 16
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: UncommonBodies_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a5c71af837e523e4f966b0a301b5c7ed
+      internalID: 169812186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_1
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 41347d87addbc4642ad53c6f66132bed
+      internalID: 53727986
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_2
+      rect:
+        serializedVersion: 2
+        x: 25
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2f5add66acc0ca447ad990751b5a602c
+      internalID: 527745738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_3
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ac172dd5d7af984398b6dd7c984d523
+      internalID: -15397152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_4
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1a71b060e922c7647b5d4116f516db6a
+      internalID: 988758399
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_5
+      rect:
+        serializedVersion: 2
+        x: 58
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19cbd39ac62091744be7ef65fce60d9f
+      internalID: 269122426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_6
+      rect:
+        serializedVersion: 2
+        x: 69
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a25d8fd4a0f620641949d2478a45e5ce
+      internalID: 1104724205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_7
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c44d45ead6b1ec641a6025dd6fa4e23e
+      internalID: 186572250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_8
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1b3fafd68d68ead4fa2be7539fb67270
+      internalID: -418864369
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_9
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b283724ecb9e6634a995aa960eba1368
+      internalID: 83497833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_10
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 401d2c4d81c9ccb418610f83e33e165f
+      internalID: 1496346919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_11
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35c3c648be916574f8e9c83d450eab98
+      internalID: -162192621
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_12
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f66d4a76d0f7d984db032ad38110aed5
+      internalID: 456316279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_13
+      rect:
+        serializedVersion: 2
+        x: 146
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c81588eb3b80fb142a201b6db725ce44
+      internalID: -1329732554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_14
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6110d13e11cc4794eb7676ff8b0521f8
+      internalID: 1276771809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_15
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f4d5192f3e493494296929d36c29a82c
+      internalID: -1930402036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_16
+      rect:
+        serializedVersion: 2
+        x: 179
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8c4b4a2860f9cc149b72a74403af541b
+      internalID: 1147596691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_17
+      rect:
+        serializedVersion: 2
+        x: 193
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9581642a4b7c08b4b8074147d6f6e644
+      internalID: -1973212397
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_18
+      rect:
+        serializedVersion: 2
+        x: 204
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7d0bf17043360dc41a2673597e3f0265
+      internalID: -90176083
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UncommonBodies_19
+      rect:
+        serializedVersion: 2
+        x: 218
+        y: 3
+        width: 9
+        height: 5
+      alignment: 9
+      pivot: {x: 0.5555556, y: 1.3}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2a130c82009bc74e80b629f3772a062
+      internalID: 1380184881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      UncommonBodies_0: 169812186
+      UncommonBodies_1: 53727986
+      UncommonBodies_10: 1496346919
+      UncommonBodies_11: -162192621
+      UncommonBodies_12: 456316279
+      UncommonBodies_13: -1329732554
+      UncommonBodies_14: 1276771809
+      UncommonBodies_15: -1930402036
+      UncommonBodies_16: 1147596691
+      UncommonBodies_17: -1973212397
+      UncommonBodies_18: -90176083
+      UncommonBodies_19: 1380184881
+      UncommonBodies_2: 527745738
+      UncommonBodies_3: -15397152
+      UncommonBodies_4: 988758399
+      UncommonBodies_5: 269122426
+      UncommonBodies_6: 1104724205
+      UncommonBodies_7: 186572250
+      UncommonBodies_8: -418864369
+      UncommonBodies_9: 83497833
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

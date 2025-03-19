@@ -22,7 +22,8 @@ public class EnemyMovement : MonoBehaviour
 
     private Transform _playerTransform;
     private Rigidbody2D _rb;
-    private SpriteRenderer _sr;
+    private SpriteRenderer _headSr;
+    private SpriteRenderer _bodySr;
     private EnemyHealth _enemyHealth;
     private Animator _anim;
     private bool _canMove = false;
@@ -88,11 +89,17 @@ public class EnemyMovement : MonoBehaviour
 
     private void InitializeComponents()
     {
+         Transform spriteHolder = transform.Find("SpriteHolder");
+
         _playerTransform = GameObject.FindWithTag("Player").transform;
+        
         _rb = GetComponent<Rigidbody2D>();
-        _sr = GetComponentInChildren<SpriteRenderer>();
         _enemyHealth = GetComponent<EnemyHealth>();
-        _anim = GetComponentInChildren<Animator>();
+        _headSr = spriteHolder.Find("Head").GetComponent<SpriteRenderer>(); // Head SpriteRenderer
+        _bodySr = spriteHolder.Find("Body").GetComponent<SpriteRenderer>();
+        _anim = spriteHolder.GetComponent<Animator>(); // Animator for Head
+
+        // Get the Body SpriteRenderer
     }
 
     private void RandomizeSpeed()
@@ -103,8 +110,11 @@ public class EnemyMovement : MonoBehaviour
     private void MoveTowardsPlayer()
     {
         Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
-        
-        _sr.flipX = directionTowardsTarget.x < 0;
+
+        // Flip both Head and Body based on movement direction
+        _headSr.flipX = directionTowardsTarget.x < 0;
+        _bodySr.flipX = directionTowardsTarget.x < 0;
+
         _rb.MovePosition(_rb.position + directionTowardsTarget * _speed * Time.fixedDeltaTime);
     }
 
@@ -183,7 +193,10 @@ public class EnemyMovement : MonoBehaviour
         _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f);
 
         _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);
-        _sr.flipX = _smoothedFlockingForce.x < 0;
+
+        // Flip both Head and Body based on flocking direction
+        _headSr.flipX = _smoothedFlockingForce.x < 0;
+        _bodySr.flipX = _smoothedFlockingForce.x < 0;
     }
 
     private void HandlePlayerCollision(Collider2D other)

@@ -10,8 +10,6 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private int _maxDownedHealth = 3;
 
     [Header("References")]
-    [SerializeField] private Sprite[] _normalSprites;
-    [SerializeField] private Sprite[] _downedSprites;
     [SerializeField] private GameObject _deathBloodParticles;
     [SerializeField] private GameObject _deathChunkParticles;
     [SerializeField] private float _knockbackDuration = 0.25f;
@@ -23,7 +21,8 @@ public class EnemyHealth : MonoBehaviour
     private int _currentDownHealth;
     private Rigidbody2D _rb;
     private CapsuleCollider2D _cc;
-    private SpriteRenderer _sr;
+    private SpriteRenderer _headSr;
+    private SpriteRenderer _bodySr;
     private Animator _anim;
     private EnemyMovement _enemyMovement;
     private int _spriteIndex;
@@ -35,14 +34,16 @@ public class EnemyHealth : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _cc = GetComponent<CapsuleCollider2D>();
-        _sr = GetComponentInChildren<SpriteRenderer>();
-        _anim = GetComponentInChildren<Animator>();
         _enemyMovement = GetComponent<EnemyMovement>();
+
+        Transform spriteHolder = transform.Find("SpriteHolder");
+        _headSr = spriteHolder.Find("Head").GetComponent<SpriteRenderer>(); // Head SpriteRenderer
+        _bodySr = spriteHolder.Find("Body").GetComponent<SpriteRenderer>();
+        _anim = spriteHolder.GetComponent<Animator>(); // Animator for Head
+
         _currentHealth = _maxHealth;
         _currentDownHealth = _maxDownedHealth;
         _anim.SetBool("isMoving", true);
-        _spriteIndex = Random.Range(0, _normalSprites.Length);
-        _sr.sprite = _normalSprites[_spriteIndex];
     }
 
     public void TakeDamage(Vector2 force, int damage)
@@ -77,9 +78,11 @@ public class EnemyHealth : MonoBehaviour
 
     private IEnumerator FlashRed()
     {
-        _sr.color = Color.red;
+        _headSr.color = Color.red;
+        _bodySr.color = Color.red;
         yield return new WaitForSeconds(0.2f);
-        _sr.color = Color.white;
+        _headSr.color = Color.white;
+        _bodySr.color = Color.white;
     }
 
     private void Downed()
@@ -88,15 +91,16 @@ public class EnemyHealth : MonoBehaviour
 
         _isDowned = true;
 
-        _sr.color = Color.white;
-        _sr.sprite = _downedSprites[_spriteIndex];
+        _headSr.color = Color.grey;
+        _bodySr.color = Color.grey;
 
         transform.rotation = Quaternion.Euler(0, 0, 90);
 
         _anim.SetBool("isMoving", false);
 
         gameObject.layer = 11;
-        _sr.sortingOrder = -1;
+        _headSr.sortingOrder = -1;
+        _bodySr.sortingOrder = -1;
 
         OnEnemyDowned?.Invoke();
 
