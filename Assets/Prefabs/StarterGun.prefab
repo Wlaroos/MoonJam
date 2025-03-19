@@ -188,10 +188,10 @@ MonoBehaviour:
   _weaponSprite: {fileID: 0}
   shootTransform: {fileID: 2261283983050055533}
   _maxAmmo: 250
-  _maxMagSize: 25
+  _maxMagSize: 8
   _reloadTime: 1
-  _isAutomatic: 1
-  _fireRate: 10
+  _isAutomatic: 0
+  _fireRate: 4
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
   _bulletSize: 1

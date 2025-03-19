@@ -113,7 +113,9 @@ public class EnemyHealth : MonoBehaviour
         Instantiate(_deathChunkParticles, transform.position, Quaternion.identity);
 
         _cc.enabled = false;
+
         OnEnemyDeath?.Invoke();
+
         DestroyEnemy();
         //StartCoroutine(StaticCoroutines.Fade(0.5f, _sr, DestroyEnemy));
         //SFXManager.Instance.PlayEnemyDownSFX();

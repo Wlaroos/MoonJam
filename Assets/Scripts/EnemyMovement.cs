@@ -43,6 +43,7 @@ public class EnemyMovement : MonoBehaviour
     {
         if (!_enemyHealth.IsDowned && _canMove && !_isKnockback)
         {
+
             if (_enableFlocking)
             {
                 ApplyFlockingBehavior();
@@ -51,6 +52,7 @@ public class EnemyMovement : MonoBehaviour
             {
                 MoveTowardsPlayer();
             }
+        
         }
     }
 
@@ -150,6 +152,14 @@ public class EnemyMovement : MonoBehaviour
        
         Vector2 rawFlockingForce = (alignment * _alignmentWeight + cohesion * _cohesionWeight + separation * _separationWeight + directionTowardsPlayer).normalized;
 
+        // Check for walls in the movement direction
+        Collider2D wall = Physics2D.OverlapCircle(transform.position, _flockRadius / 3, LayerMask.GetMask("Wall"));
+        if (wall != null)
+        {
+            // Rotate the direction by 90 degrees
+            rawFlockingForce = new Vector2(-rawFlockingForce.y, rawFlockingForce.x).normalized;
+        }
+ 
         _smoothedFlockingForce = Vector2.Lerp(_smoothedFlockingForce, rawFlockingForce, 0.1f);
 
         _rb.MovePosition(_rb.position + _smoothedFlockingForce * _speed * Time.fixedDeltaTime);

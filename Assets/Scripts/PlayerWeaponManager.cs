@@ -180,7 +180,8 @@ private void OnDisable()
             // If the starter weapon is currently equipped, keep it equipped
             if (_currentWeapon == _starterWeapon)
             {
-                _currentWeaponIndex = 0; // Keep the starter weapon equipped
+                //_currentWeaponIndex = 0; // Keep the starter weapon equipped
+                _currentWeaponIndex = 1; // Keep the starter weapon equipped
             }
             else
             {
