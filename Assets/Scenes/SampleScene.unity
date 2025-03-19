@@ -2751,7 +2751,7 @@ MonoBehaviour:
   _playerRef: {fileID: 1426348531}
   _smoothSpeed: 0.125
   _minY: 0
-  _maxY: 14
+  _maxY: 28
 --- !u!114 &1813353922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2759,7 +2759,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813353919}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ae71e50721bced48b6918e80f23f4e1, type: 3}
   m_Name: 

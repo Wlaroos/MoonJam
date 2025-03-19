@@ -200,6 +200,8 @@ private void OnDisable()
         _secondaryWeapon = null;
 
         _currentWeapon = _starterWeapon; // Switch back to the starter weapon
+        _currentWeaponIndex = 0; // Ensure starter weapon is selected
+        UpdateCurrentWeapon();
         WeaponChangeEvent.Invoke(_currentWeapon);
         AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
     }
@@ -320,7 +322,7 @@ private void HandleReloading()
 
             if (_currentWeapon == null)
             {
-                Debug.LogWarning("Weapon was dropped or swapped during reload. Stopping reload coroutine.");
+                //Debug.LogWarning("Weapon was dropped or swapped during reload. Stopping reload coroutine.");
                 yield break;
             }
 
