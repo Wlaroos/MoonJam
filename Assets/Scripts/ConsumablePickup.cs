@@ -14,6 +14,7 @@ public class ConsumablePickup : MonoBehaviour
     [SerializeField] private Sprite[] _consumableSprite; // The sprite for the pickup.
     [SerializeField] private Sprite[] _consumableHoverSprite; // The sprite for the pickups when the player is near it.
     [SerializeField] private Sprite[] _consumableTextSprite; // Text (Optional)
+    [SerializeField] private GameObject[] _consumableEffect; // The effect that plays when the pickup is used.
     [SerializeField] private ConsumableType _consumableType; // The type of consumable (e.g., health, ammo, etc.)
 
     [SerializeField] private int _ammoPercentAmount = 10; // The amount of ammo the pickup gives.
@@ -114,9 +115,11 @@ public class ConsumablePickup : MonoBehaviour
         switch (_consumableType)
         {
             case ConsumableType.Ammo:
+                Instantiate(_consumableEffect[0], transform.position, Quaternion.identity);
                 _pwm.AddAmmo(_ammoPercentAmount);
                 break;
             case ConsumableType.Health:
+                Instantiate(_consumableEffect[1], transform.position, Quaternion.identity);
                 _ph.Heal(_healthAmount);
                 break;
         }
