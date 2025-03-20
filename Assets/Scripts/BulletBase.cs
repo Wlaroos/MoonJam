@@ -14,10 +14,31 @@ public class BulletBase : MonoBehaviour
 
     private Rigidbody2D _rb;
     private bool _once = false;
+    private SpriteRenderer _sr;
+    private TrailRenderer _tr;
+    private Vector3 _startPosition;
+    private bool _isVisible = false;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody2D>();
+        _sr = GetComponent<SpriteRenderer>();
+        _tr = GetComponent<TrailRenderer>();
+        _sr.enabled = false; // Initially hide the bullet
+        _tr.enabled = false; // Initially hide the trail
+
+        _startPosition = transform.position;
+    }
+
+    private void Update()
+    {
+        if(_isVisible) return;
+        if (Vector3.Distance(_startPosition, transform.position) >= 0.5f)
+        {
+            _sr.enabled = true; // Show the bullet after it has moved 1 unit
+            _tr.enabled = true; // Show the trail after it has moved 1 unit
+            _isVisible = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

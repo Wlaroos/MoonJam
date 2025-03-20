@@ -115,6 +115,7 @@ public class GameStateManager : MonoBehaviour
 
         if (Mathf.Abs(transform.position.y - _cameraFollow.MaxY) <= 0.01f)
         {
+            transform.position =  new Vector3(transform.position.x, _cameraFollow.MaxY, transform.position.z);
             _cameraFollow.AddMinHeight(_cameraFollow.RoomHeight);
             _spawnManager.AddPoints(50);
 

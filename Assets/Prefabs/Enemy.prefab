@@ -328,9 +328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff56c141ce45d3d4db42cf6584b93dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseWeight: 0.85
-  uncommonWeight: 0.1
-  rareWeight: 0.05
+  baseWeight: 0.92
+  uncommonWeight: 0.07
+  rareWeight: 0.01
 --- !u!1 &4856165593370316461
 GameObject:
   m_ObjectHideFlags: 0
@@ -404,7 +404,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 682441372, guid: 17a2c094fd5858144be1e4d9d8732402, type: 3}
+  m_Sprite: {fileID: -1129816262, guid: 17a2c094fd5858144be1e4d9d8732402, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
