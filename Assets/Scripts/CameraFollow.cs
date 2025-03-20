@@ -24,4 +24,14 @@ public class CameraFollow : MonoBehaviour
             transform.position = Vector3.Lerp(currentPosition, targetPosition, _smoothSpeed);
         }
     }
+
+    public void AddMaxHeight(float height)
+    {
+        _maxY += height;
+    }
+
+    public void AddMinHeight(float height)
+    {
+        _minY += height;
+    }
 }

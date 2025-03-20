@@ -56,5 +56,8 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "MoonJam.sln"
+    "dotnet.defaultSolution": "MoonJam.sln",
+    "cSpell.words": [
+        "Spawnee"
+    ]
 }

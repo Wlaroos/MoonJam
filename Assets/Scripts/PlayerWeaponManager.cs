@@ -74,6 +74,7 @@ private void OnDisable()
 
     private void Update()
     {
+        if (Time.timeScale == 0) return;
         if (!_isInputEnabled) return;
 
         UpdatePickupText();
@@ -235,18 +236,6 @@ private void OnDisable()
 
     private void HandleAimingAndShooting()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            _currentWeapon = _starterWeapon;
-            WeaponChangeEvent.Invoke(_currentWeapon);
-            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2) && _secondaryWeapon != null)
-        {
-            _currentWeapon = _secondaryWeapon;
-            WeaponChangeEvent.Invoke(_currentWeapon);
-            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-        }
 
         if (_currentWeapon == null) return;
 
@@ -450,6 +439,22 @@ private void EquipStarterWeapon()
         else if (Input.GetAxis("Mouse ScrollWheel") < 0f) // Scroll down
         {
             SwitchToPreviousWeapon();
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            _currentWeapon = _starterWeapon;
+            _currentWeaponIndex = 0;
+            UpdateCurrentWeapon();
+            WeaponChangeEvent.Invoke(_currentWeapon);
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2) && _secondaryWeapon != null)
+        {
+            _currentWeapon = _secondaryWeapon;
+            _currentWeaponIndex = 1;
+            UpdateCurrentWeapon();
+            WeaponChangeEvent.Invoke(_currentWeapon);
+            AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
         }
     }
 

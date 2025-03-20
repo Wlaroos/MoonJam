@@ -137,6 +137,7 @@ public abstract class WeaponBase : MonoBehaviour
 
 public virtual void Aim(Vector3 targetPosition)
 {
+    
     Vector3 aimDirection = (targetPosition - transform.position).normalized;
     float angle = Mathf.Atan2(aimDirection.y, aimDirection.x) * Mathf.Rad2Deg;
 

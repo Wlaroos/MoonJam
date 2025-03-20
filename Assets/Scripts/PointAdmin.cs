@@ -33,24 +33,11 @@ public class PointAdmin : MonoBehaviour
 
     private float lastSpawnTime = 0f;
 
-    Enemy Zombie = new Enemy();
-    Enemy BigZombie = new Enemy();
-    Enemy SmallZombie = new Enemy();
-    List<Enemy> EnemyList = new List<Enemy>();
-    List<GameObject> LiveEnemyList = new List<GameObject>();
-
-    // State machine
-    private enum GameState
-    {
-        Start,
-        PreWave,
-        DuringWave,
-        PostWave,
-        End,
-        Paused
-    }
-
-    private GameState currentState;
+    private Enemy Zombie = new Enemy();
+    private Enemy BigZombie = new Enemy();
+    private Enemy SmallZombie = new Enemy();
+    private List<Enemy> EnemyList = new List<Enemy>();
+    public List<GameObject> LiveEnemyList = new List<GameObject>();
 
     private void Awake()
     {
@@ -76,88 +63,9 @@ public class PointAdmin : MonoBehaviour
             SmallZombie.cost = SmallZombieCost;
             EnemyList.Add(SmallZombie);
         }
-
-        // Initialize the state
-        currentState = GameState.Start;
     }
 
-    private void Update()
-    {
-        switch (currentState)
-        {
-            case GameState.Start:
-                HandleStartState();
-                break;
-            case GameState.PreWave:
-                HandlePreWaveState();
-                break;
-            case GameState.DuringWave:
-                HandleDuringWaveState();
-                break;
-            case GameState.PostWave:
-                HandlePostWaveState();
-                break;
-            case GameState.End:
-                HandleEndState();
-                break;
-            case GameState.Paused:
-                HandlePausedState();
-                break;
-        }
-    }
-
-    private void HandleStartState()
-    {
-        // Logic for the Start state
-        Debug.Log("Game is in Start state.");
-        // Transition to PreWave
-        currentState = GameState.PreWave;
-    }
-
-    private void HandlePreWaveState()
-    {
-        // Logic for the PreWave state
-        Debug.Log("Game is in PreWave state.");
-        // Transition to DuringWave
-        currentState = GameState.DuringWave;
-    }
-
-    private void HandleDuringWaveState()
-    {
-        // Logic for the DuringWave state
-        Debug.Log("Game is in DuringWave state.");
-        SpawnEnemies();
-
-        // Example condition to transition to PostWave
-        if (LiveEnemyList.Count == 0 && MaxPoints <= 0)
-        {
-            currentState = GameState.PostWave;
-        }
-    }
-
-    private void HandlePostWaveState()
-    {
-        // Logic for the PostWave state
-        Debug.Log("Game is in PostWave state.");
-        // Transition to End or PreWave based on game logic
-        currentState = GameState.End;
-    }
-
-    private void HandleEndState()
-    {
-        // Logic for the End state
-        Debug.Log("Game is in End state.");
-        // Game over logic here
-    }
-
-    private void HandlePausedState()
-    {
-        // Logic for the Paused state
-        Debug.Log("Game is Paused.");
-        // Wait for unpause
-    }
-
-    private void SpawnEnemies()
+    public void SpawnEnemies()
     {
         while (MaxPoints > 0)
         {
@@ -188,7 +96,8 @@ public class PointAdmin : MonoBehaviour
 
                     LiveEnemyList.Add(holder);
 
-                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RestorePoints(holder, Spawnee.cost));
+                    holder.GetComponent<EnemyHealth>().OnEnemyDeath.AddListener(() => RemoveFromList(holder));
+                    //holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RestorePoints(holder, Spawnee.cost));
                     lastSpawnTime = Time.time;
                     MaxPoints -= Spawnee.cost;
                 }
@@ -200,10 +109,15 @@ public class PointAdmin : MonoBehaviour
         }
     }
 
-    private void RestorePoints(GameObject holder, float points)
+    // private void RestorePoints(GameObject holder, float points)
+    // {
+    //     holder.GetComponent<EnemyHealth>().OnEnemyDowned.RemoveAllListeners();
+    //     MaxPoints += points;
+    // }
+
+    private void RemoveFromList(GameObject holder)
     {
-        holder.GetComponent<EnemyHealth>().OnEnemyDowned.RemoveAllListeners();
-        MaxPoints += points;
+        LiveEnemyList.Remove(holder);
     }
 
     private void OnDrawGizmos()
