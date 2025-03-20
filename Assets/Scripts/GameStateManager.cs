@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
+    [SerializeField] private GameObject _pausedCanvas; // Reference to the paused canvas
+    [SerializeField] private GameObject _gameOverCanvas; // Reference to the game over canvas
+    [SerializeField] private GameObject _moveUpIndicator; // Reference to the move up indicator
+
+
     // State machine
     private enum GameState
     {
@@ -11,23 +16,22 @@ public class GameStateManager : MonoBehaviour
         PreWave,
         DuringWave,
         PostWave,
-        End,
-        Paused
+        Transition
     }
 
     private GameState _currentState;
     private PointAdmin _spawnManager;
-
-    [SerializeField] private GameObject pausedCanvas; // Reference to the paused canvas
-
+    private CameraFollow _cameraFollow;
+    private bool _paused;
     void Awake()
     {
-        // Initialize the state
         _currentState = GameState.Start;
         _spawnManager = GetComponent<PointAdmin>();
-        if (pausedCanvas != null)
+        _cameraFollow = GetComponent<CameraFollow>();
+
+        if (_pausedCanvas != null)
         {
-            pausedCanvas.SetActive(false); // Ensure the canvas is disabled at the start
+            _pausedCanvas.SetActive(false); // Ensure the canvas is disabled at the start
         }
     }
 
@@ -36,7 +40,7 @@ public class GameStateManager : MonoBehaviour
         // Check for pause input
         if (Input.GetKeyDown(KeyCode.P))
         {
-            if (_currentState == GameState.Paused)
+            if (_paused)
             {
                 UnpauseGame();
             }
@@ -60,11 +64,8 @@ public class GameStateManager : MonoBehaviour
             case GameState.PostWave:
                 HandlePostWaveState();
                 break;
-            case GameState.End:
-                HandleEndState();
-                break;
-            case GameState.Paused:
-                HandlePausedState();
+            case GameState.Transition:
+                HandleTransitionState();
                 break;
         }
     }
@@ -100,32 +101,33 @@ public class GameStateManager : MonoBehaviour
 
     private void HandlePostWaveState()
     {
-        // Logic for the PostWave state
         Debug.Log("Game is in PostWave state.");
-        // Transition to End or PreWave based on game logic
-        _currentState = GameState.End;
+
+        _cameraFollow.AddMaxHeight(_cameraFollow.RoomHeight);
+        Instantiate(_moveUpIndicator, new Vector3(transform.position.x, transform.position.y + 4.5f, 0), Quaternion.identity);
+
+        _currentState = GameState.Transition;
     }
 
-    private void HandleEndState()
+    private void HandleTransitionState()
     {
-        // Logic for the End state
-        Debug.Log("Game is in End state.");
-        // Game over logic here
-    }
+        Debug.Log("Game is in Transition state.");
 
-    private void HandlePausedState()
-    {
-        // Logic for the Paused state
-        Debug.Log("Game is Paused.");
-        // Wait for unpause
+        if (Mathf.Abs(transform.position.y - _cameraFollow.MaxY) <= 0.01f)
+        {
+            _cameraFollow.AddMinHeight(_cameraFollow.RoomHeight);
+            _spawnManager.AddPoints(50);
+
+            _currentState = GameState.PreWave;
+        }
     }
 
     private void PauseGame()
     {
-        _currentState = GameState.Paused;
-        if (pausedCanvas != null)
+        _paused = true;
+        if (_pausedCanvas != null)
         {
-            pausedCanvas.SetActive(true); // Enable the paused canvas
+            _pausedCanvas.SetActive(true); // Enable the paused canvas
         }
         Cursor.visible = true;
         Time.timeScale = 0f; // Freeze the game
@@ -133,10 +135,10 @@ public class GameStateManager : MonoBehaviour
 
     public void UnpauseGame()
     {
-        _currentState = GameState.DuringWave; // Resume the game state (adjust as needed)
-        if (pausedCanvas != null)
+        _paused = false;
+        if (_pausedCanvas != null)
         {
-            pausedCanvas.SetActive(false); // Disable the paused canvas
+            _pausedCanvas.SetActive(false); // Disable the paused canvas
         }
         Cursor.visible = false;
         Time.timeScale = 1f; // Resume the game

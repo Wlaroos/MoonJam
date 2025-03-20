@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform _playerRef; // Reference to the player's transform
-    public float _smoothSpeed = 0.125f; // Smoothing speed for the camera movement
-    public float _minY = 0f; // Minimum Y position for the camera
-    public float _maxY = 10f; // Maximum Y position for the camera
+    [SerializeField] private Transform _playerRef; // Reference to the player's transform
+    [SerializeField] private float _smoothSpeed = 0.125f; // Smoothing speed for the camera movement
+    private float _minY = 0f; // Minimum Y position for the camera
+    public float MinY => _minY;
+    private float _maxY = 0f; // Maximum Y position for the camera
+    public float MaxY => _maxY;
+    private float _roomHeight = 14f; // Height of the room
+    public float RoomHeight => _roomHeight;
 
     private void LateUpdate()
     {

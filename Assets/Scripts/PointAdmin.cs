@@ -96,7 +96,7 @@ public class PointAdmin : MonoBehaviour
 
                     LiveEnemyList.Add(holder);
 
-                    holder.GetComponent<EnemyHealth>().OnEnemyDeath.AddListener(() => RemoveFromList(holder));
+                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromList(holder));
                     //holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RestorePoints(holder, Spawnee.cost));
                     lastSpawnTime = Time.time;
                     MaxPoints -= Spawnee.cost;
@@ -107,6 +107,11 @@ public class PointAdmin : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void AddPoints(float points)
+    {
+        MaxPoints += points;
     }
 
     // private void RestorePoints(GameObject holder, float points)
