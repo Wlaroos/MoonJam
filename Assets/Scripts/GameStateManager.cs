@@ -7,6 +7,16 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject _pausedCanvas; // Reference to the paused canvas
     [SerializeField] private GameObject _gameOverCanvas; // Reference to the game over canvas
     [SerializeField] private GameObject _moveUpIndicator; // Reference to the move up indicator
+    [SerializeField] private int _level1WaveCount;
+    [SerializeField] private int _level2WaveCount;
+    [SerializeField] private int _level3WaveCount;
+    [SerializeField] private int _level4WaveCount;
+    [SerializeField] private GameObject _afterTutorialRoom;
+    [SerializeField] private GameObject _room;
+    [SerializeField] private GameObject _checkpointRoom;
+
+    private int _currentWaveCount;
+    private int _currentLevel;
     private LineRenderer _waveBoundaryRenderer; // LineRenderer for wave boundary
 
     // State machine
@@ -42,6 +52,11 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
+    void Start()
+    {
+        CreateRooms();
+    }
+
     void Update()
     {
         // Check for pause input
@@ -60,7 +75,7 @@ public class GameStateManager : MonoBehaviour
         switch (_currentState)
         {
             case GameState.TutorialStart:
-                HandleStartState();
+                HandleTutorialStartState();
                 break;
             case GameState.TutorialEnd:
                 HandleTutorialEndState();
@@ -80,7 +95,7 @@ public class GameStateManager : MonoBehaviour
         }
     }
 
-    private void HandleStartState()
+    private void HandleTutorialStartState()
     {
         // Logic for the Start state
         Debug.Log("Game is in Start state.");
@@ -215,5 +230,36 @@ public class GameStateManager : MonoBehaviour
     public void TutorialEnded()
     {
         _currentState = GameState.TutorialEnd;
+    }
+
+    private void CreateRooms()
+    {
+        int[] waveCounts = { _level1WaveCount, _level2WaveCount, _level3WaveCount, _level4WaveCount };
+
+        for (int level = 0; level < waveCounts.Length; level++)
+        {
+                for (int wave = 0; wave < waveCounts[level]; wave++)
+                {
+                    GameObject roomToInstantiate;
+
+                    // Use the after tutorial room for the first room in level 1
+                    if (level == 0 && level == 0 && wave == 0)
+                    {
+                        roomToInstantiate = _afterTutorialRoom;
+                    }
+                    // Use the checkpoint room for the last room of each level
+                    else if (wave == waveCounts[level] - 1)
+                    {
+                        roomToInstantiate = _checkpointRoom;
+                    }
+                    else
+                    {
+                        roomToInstantiate = _room;
+                    }
+
+                    Instantiate(roomToInstantiate, new Vector3(level * _cameraFollow.RoomWidth, wave * _cameraFollow.RoomHeight , 0), Quaternion.identity);
+                }
+
+        }
     }
 }

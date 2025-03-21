@@ -39,41 +39,31 @@ public class TutorialMessages : MonoBehaviour
     {
         if(_pwm.CurrentWeapon != null && !_gunBool)
         {
-            if (_gunMessage != null)
-            {
-                _gunMessage.GetComponent<ParticleOnShot>().Explode();
-            }
-            _dummyMessage.SetActive(true);
+            if (_gunMessage != null) _gunMessage.GetComponent<ParticleOnShot>().Explode();
+            if (_dummyMessage != null) _dummyMessage.SetActive(true);
             _gunBool = true;
         }
 
         if(_tz == null && !_dummyBool)
         {
-            if (_dummyMessage != null)
-            {
-                _dummyMessage.GetComponent<ParticleOnShot>().Explode();
-            }
-            _hpMessage.SetActive(true);
+
+            if (_dummyMessage != null) _dummyMessage.GetComponent<ParticleOnShot>().Explode();
+            if (_hpMessage != null) _hpMessage.SetActive(true);
             _dummyBool = true;
         }
 
         if(_ph.CurrentHealth == _ph.MaxHealth && !_hpBool)
         {
-            if (_hpMessage != null)
-            {
-                _hpMessage.GetComponent<ParticleOnShot>().Explode();
-            }
-            _buttonMessage.SetActive(true);
+            if (_hpMessage != null) _hpMessage.GetComponent<ParticleOnShot>().Explode();
+            if (_buttonMessage != null) _buttonMessage.SetActive(true);
             _hpBool = true;
         }
 
         if(_tb == null && !_buttonBool)
         {
-            if (_buttonMessage != null)
-            {
-                _buttonMessage.GetComponent<ParticleOnShot>().Explode();
-            }
-            _runMessage.SetActive(true);
+
+            if (_buttonMessage != null) _buttonMessage.GetComponent<ParticleOnShot>().Explode();
+            if (_runMessage != null) _runMessage.SetActive(true);
             _buttonBool = true;
         }
     }
