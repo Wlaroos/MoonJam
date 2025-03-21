@@ -1477,8 +1477,24 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2226409839781212555, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
+      propertyPath: _maxAmmo
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226409839781212555, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
       propertyPath: _bulletSize
       value: 0.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226409839781212555, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
+      propertyPath: _maxMagSize
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226409839781212555, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
+      propertyPath: _bulletDamage
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226409839781212555, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
+      propertyPath: _bulletKnockback
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5218880436973579774, guid: 654c54206ddb70845a53d911f09bfd54, type: 3}
       propertyPath: m_Name

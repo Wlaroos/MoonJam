@@ -11,6 +11,7 @@ public class MoveUpIndicator : MonoBehaviour
         if (other.GetComponent<BulletBase>() != null)
         {
             Instantiate(_ps, transform.position, Quaternion.identity);
+            Instantiate(_ps, transform.position, Quaternion.Euler(0, 0, 180));
             Destroy(gameObject);
         }
     }
