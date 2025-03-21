@@ -11,8 +11,9 @@ GameObject:
   - component: {fileID: 2446786645064472941}
   - component: {fileID: 5607636017683565657}
   - component: {fileID: 1154146487543580405}
+  - component: {fileID: 8147630165388708936}
   m_Layer: 0
-  m_Name: MoveUp
+  m_Name: Tutorial_Pickup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe35dd29959d0634c9f66ffac6cfd1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _ps: {fileID: 6009536360408007042, guid: 465f37590133e6542b930d46f0e0af9f, type: 3}
+  _ps: {fileID: 6009536360408007042, guid: 3aa1ed7ce5c0df5459c5f61c3b6b1e19, type: 3}
 --- !u!61 &1154146487543580405
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -91,8 +92,26 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 25, y: 1}
+  m_Size: {x: 1.75, y: 0.6}
   m_EdgeRadius: 0
+--- !u!114 &8147630165388708936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2897596344500416515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 881f723db59c9b3429a53ffa787e50d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  usesLocalTime: 1
+  canRotate: 0
+  degreesPerSecond: {x: 0, y: 0, z: 15}
+  canHover: 1
+  amplitude: 0.25
+  frequency: 0.5
 --- !u!1 &5753406214652967966
 GameObject:
   m_ObjectHideFlags: 0
@@ -166,7 +185,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -955717274, guid: 452ec1cf732b7cf4ebcbada5a65c108d, type: 3}
+  m_Sprite: {fileID: -1381756505, guid: 452ec1cf732b7cf4ebcbada5a65c108d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -187,7 +206,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4740416560205063888}
   - component: {fileID: 8618026002852280398}
-  - component: {fileID: 6602042462109105581}
   m_Layer: 0
   m_Name: Sprite (1)
   m_TagString: Untagged
@@ -204,7 +222,7 @@ Transform:
   m_GameObject: {fileID: 7173772501731144555}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.33, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -262,21 +280,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6602042462109105581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7173772501731144555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 881f723db59c9b3429a53ffa787e50d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  usesLocalTime: 1
-  canRotate: 0
-  degreesPerSecond: {x: 0, y: 0, z: 15}
-  canHover: 1
-  amplitude: 0.25
-  frequency: 1

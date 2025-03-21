@@ -99,6 +99,7 @@ public abstract class WeaponBase : MonoBehaviour
         if (gunSprite != null)
         {
             gunSprite.localRotation = Quaternion.identity;
+            gunSprite.GetComponent<SpriteRenderer>().sortingOrder = 5;
         }
     }
 

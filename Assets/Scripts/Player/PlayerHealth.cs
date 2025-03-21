@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class PlayerHealth : MonoBehaviour
 {
     [SerializeField] private int _maxHealth = 3;
+    [SerializeField] private int _startingHealth = 3;
     public int MaxHealth => _maxHealth;
 
     private int _currentHealth;
@@ -30,7 +31,7 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         _sr = GetComponentInChildren<SpriteRenderer>();
-        _currentHealth = _maxHealth;
+        _currentHealth = _startingHealth;
     }
 
     private void OnEnable()

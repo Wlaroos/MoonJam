@@ -52,7 +52,7 @@ public class ConsumablePickup : MonoBehaviour
     public void PickedUp()
     {
         ApplyEffect();
-        Destroy(gameObject);
+        DestroyPickup();
     }
 
     private void InitializeComponents()
@@ -123,5 +123,15 @@ public class ConsumablePickup : MonoBehaviour
                 _ph.Heal(_healthAmount);
                 break;
         }
+    }
+
+    private void DestroyPickup()
+    {
+        Destroy(gameObject);
+    }
+
+    public void SetConsumableType(ConsumableType type)
+    {
+        _consumableType = type;
     }
 }

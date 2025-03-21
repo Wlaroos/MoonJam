@@ -165,6 +165,14 @@ private void OnDisable()
         {
             StopReloadCoroutine();
 
+            // If no starter weapon is assigned, treat the first weapon picked up as the starter weapon
+            if (_starterWeapon == null)
+            {
+                _starterWeapon = weaponToPickup;
+                EquipStarterWeapon();
+                return;
+            }
+
             // If a secondary weapon already exists, drop it
             if (_secondaryWeapon != null)
             {
@@ -181,7 +189,6 @@ private void OnDisable()
             // If the starter weapon is currently equipped, keep it equipped
             if (_currentWeapon == _starterWeapon)
             {
-                //_currentWeaponIndex = 0; // Keep the starter weapon equipped
                 _currentWeaponIndex = 1; // Keep the starter weapon equipped
             }
             else

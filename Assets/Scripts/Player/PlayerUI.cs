@@ -38,6 +38,11 @@ public class PlayerUI : MonoBehaviour
         ConfigureWeaponDisplay();
     }
 
+    void Start()
+    {
+        UpdateAmmoUI(0);
+    }
+
     private void OnEnable()
     {
         SubscribeToEvents();
@@ -185,14 +190,27 @@ private void InitializeAmmoBar()
     {
         if (_ammoText != null)
         {
-            // Check if the current weapon is the starter weapon
-            if (_playerWeaponManager != null && _playerWeaponManager.CurrentWeapon == _playerWeaponManager.StarterWeapon)
+            if (_playerWeaponManager != null && _playerWeaponManager.CurrentWeapon == null)
             {
-                _ammoText.text = "xINF"; // Display infinite ammo for the starter weapon
+                // Hide ammo UI if no weapon is equipped
+                _ammoText.text = "";
+                SetCanvasGroupAlpha(_ammoBarContainer, 0f); // Hide the ammo bar container
+                SetCanvasGroupAlpha(_ammoText.transform.parent, 0f); // Hide the horizontal container
             }
             else
             {
-                _ammoText.text = $"x{currentAmmo}"; // Display regular ammo count for other weapons
+                // Show ammo UI and update the text
+                SetCanvasGroupAlpha(_ammoBarContainer, 1f); // Show the ammo bar container
+                SetCanvasGroupAlpha(_ammoText.transform.parent, 1f); // Hide the horizontal container
+
+                if (_playerWeaponManager.CurrentWeapon == _playerWeaponManager.StarterWeapon)
+                {
+                    _ammoText.text = "xINF"; // Display infinite ammo for the starter weapon
+                }
+                else
+                {
+                    _ammoText.text = $"x{currentAmmo}"; // Display regular ammo count for other weapons
+                }
             }
         }
     }
