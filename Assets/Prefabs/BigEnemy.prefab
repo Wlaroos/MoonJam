@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 924183274721698950}
   - component: {fileID: 7880061942750317333}
   - component: {fileID: 2234931641394426}
-  - component: {fileID: 7803159425681912864}
+  - component: {fileID: 1954620601391679979}
   m_Layer: 7
   m_Name: BigEnemy
   m_TagString: Enemy
@@ -121,7 +121,7 @@ MonoBehaviour:
   OnEnemyDeath:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7803159425681912864
+--- !u!114 &1954620601391679979
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -130,16 +130,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 2010993383133134886}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e077479dc443c9046a8567c3b59600f6, type: 3}
+  m_Script: {fileID: 11500000, guid: f46b1dfcc050a7e47af038794f2e859c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 1.5
   _startDelay: 0
-  _enableFlocking: 1
-  _flockRadius: 2
-  _alignmentWeight: 0.5
-  _cohesionWeight: 0.33
+  _enableFlocking: 0
+  _flockRadius: 5
+  _alignmentWeight: 1
+  _cohesionWeight: 1
   _separationWeight: 1
+  _chargeSpeed: 10
+  _chargeDuration: 1
+  _chargeCooldown: 5
+  _chargeStartDelay: 1
+  _jumpHeight: 0.5
+  _jumpCount: 2
+  _psGround: {fileID: 4478317677858999953, guid: a1c23eed171ac8b468e27501acae697b, type: 3}
 --- !u!1 &2467925903493466049
 GameObject:
   m_ObjectHideFlags: 0
