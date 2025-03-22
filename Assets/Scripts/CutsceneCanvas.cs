@@ -125,11 +125,12 @@ public class CutsceneCanvas : MonoBehaviour
                 break;
             default:
                 Time.timeScale = 1;
+                FindObjectOfType<TutorialMessages>().ActivateGunMessage();
                 break;
         }
 
         _state++;
-        Debug.Log("State: " + _state);
+        //Debug.Log("State: " + _state);
     }
 
     private IEnumerator XSlide(Image image)

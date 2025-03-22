@@ -22,7 +22,7 @@ public class TutorialMessages : MonoBehaviour
 
     void Awake()
     {
-        _gunMessage.SetActive(true);
+        _gunMessage.SetActive(false);
         _dummyMessage.SetActive(false);
         _hpMessage.SetActive(false);
         _buttonMessage.SetActive(false);
@@ -65,5 +65,10 @@ public class TutorialMessages : MonoBehaviour
             if (_runMessage != null) _runMessage.SetActive(true);
             _buttonBool = true;
         }
+    }
+
+    public void ActivateGunMessage()
+    {
+        if (_gunMessage != null) _gunMessage.SetActive(true);
     }
 }

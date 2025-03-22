@@ -145,9 +145,9 @@ public class ArmyDude : MonoBehaviour
                 bullet.BulletSetup(
                     direction,  // Pass the direction vector
                     angle,      // Pass the angle
-                    20f,        // Speed
-                    2,          // Damage
-                    2f,         // Lifetime
+                    30f,        // Speed
+                    3,          // Damage
+                    5f,         // Lifetime
                     0.5f,       // Size
                     3f          // Knockback
                 );

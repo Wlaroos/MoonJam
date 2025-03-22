@@ -5611,6 +5611,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArmyDudePistol (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _shotDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8568117852327954641, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.68
@@ -5676,6 +5684,14 @@ PrefabInstance:
     - target: {fileID: 2623524593878303571, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_Name
       value: ArmyDudePistol (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _shotDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8568117852327954641, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5783,6 +5799,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _shotDelay
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5848,6 +5872,14 @@ PrefabInstance:
     - target: {fileID: 6762704141395372604, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _shotDelay
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5915,6 +5947,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _shotDelay
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5940,6 +5980,14 @@ PrefabInstance:
     - target: {fileID: 2623524593878303571, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_Name
       value: ArmyDudePistol (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _shotDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8568117852327954641, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6047,6 +6095,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _shotDelay
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 7541731847634720327, guid: 1ff69e57726afbd43a7162df8c2de055, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -6072,6 +6128,14 @@ PrefabInstance:
     - target: {fileID: 2623524593878303571, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_Name
       value: ArmyDudePistol
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _shotDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8568117852327954641, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6138,6 +6202,14 @@ PrefabInstance:
     - target: {fileID: 2623524593878303571, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_Name
       value: ArmyDudePistol (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _shotDelay
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5013420031538004046, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
+      propertyPath: _burstDelay
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8568117852327954641, guid: 6ab279baacaf348489b3a411e442c28f, type: 3}
       propertyPath: m_LocalPosition.x

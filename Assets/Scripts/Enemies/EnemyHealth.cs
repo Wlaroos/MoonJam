@@ -44,15 +44,6 @@ public class EnemyHealth : MonoBehaviour
         _currentHealth = _maxHealth;
         _currentDownHealth = _maxDownedHealth;
         _anim.SetBool("isMoving", true);
-
-        // Disable the collider initially
-        _cc.isTrigger = true;
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("BulletBounds")) _cc.isTrigger = false;
-        Debug.Log("Trigger Exit");
     }
 
     public void TakeDamage(Vector2 force, int damage)
@@ -113,7 +104,16 @@ public class EnemyHealth : MonoBehaviour
 
         OnEnemyDowned?.Invoke();
 
+        // Start a coroutine to automatically kill the enemy after 3 seconds
+        StartCoroutine(AutoDeathAfterDowned());
+
         //SFXManager.Instance.PlayEnemyDownSFX();
+    }
+
+    private IEnumerator AutoDeathAfterDowned()
+    {
+        yield return new WaitForSeconds(8f);
+        Death();
     }
 
     private void Death()

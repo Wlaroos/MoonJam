@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class Enemy
 {
@@ -30,11 +31,12 @@ public class PointAdmin : MonoBehaviour
     public float MaxPoints = 100;
     public float SpawnDelay = 1;
     public float SpawnBorderBuffer = 1f; // Buffer for spawn area
-
-    private Transform _playerRef; // Reference to the player's transform
-    private float _minDistanceFromPlayer = 2f; // Minimum distance from the player
-
+    private Transform playerRef; // Reference to the player's transform
+    private float minDistanceFromPlayer = 2f; // Minimum distance from the player
     private float lastSpawnTime = 0f;
+    private bool isHordeSpawningOver = true;
+    public bool HordeSpawningOver => isHordeSpawningOver;
+
 
     private Enemy Zombie = new Enemy();
     private Enemy BigZombie = new Enemy();
@@ -44,7 +46,7 @@ public class PointAdmin : MonoBehaviour
 
     private void Awake()
     {
-        _playerRef = FindObjectOfType<PlayerMovement>().transform;
+        playerRef = FindObjectOfType<PlayerMovement>().transform;
         rand = new System.Random();
 
         if (AllowZombie)
@@ -113,7 +115,7 @@ public class PointAdmin : MonoBehaviour
 
                     attempts++;
                 }
-                while (Vector2.Distance(spawnPosition, _playerRef.position) < _minDistanceFromPlayer && attempts < maxAttempts);
+                while (Vector2.Distance(spawnPosition, playerRef.position) < minDistanceFromPlayer && attempts < maxAttempts);
 
                 if (attempts >= maxAttempts) return; // Exit if no valid position is found
 
@@ -136,6 +138,46 @@ public class PointAdmin : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void HordeSpawn(int hordeSize)
+    {
+        StartCoroutine(SpawnHorde(hordeSize));
+    }
+
+    private IEnumerator SpawnHorde(int hordeSize)
+    {
+        Camera cam = Camera.main;
+
+        // Calculate the bottom of the screen
+        float spawnY = cam.transform.position.y - cam.orthographicSize - SpawnBorderBuffer;
+        float minX = cam.transform.position.x - cam.orthographicSize * cam.aspect + SpawnBorderBuffer;
+        float maxX = cam.transform.position.x + cam.orthographicSize * cam.aspect - SpawnBorderBuffer;
+
+        isHordeSpawningOver = false;
+
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i < hordeSize; i++)
+        {
+            if (AllowZombie)
+            {
+                // Randomize the X position within the screen bounds
+                float spawnX = UnityEngine.Random.Range(minX, maxX);
+                Vector2 spawnPosition = new Vector2(spawnX, spawnY);
+
+                // Spawn the zombie
+                GameObject holder = Instantiate(ZombiePrefab, spawnPosition, Quaternion.identity);
+                LiveEnemyList.Add(holder);
+
+                holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromList(holder));
+
+                // Wait for 0.1 seconds before spawning the next zombie
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+
+        isHordeSpawningOver = true;
     }
 
     public void AddPoints(float points)

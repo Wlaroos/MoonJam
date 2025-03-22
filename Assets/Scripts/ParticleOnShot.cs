@@ -6,12 +6,22 @@ public class ParticleOnShot : MonoBehaviour
 {
     [SerializeField] private GameObject _ps;
 
+    private void OnEnable()
+    {
+        StartCoroutine(DelayedExplode(2f));
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.GetComponent<BulletBase>() != null)
         {
             Explode();
         }
+    }
+
+    private IEnumerator DelayedExplode(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        Explode();
     }
 
     public void Explode()

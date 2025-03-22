@@ -18,7 +18,8 @@ public class GameStateManager : MonoBehaviour
 
     private int _currentWaveCount;
     private int _currentLevel;
-    private LineRenderer _waveBoundaryRenderer; // LineRenderer for wave boundary
+    private float _cameraDistanceFromCenter = 0.1f;
+    //private LineRenderer _waveBoundaryRenderer; // LineRenderer for wave boundary
 
     // State machine
     private enum GameState
@@ -28,29 +29,32 @@ public class GameStateManager : MonoBehaviour
         PreWave,
         DuringWave,
         PostWave,
-        Transition
+        Transition,
+        PreHorde,
+        DuringHorde,
+        PostHorde,
     }
 
     private GameState _currentState;
-    private PointAdmin _spawnManager;
+    private PointAdmin _pointAdmin;
     private CameraFollow _cameraFollow;
     private bool _paused;
     void Awake()
     {
         _currentState = GameState.TutorialStart;
-        _spawnManager = GetComponent<PointAdmin>();
+        _pointAdmin = GetComponent<PointAdmin>();
         _cameraFollow = GetComponent<CameraFollow>();
-        _waveBoundaryRenderer = GetComponent<LineRenderer>();
+        //_waveBoundaryRenderer = GetComponent<LineRenderer>();
 
         if (_pausedCanvas != null)
         {
             _pausedCanvas.SetActive(false); // Ensure the canvas is disabled at the start
         }
 
-        if (_waveBoundaryRenderer != null)
-        {
-            _waveBoundaryRenderer.enabled = false; // Disable the LineRenderer at the start
-        }
+        // if (_waveBoundaryRenderer != null)
+        // {
+        //     _waveBoundaryRenderer.enabled = false; // Disable the LineRenderer at the start
+        // }
     }
 
     void Start()
@@ -93,6 +97,15 @@ public class GameStateManager : MonoBehaviour
             case GameState.Transition:
                 HandleTransitionState();
                 break;
+            case GameState.PreHorde:
+                HandlePreHordeState();
+                break;
+            case GameState.DuringHorde:
+                HandleDuringHordeState();
+                break;
+            case GameState.PostHorde:
+                HandlePostHordeState();
+                break;
         }
     }
 
@@ -107,7 +120,7 @@ public class GameStateManager : MonoBehaviour
         // Logic for the TutorialEnd state
         Debug.Log("Game is in TutorialEnd state.");
         // Transition to PreWave
-        if (Mathf.Abs(transform.position.x - _cameraFollow.MaxX) <= 0.01f)
+        if (Mathf.Abs(transform.position.x - _cameraFollow.MaxX) <= _cameraDistanceFromCenter)
         {
             transform.position =  new Vector3(_cameraFollow.MaxX, transform.position.y, transform.position.z);
             _cameraFollow.AddMinWidth(_cameraFollow.RoomWidth);
@@ -128,52 +141,25 @@ public class GameStateManager : MonoBehaviour
     {
         // Logic for the DuringWave state
         Debug.Log("Game is in DuringWave state.");
-        _spawnManager.SpawnEnemies();
+        _pointAdmin.SpawnEnemies();
 
-        // Enable and update the wave boundary
-        if (_waveBoundaryRenderer != null)
-        {
-            _waveBoundaryRenderer.enabled = true;
-            UpdateWaveBoundary();
-        }
+        // // Enable and update the wave boundary
+        // if (_waveBoundaryRenderer != null)
+        // {
+        //     _waveBoundaryRenderer.enabled = true;
+        //     UpdateWaveBoundary();
+        // }
 
-        // Example condition to transition to PostWave
-        if (_spawnManager.LiveEnemyList.Count == 0 && _spawnManager.MaxPoints <= 0)
+        if (_pointAdmin.LiveEnemyList.Count == 0 && _pointAdmin.MaxPoints <= 0)
         {
             _currentState = GameState.PostWave;
 
-            // Disable the wave boundary when the wave ends
-            if (_waveBoundaryRenderer != null)
-            {
-                _waveBoundaryRenderer.enabled = false;
-            }
+            // // Disable the wave boundary when the wave ends
+            // if (_waveBoundaryRenderer != null)
+            // {
+            //     _waveBoundaryRenderer.enabled = false;
+            // }
         }
-    }
-
-    private void UpdateWaveBoundary()
-    {
-        if (_waveBoundaryRenderer == null || Camera.main == null) return;
-
-        // Get the camera's viewport bounds
-        Camera cam = Camera.main;
-        Vector3 bottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, 0));
-        Vector3 bottomRight = cam.ViewportToWorldPoint(new Vector3(1, 0, 0));
-        Vector3 topRight = cam.ViewportToWorldPoint(new Vector3(1, 1, 0));
-        Vector3 topLeft = cam.ViewportToWorldPoint(new Vector3(0, 1, 0));
-
-        // Set the positions for the LineRenderer
-        _waveBoundaryRenderer.positionCount = 5; // 4 corners + 1 to close the loop
-        _waveBoundaryRenderer.SetPosition(0, new Vector3(bottomLeft.x, bottomLeft.y, 0));
-        _waveBoundaryRenderer.SetPosition(1, new Vector3(bottomRight.x, bottomRight.y, 0));
-        _waveBoundaryRenderer.SetPosition(2, new Vector3(topRight.x, topRight.y, 0));
-        _waveBoundaryRenderer.SetPosition(3, new Vector3(topLeft.x, topLeft.y, 0));
-        _waveBoundaryRenderer.SetPosition(4, new Vector3(bottomLeft.x, bottomLeft.y, 0)); // Close the loop
-
-        _waveBoundaryRenderer.startColor = Color.red;
-        _waveBoundaryRenderer.endColor = Color.red;
-
-        _waveBoundaryRenderer.startWidth = .025f;
-        _waveBoundaryRenderer.endWidth = .025f;
     }
 
     private void HandlePostWaveState()
@@ -181,29 +167,79 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("Game is in PostWave state.");
 
         _cameraFollow.AddMaxHeight(_cameraFollow.RoomHeight);
-        Instantiate(_moveUpIndicator, new Vector3(transform.position.x, transform.position.y + 4.5f, 0), Quaternion.identity);
+        GameObject moveUpIndicator = Instantiate(_moveUpIndicator, new Vector3(transform.position.x, transform.position.y + 4.5f, 0), Quaternion.identity);
+        moveUpIndicator.transform.parent = transform;
 
         _currentState = GameState.Transition;
 
-        // Disable the wave boundary when transitioning
-        if (_waveBoundaryRenderer != null)
-        {
-            _waveBoundaryRenderer.enabled = false;
-        }
+        // // Disable the wave boundary when transitioning
+        // if (_waveBoundaryRenderer != null)
+        // {
+        //     _waveBoundaryRenderer.enabled = false;
+        // }
+
+        _currentWaveCount++;
     }
 
     private void HandleTransitionState()
     {
         Debug.Log("Game is in Transition state.");
 
-        if (Mathf.Abs(transform.position.y - _cameraFollow.MaxY) <= 0.01f)
+        if (Mathf.Abs(transform.position.y - _cameraFollow.MaxY) <= _cameraDistanceFromCenter)
         {
-            transform.position =  new Vector3(transform.position.x, _cameraFollow.MaxY, transform.position.z);
+            transform.position = new Vector3(transform.position.x, _cameraFollow.MaxY, transform.position.z);
             _cameraFollow.AddMinHeight(_cameraFollow.RoomHeight);
-            _spawnManager.AddPoints(50);
+            _pointAdmin.AddPoints(50);
+
+            // Check if this is the second-to-last wave of the level
+            if (_currentWaveCount == GetSecondToLastWaveCount())
+            {
+                _currentState = GameState.PreHorde;
+                return;
+            }
 
             _currentState = GameState.PreWave;
         }
+    }
+
+    private void HandlePreHordeState()
+    {
+        Debug.Log("Game is in PreHorde state.");
+
+        // Spawn indicators
+        GameObject hordeIndicator = Instantiate(_hordeIndicator, new Vector3(transform.position.x, transform.position.y - 4.5f, 0), Quaternion.identity);
+        hordeIndicator.transform.parent = transform;
+
+        GameObject moveUpIndicator = Instantiate(_moveUpIndicator, new Vector3(transform.position.x, transform.position.y + 4.5f, 0), Quaternion.identity);
+        moveUpIndicator.transform.parent = transform;
+        // Call SpawnHorde in the PointAdmin
+        _pointAdmin.HordeSpawn(50);
+
+        _cameraFollow.AddMaxHeight(_cameraFollow.RoomHeight);
+
+        _currentState = GameState.DuringHorde;
+    }
+
+    private void HandleDuringHordeState()
+    {
+        Debug.Log("Game is in DuringHorde state.");
+        
+        if(_pointAdmin.LiveEnemyList.Count == 0 && _pointAdmin.HordeSpawningOver)
+        {
+            _currentState = GameState.PostHorde;
+        }
+    }
+
+    private void HandlePostHordeState()
+    {
+        Debug.Log("Game is in PostHorde state.");
+    }
+
+    // Helper method to calculate the second-to-last wave count for the current level
+    private int GetSecondToLastWaveCount()
+    {
+        int[] waveCounts = { _level1WaveCount, _level2WaveCount, _level3WaveCount, _level4WaveCount };
+        return waveCounts[_currentLevel] - 2; // Second-to-last wave
     }
 
     private void PauseGame()
@@ -232,6 +268,32 @@ public class GameStateManager : MonoBehaviour
     {
         _currentState = GameState.TutorialEnd;
     }
+
+    // private void UpdateWaveBoundary()
+    // {
+    //     if (_waveBoundaryRenderer == null || Camera.main == null) return;
+
+    //     // Get the camera's viewport bounds
+    //     Camera cam = Camera.main;
+    //     Vector3 bottomLeft = cam.ViewportToWorldPoint(new Vector3(0, 0, 0));
+    //     Vector3 bottomRight = cam.ViewportToWorldPoint(new Vector3(1, 0, 0));
+    //     Vector3 topRight = cam.ViewportToWorldPoint(new Vector3(1, 1, 0));
+    //     Vector3 topLeft = cam.ViewportToWorldPoint(new Vector3(0, 1, 0));
+
+    //     // Set the positions for the LineRenderer
+    //     _waveBoundaryRenderer.positionCount = 5; // 4 corners + 1 to close the loop
+    //     _waveBoundaryRenderer.SetPosition(0, new Vector3(bottomLeft.x, bottomLeft.y, 0));
+    //     _waveBoundaryRenderer.SetPosition(1, new Vector3(bottomRight.x, bottomRight.y, 0));
+    //     _waveBoundaryRenderer.SetPosition(2, new Vector3(topRight.x, topRight.y, 0));
+    //     _waveBoundaryRenderer.SetPosition(3, new Vector3(topLeft.x, topLeft.y, 0));
+    //     _waveBoundaryRenderer.SetPosition(4, new Vector3(bottomLeft.x, bottomLeft.y, 0)); // Close the loop
+
+    //     _waveBoundaryRenderer.startColor = Color.red;
+    //     _waveBoundaryRenderer.endColor = Color.red;
+
+    //     _waveBoundaryRenderer.startWidth = .025f;
+    //     _waveBoundaryRenderer.endWidth = .025f;
+    // }
 
     private void CreateRooms()
     {
