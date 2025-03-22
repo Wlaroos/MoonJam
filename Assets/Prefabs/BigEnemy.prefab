@@ -114,7 +114,7 @@ MonoBehaviour:
   _maxDownedHealth: 3
   _deathBloodParticles: {fileID: 6009536360408007042, guid: ec1467be08318634186665177f7b9481, type: 3}
   _deathChunkParticles: {fileID: 6009536360408007042, guid: 34ab9b0385847c240903005af8e6d8c2, type: 3}
-  _knockbackDuration: 0.25
+  _knockbackDuration: 0.1
   OnEnemyDowned:
     m_PersistentCalls:
       m_Calls: []
@@ -135,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 1.5
   _startDelay: 0
+  _knockbackMult: 0.33
   _enableFlocking: 0
   _flockRadius: 5
   _alignmentWeight: 1

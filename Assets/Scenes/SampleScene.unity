@@ -467,67 +467,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &193290188
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 216438180333113442, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_Name
-      value: NextLevelZone
-      objectReference: {fileID: 0}
-    - target: {fileID: 216438180333113442, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -26.10032
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -3.502223
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9141411235783199184, guid: daa7d615b9243144195ebe069e50348b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: daa7d615b9243144195ebe069e50348b, type: 3}
 --- !u!1 &200682778
 GameObject:
   m_ObjectHideFlags: 0
@@ -7608,7 +7547,7 @@ MonoBehaviour:
   ZombieCost: 10
   AllowBigZombie: 0
   BigZombiePrefab: {fileID: 2010993383133134886, guid: c330a6b7b3ce3d04c9638e12b619d19c, type: 3}
-  BigZombieCost: 30
+  BigZombieCost: 20
   AllowSmallZombie: 0
   SmallZombiePrefab: {fileID: 3125447741530896508, guid: 09e1e6f88322c974ea3867730ec6049a, type: 3}
   SmallZombieCost: 20
@@ -9211,4 +9150,3 @@ SceneRoots:
   - {fileID: 862475986}
   - {fileID: 1573577988}
   - {fileID: 293479192}
-  - {fileID: 193290188}

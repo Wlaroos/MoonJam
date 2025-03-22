@@ -115,6 +115,15 @@ public class PointAdmin : MonoBehaviour
                 }
                 else
                 {
+                    // Spawn one last zombie and remove all remaining points
+                    Enemy lastZombie = EnemyList[0]; // Default to the first enemy in the list
+                    GameObject holder = Instantiate(lastZombie.prefab, spawnPosition, Quaternion.identity);
+
+                    LiveEnemyList.Add(holder);
+
+                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromLiveEnemyList(holder));
+                    lastSpawnTime = Time.time;
+                    MaxPoints = 0; // Remove all remaining points
                     break;
                 }
             }

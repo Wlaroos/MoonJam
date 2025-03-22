@@ -7,6 +7,7 @@ public class EnemyMovement : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] protected float _speed = 3f;
     [SerializeField] protected float _startDelay = 1f;
+    [SerializeField] protected float _knockbackMult = 1f;
 
     [Header("Flocking Settings")]
     [SerializeField] protected bool _enableFlocking = false;
@@ -81,7 +82,7 @@ public class EnemyMovement : MonoBehaviour
 
     protected virtual void RandomizeSpeed()
     {
-        _speed = Random.Range(_speed - 1, _speed + 1);
+        _speed = Random.Range(_speed, _speed + 1.5f);
     }
 
     protected virtual void MoveTowardsPlayer()
@@ -111,7 +112,7 @@ public class EnemyMovement : MonoBehaviour
     protected virtual IEnumerator KnockbackStart(Vector2 force, float duration)
     {
         _isKnockback = true;
-        _rb.AddForce(force, ForceMode2D.Impulse);
+        _rb.AddForce(force * _knockbackMult, ForceMode2D.Impulse);
 
         yield return new WaitForSeconds(duration);
 

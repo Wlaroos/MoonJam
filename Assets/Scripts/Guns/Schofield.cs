@@ -55,7 +55,7 @@ public class Schofield : WeaponBase
     {
         if (IsReloading)
         {
-            _gunSprite.Rotate(0, 0, 3000 * Time.deltaTime);
+            _gunSprite.Rotate(0, 0, 1750 * Time.deltaTime);
             _resetRotationDone = false;
         }
         else if (!_resetRotationDone)

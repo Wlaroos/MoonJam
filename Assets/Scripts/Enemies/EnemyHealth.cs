@@ -26,7 +26,6 @@ public class EnemyHealth : MonoBehaviour
     private Animator _anim;
     private EnemyMovement _enemyMovement;
     private int _spriteIndex;
-    private const float knockbackMultiplier = 1.0f;
     private bool _isDowned = false;
     public bool IsDowned => _isDowned;
 
@@ -54,7 +53,7 @@ public class EnemyHealth : MonoBehaviour
         if (!_isDowned)
         {
             // Apply knockback and flash red
-            _enemyMovement.Knockback(force * knockbackMultiplier, _knockbackDuration);
+            _enemyMovement.Knockback(force, _knockbackDuration);
 
             _currentHealth -= damage;
             if (_currentHealth <= 0)
@@ -65,7 +64,7 @@ public class EnemyHealth : MonoBehaviour
         else
         {
             // Weaker knockback in downed state
-            _enemyMovement.Knockback(force * (knockbackMultiplier / 2), _knockbackDuration);
+            _enemyMovement.Knockback(force / 2, _knockbackDuration);
 
             _currentDownHealth -= damage;
             if (_currentDownHealth <= 0)
@@ -81,8 +80,17 @@ public class EnemyHealth : MonoBehaviour
         _headSr.color = Color.red;
         _bodySr.color = Color.red;
         yield return new WaitForSeconds(0.2f);
-        _headSr.color = Color.white;
-        _bodySr.color = Color.white;
+
+        if(_isDowned)
+        {
+            _headSr.color = Color.grey;
+            _bodySr.color = Color.grey;
+        }
+        else
+        {
+            _headSr.color = Color.white;
+            _bodySr.color = Color.white;
+        }
     }
 
     private void Downed()
