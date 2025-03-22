@@ -8,7 +8,7 @@ public class ParticleOnShot : MonoBehaviour
 
     private void OnEnable()
     {
-        StartCoroutine(DelayedExplode(2f));
+        StartCoroutine(DelayedExplode(3.5f));
     }
     void OnTriggerEnter2D(Collider2D other)
     {

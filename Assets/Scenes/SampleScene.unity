@@ -3115,7 +3115,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -49.7, y: -33.700012}
+  m_AnchoredPosition: {x: -62, y: -25}
   m_SizeDelta: {x: 27.16, y: 43.2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &973755401
@@ -7974,6 +7974,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2520983318697064329, guid: 7b749a6458cb3b54f97e729e9ba96262, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 1470618657, guid: e878ad35fb4ba4e4f90f20196049d8ae, type: 3}
     - target: {fileID: 5457529970483663339, guid: 7b749a6458cb3b54f97e729e9ba96262, type: 3}
       propertyPath: m_Name
       value: StarterGun

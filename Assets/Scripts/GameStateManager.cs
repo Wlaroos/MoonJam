@@ -18,12 +18,16 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject _checkpointRoom;
     [SerializeField] private GameObject _finalRoom;
     [SerializeField] private GameObject _gunCrate;
-
+    private GameObject _playerRef;
     private int _currentWaveCount;
     private int _currentLevel;
     public int CurrentLevel => _currentLevel;
     private float _cameraDistanceFromCenter = 0.1f;
     //private LineRenderer _waveBoundaryRenderer; // LineRenderer for wave boundary
+
+    // Add a list to track rooms for the current level
+    private List<GameObject> _currentLevelRooms = new List<GameObject>();
+    private List<GameObject> _lastLevelRooms = new List<GameObject>();
 
     // State machine
     private enum GameState
@@ -52,6 +56,8 @@ public class GameStateManager : MonoBehaviour
         _currentState = GameState.TutorialStart;
         _pointAdmin = GetComponent<PointAdmin>();
         _cameraFollow = GetComponent<CameraFollow>();
+        _playerRef = GameObject.FindGameObjectWithTag("Player");
+
         //_waveBoundaryRenderer = GetComponent<LineRenderer>();
 
         if (_pausedCanvas != null)
@@ -192,12 +198,6 @@ public class GameStateManager : MonoBehaviour
 
         _currentState = GameState.Transition;
 
-        // // Disable the wave boundary when transitioning
-        // if (_waveBoundaryRenderer != null)
-        // {
-        //     _waveBoundaryRenderer.enabled = false;
-        // }
-
         _currentWaveCount++;
     }
 
@@ -264,7 +264,9 @@ public class GameStateManager : MonoBehaviour
     
     public void NextLevelTrigger()
     {   
-        Debug.Log("Current level: " + _currentLevel);
+        // Create a copy of _currentLevelRooms instead of referencing it
+        _lastLevelRooms = new List<GameObject>(_currentLevelRooms);
+
         if (_currentLevel >= 3)
         {
             _currentState = GameState.FinalArea;
@@ -275,6 +277,9 @@ public class GameStateManager : MonoBehaviour
             _currentState = GameState.MapCutscene;
             _currentLevel++;
             _currentWaveCount = 0;
+
+            // Load rooms for the next level
+            CreateRooms();
         }
     }
 
@@ -286,6 +291,19 @@ public class GameStateManager : MonoBehaviour
     private void HandleNextLevelState()
     {
         Debug.Log("Game is in NextLevel state.");
+        
+        _playerRef.transform.position = new Vector3(_cameraFollow.RoomWidth * _currentLevel, 0, 0);
+        _cameraFollow.MinMaxReset();
+        _cameraFollow.AddMaxWidth(_cameraFollow.RoomWidth * _currentLevel);
+        _cameraFollow.AddMinWidth(_cameraFollow.RoomWidth * _currentLevel);
+
+        // Clear the rooms from the previous level
+        foreach (GameObject room in _lastLevelRooms)
+        {
+            Destroy(room);
+        }
+
+        _currentState = GameState.PreWave;
     }
 
     private void HandleFinalAreaState()
@@ -332,6 +350,11 @@ public class GameStateManager : MonoBehaviour
         _currentState = GameState.TutorialEnd;
     }
 
+    public void NextLevel()
+    {
+        _currentState = GameState.NextLevel;
+    }
+
     // private void UpdateWaveBoundary()
     // {
     //     if (_waveBoundaryRenderer == null || Camera.main == null) return;
@@ -360,32 +383,39 @@ public class GameStateManager : MonoBehaviour
 
     private void CreateRooms()
     {
+        // Clear the list of rooms for the current level
+        _currentLevelRooms.Clear();
+
         int[] waveCounts = { _level1WaveCount, _level2WaveCount, _level3WaveCount, _level4WaveCount };
+        int waveCountForCurrentLevel = waveCounts[_currentLevel];
 
-        for (int level = 0; level < waveCounts.Length; level++)
+        for (int wave = 0; wave < waveCountForCurrentLevel; wave++)
         {
-                for (int wave = 0; wave < waveCounts[level]; wave++)
-                {
-                    GameObject roomToInstantiate;
+            GameObject roomToInstantiate;
 
-                    // Use the after tutorial room for the first room in level 1
-                    if (level == 0 && level == 0 && wave == 0)
-                    {
-                        roomToInstantiate = _afterTutorialRoom;
-                    }
-                    // Use the checkpoint room for the last room of each level
-                    else if (wave == waveCounts[level] - 1)
-                    {
-                        roomToInstantiate = _checkpointRoom;
-                    }
-                    else
-                    {
-                        roomToInstantiate = _room;
-                    }
+            // Use the after tutorial room for the first room in level 1
+            if (_currentLevel == 0 && wave == 0)
+            {
+                roomToInstantiate = _afterTutorialRoom;
+            }
+            // Use the checkpoint room for the last room of the level
+            else if (wave == waveCountForCurrentLevel - 1)
+            {
+                roomToInstantiate = _checkpointRoom;
+            }
+            else
+            {
+                roomToInstantiate = _room;
+            }
 
-                    Instantiate(roomToInstantiate, new Vector3(level * _cameraFollow.RoomWidth, wave * _cameraFollow.RoomHeight , 0), Quaternion.identity);
-                }
+            GameObject instantiatedRoom = Instantiate(
+                roomToInstantiate,
+                new Vector3(_currentLevel * _cameraFollow.RoomWidth, wave * _cameraFollow.RoomHeight, 0),
+                Quaternion.identity
+            );
 
+            // Add the instantiated room to the list
+            _currentLevelRooms.Add(instantiatedRoom);
         }
     }
 }

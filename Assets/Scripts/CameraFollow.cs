@@ -55,4 +55,12 @@ public class CameraFollow : MonoBehaviour
     {
         _minX += width;
     }
+
+    public void MinMaxReset()
+    {
+        _minY = 0f;
+        _maxY = 0f;
+        _minX = 0f;
+        _maxX = 0f;
+    }
 }

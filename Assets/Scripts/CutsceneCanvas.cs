@@ -34,8 +34,7 @@ public class CutsceneCanvas : MonoBehaviour
     private float _holdDuration = 1f;
     private CanvasGroup _canvasGroup; // Assign the CanvasGroup in the Inspector.
     private Sprite[] _phoneSprites;
-    private bool _mapCutscene = false;
-
+    private GameStateManager _gsm;
     void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
@@ -47,6 +46,8 @@ public class CutsceneCanvas : MonoBehaviour
         _holdBarSize = _holdBar.rectTransform.sizeDelta;
         _holdBar.rectTransform.sizeDelta = Vector2.zero;
         _holdBar2.rectTransform.sizeDelta = Vector2.zero;
+
+        _gsm = FindObjectOfType<GameStateManager>();
 
         Time.timeScale = 0;
     }
@@ -144,6 +145,7 @@ public class CutsceneCanvas : MonoBehaviour
             case 12:
                 _state = 9;
                 AdvanceState();
+                _gsm.NextLevel();
                 break;
             default:
                 break;
@@ -203,104 +205,108 @@ public class CutsceneCanvas : MonoBehaviour
     }
 
     private IEnumerator YSlideIn(Image image)
-{
-    if (image != null)
     {
-        float duration = 1f; // Duration of the lerp in seconds
-        float elapsedTime = 0f;
-
-        // Store the initial position and rotation
-        Vector3 initialPosition = image.rectTransform.anchoredPosition;
-        Quaternion initialRotation = image.rectTransform.rotation;
-
-        // Calculate the target position (half the height of the image)
-        float halfHeight = image.rectTransform.rect.height / 2f;
-        Vector3 targetPosition = new Vector3(initialPosition.x, halfHeight, initialPosition.z);
-        Quaternion targetRotation = Quaternion.Euler(
-            initialRotation.eulerAngles.x,
-            initialRotation.eulerAngles.y,
-            0
-        );
-
-        while (elapsedTime < duration)
+        if (image != null)
         {
-            elapsedTime += Time.unscaledDeltaTime;
+            float duration = 1f; // Duration of the lerp in seconds
+            float elapsedTime = 0f;
 
-            // Calculate the easing factor using Mathf.SmoothStep
-            float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
+            // Store the initial position and rotation
+            Vector3 initialPosition = image.rectTransform.anchoredPosition;
+            Quaternion initialRotation = image.rectTransform.rotation;
 
-            // Lerp position with easing
-            image.rectTransform.anchoredPosition = Vector3.Lerp(
-                initialPosition,
-                targetPosition,
-                t
+            // Calculate the target position (half the height of the image)
+            float halfHeight = image.rectTransform.rect.height / 2f;
+
+            // Apply additional offset only for the phone
+            float additionalOffset = (image == _phone) ? 20f : 0f; // Adjust 50f as needed
+            Vector3 targetPosition = new Vector3(initialPosition.x, halfHeight + additionalOffset, initialPosition.z);
+
+            Quaternion targetRotation = Quaternion.Euler(
+                initialRotation.eulerAngles.x,
+                initialRotation.eulerAngles.y,
+                0
             );
 
-            // Lerp rotation with easing
-            image.rectTransform.rotation = Quaternion.Lerp(
-                initialRotation,
-                targetRotation,
-                t
-            );
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.unscaledDeltaTime;
 
-            yield return null;
+                // Calculate the easing factor using Mathf.SmoothStep
+                float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
+
+                // Lerp position with easing
+                image.rectTransform.anchoredPosition = Vector3.Lerp(
+                    initialPosition,
+                    targetPosition,
+                    t
+                );
+
+                // Lerp rotation with easing
+                image.rectTransform.rotation = Quaternion.Lerp(
+                    initialRotation,
+                    targetRotation,
+                    t
+                );
+
+                yield return null;
+            }
+
+            // Ensure final position and rotation are set
+            image.rectTransform.anchoredPosition = targetPosition;
+            image.rectTransform.rotation = targetRotation;
         }
-
-        // Ensure final position and rotation are set
-        image.rectTransform.anchoredPosition = targetPosition;
-        image.rectTransform.rotation = targetRotation;
     }
-}
 
-private IEnumerator YSlideOut(Image image)
-{
-    if (image != null)
+    private IEnumerator YSlideOut(Image image)
     {
-        float duration = 1f; // Duration of the lerp in seconds
-        float elapsedTime = 0f;
-
-        // Store the initial position and rotation
-        Vector3 initialPosition = image.rectTransform.anchoredPosition;
-        Quaternion initialRotation = image.rectTransform.rotation;
-
-        // Calculate the target position (negative half the height of the image)
-        float halfHeight = image.rectTransform.rect.height / 2f;
-        Vector3 targetPosition = new Vector3(initialPosition.x, -halfHeight, initialPosition.z);
-        Quaternion targetRotation = Quaternion.Euler(
-            initialRotation.eulerAngles.x,
-            initialRotation.eulerAngles.y,
-            -initialRotation.eulerAngles.z
-        );
-
-        while (elapsedTime < duration)
+        if (image != null)
         {
-            elapsedTime += Time.unscaledDeltaTime;
+            float duration = 1f; // Duration of the lerp in seconds
+            float elapsedTime = 0f;
 
-            // Calculate the easing factor using Mathf.SmoothStep
-            float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
+            // Store the initial position and rotation
+            Vector3 initialPosition = image.rectTransform.anchoredPosition;
+            Quaternion initialRotation = image.rectTransform.rotation;
 
-            // Lerp position with easing
-            image.rectTransform.anchoredPosition = Vector3.Lerp(
-                initialPosition,
-                targetPosition,
-                t
+            // Calculate the target position (negative half the height of the image)
+            float halfHeight = image.rectTransform.rect.height / 2f;
+            Vector3 targetPosition = new Vector3(initialPosition.x, -halfHeight, initialPosition.z);
+            Quaternion targetRotation = Quaternion.Euler(
+                initialRotation.eulerAngles.x,
+                initialRotation.eulerAngles.y,
+                -initialRotation.eulerAngles.z
             );
 
-            // Lerp rotation with easing
-            image.rectTransform.rotation = Quaternion.Lerp(
-                initialRotation,
-                targetRotation,
-                t
-            );
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.unscaledDeltaTime;
 
-            yield return null;
+                // Calculate the easing factor using Mathf.SmoothStep
+                float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
+
+                // Lerp position with easing
+                image.rectTransform.anchoredPosition = Vector3.Lerp(
+                    initialPosition,
+                    targetPosition,
+                    t
+                );
+
+                // Lerp rotation with easing
+                image.rectTransform.rotation = Quaternion.Lerp(
+                    initialRotation,
+                    targetRotation,
+                    t
+                );
+
+                yield return null;
+            }
+
+            // Ensure final position and rotation are set
+            image.rectTransform.anchoredPosition = targetPosition;
+            image.rectTransform.rotation = targetRotation;
         }
-
-        // Ensure final position and rotation are set
-        image.rectTransform.anchoredPosition = targetPosition;
-        image.rectTransform.rotation = targetRotation;
     }
-}
 
     private IEnumerator FadeOutCanvas()
     {
@@ -330,7 +336,6 @@ private IEnumerator YSlideOut(Image image)
     {
         Time.timeScale = 0;
         _state = 11;
-        _mapCutscene = true;
         _gaz1.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
         StartCoroutine(YSlideIn(_map));
         StartCoroutine(FadeInCanvas());
@@ -358,7 +363,7 @@ private IEnumerator YSlideOut(Image image)
     private IEnumerator MapAnimation()
     {
         // Get the current level from the GameStateManager
-        int level = FindObjectOfType<GameStateManager>().CurrentLevel;
+        int level = _gsm.CurrentLevel;
 
         // Ensure the level index is within bounds
         if (level < 0 || level >= _maskSizes.Length || level >= _mePagePos.Length)
