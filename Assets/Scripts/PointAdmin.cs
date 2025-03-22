@@ -82,10 +82,10 @@ public class PointAdmin : MonoBehaviour
                 Camera cam = Camera.main;
 
                 // Calculate the camera's world boundaries
-                float minY = cam.transform.position.y - cam.orthographicSize + SpawnBorderBuffer;
-                float maxY = cam.transform.position.y + cam.orthographicSize - SpawnBorderBuffer;
-                float minX = cam.transform.position.x - cam.orthographicSize * cam.aspect + SpawnBorderBuffer;
-                float maxX = cam.transform.position.x + cam.orthographicSize * cam.aspect - SpawnBorderBuffer;
+                float minY = cam.transform.position.y - cam.orthographicSize - SpawnBorderBuffer; // Spawn outside the bottom
+                float maxY = cam.transform.position.y + cam.orthographicSize + SpawnBorderBuffer; // Spawn outside the top
+                float minX = cam.transform.position.x - cam.orthographicSize * cam.aspect - SpawnBorderBuffer; // Spawn outside the left
+                float maxX = cam.transform.position.x + cam.orthographicSize * cam.aspect + SpawnBorderBuffer; // Spawn outside the right
 
                 Vector2 spawnPosition;
                 int maxAttempts = 10; // Limit attempts to find a valid spawn position
@@ -93,9 +93,24 @@ public class PointAdmin : MonoBehaviour
 
                 do
                 {
-                    float spawnY = UnityEngine.Random.Range(minY, maxY);
-                    float spawnX = UnityEngine.Random.Range(minX, maxX);
-                    spawnPosition = new Vector2(spawnX, spawnY);
+                    // Randomly decide whether to spawn on the top/bottom or left/right
+                    bool spawnHorizontally = UnityEngine.Random.value > 0.5f;
+
+                    if (spawnHorizontally)
+                    {
+                        // Spawn on the left or right side
+                        float spawnX = UnityEngine.Random.value > 0.5f ? minX : maxX;
+                        float spawnY = UnityEngine.Random.Range(minY, maxY);
+                        spawnPosition = new Vector2(spawnX, spawnY);
+                    }
+                    else
+                    {
+                        // Spawn on the top or bottom side
+                        float spawnX = UnityEngine.Random.Range(minX, maxX);
+                        float spawnY = UnityEngine.Random.value > 0.5f ? minY : maxY;
+                        spawnPosition = new Vector2(spawnX, spawnY);
+                    }
+
                     attempts++;
                 }
                 while (Vector2.Distance(spawnPosition, _playerRef.position) < _minDistanceFromPlayer && attempts < maxAttempts);
@@ -112,7 +127,6 @@ public class PointAdmin : MonoBehaviour
                     LiveEnemyList.Add(holder);
 
                     holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromList(holder));
-                    //holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RestorePoints(holder, Spawnee.cost));
                     lastSpawnTime = Time.time;
                     MaxPoints -= Spawnee.cost;
                 }

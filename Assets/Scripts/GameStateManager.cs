@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class GameStateManager : MonoBehaviour
 {
-    [SerializeField] private GameObject _pausedCanvas; // Reference to the paused canvas
-    [SerializeField] private GameObject _gameOverCanvas; // Reference to the game over canvas
-    [SerializeField] private GameObject _moveUpIndicator; // Reference to the move up indicator
+    [SerializeField] private GameObject _pausedCanvas;
+    [SerializeField] private GameObject _gameOverCanvas;
+    [SerializeField] private GameObject _moveUpIndicator;
+    [SerializeField] private GameObject _hordeIndicator;
     [SerializeField] private int _level1WaveCount;
     [SerializeField] private int _level2WaveCount;
     [SerializeField] private int _level3WaveCount;
