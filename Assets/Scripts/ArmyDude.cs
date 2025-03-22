@@ -146,7 +146,7 @@ public class ArmyDude : MonoBehaviour
                     direction,  // Pass the direction vector
                     angle,      // Pass the angle
                     30f,        // Speed
-                    3,          // Damage
+                    1,          // Damage
                     5f,         // Lifetime
                     0.5f,       // Size
                     3f          // Knockback

@@ -49,26 +49,7 @@ public class PointAdmin : MonoBehaviour
         playerRef = FindObjectOfType<PlayerMovement>().transform;
         rand = new System.Random();
 
-        if (AllowZombie)
-        {
-            Zombie.prefab = ZombiePrefab;
-            Zombie.cost = ZombieCost;
-            EnemyList.Add(Zombie);
-        }
-
-        if (AllowBigZombie)
-        {
-            BigZombie.prefab = BigZombiePrefab;
-            BigZombie.cost = BigZombieCost;
-            EnemyList.Add(BigZombie);
-        }
-
-        if (AllowSmallZombie)
-        {
-            SmallZombie.prefab = SmallZombiePrefab;
-            SmallZombie.cost = SmallZombieCost;
-            EnemyList.Add(SmallZombie);
-        }
+        UpdateEnemyList(); // Initialize the enemy list
     }
 
     public void SpawnEnemies()
@@ -128,7 +109,7 @@ public class PointAdmin : MonoBehaviour
 
                     LiveEnemyList.Add(holder);
 
-                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromList(holder));
+                    holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromLiveEnemyList(holder));
                     lastSpawnTime = Time.time;
                     MaxPoints -= Spawnee.cost;
                 }
@@ -170,7 +151,7 @@ public class PointAdmin : MonoBehaviour
                 GameObject holder = Instantiate(ZombiePrefab, spawnPosition, Quaternion.identity);
                 LiveEnemyList.Add(holder);
 
-                holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromList(holder));
+                holder.GetComponent<EnemyHealth>().OnEnemyDowned.AddListener(() => RemoveFromLiveEnemyList(holder));
 
                 // Wait for 0.1 seconds before spawning the next zombie
                 yield return new WaitForSeconds(0.1f);
@@ -191,29 +172,34 @@ public class PointAdmin : MonoBehaviour
     //     MaxPoints += points;
     // }
 
-    private void RemoveFromList(GameObject holder)
+    private void RemoveFromLiveEnemyList(GameObject holder)
     {
         LiveEnemyList.Remove(holder);
     }
 
-    private void OnDrawGizmos()
+    public void UpdateEnemyList()
     {
-        // Ensure the main camera exists
-        if (Camera.main == null) return;
+        EnemyList.Clear();
 
-        Camera cam = Camera.main;
+        if (AllowZombie)
+        {
+            Zombie.prefab = ZombiePrefab;
+            Zombie.cost = ZombieCost;
+            EnemyList.Add(Zombie);
+        }
 
-        // Calculate the camera's world boundaries
-        float minY = cam.transform.position.y - cam.orthographicSize + SpawnBorderBuffer;
-        float maxY = cam.transform.position.y + cam.orthographicSize - SpawnBorderBuffer;
-        float minX = cam.transform.position.x - cam.orthographicSize * cam.aspect + SpawnBorderBuffer;
-        float maxX = cam.transform.position.x + cam.orthographicSize * cam.aspect - SpawnBorderBuffer;
+        if (AllowBigZombie)
+        {
+            BigZombie.prefab = BigZombiePrefab;
+            BigZombie.cost = BigZombieCost;
+            EnemyList.Add(BigZombie);
+        }
 
-        // Draw the spawn area as a rectangle
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(new Vector3(minX, minY, 0), new Vector3(maxX, minY, 0));
-        Gizmos.DrawLine(new Vector3(maxX, minY, 0), new Vector3(maxX, maxY, 0));
-        Gizmos.DrawLine(new Vector3(maxX, maxY, 0), new Vector3(minX, maxY, 0));
-        Gizmos.DrawLine(new Vector3(minX, maxY, 0), new Vector3(minX, minY, 0));
+        if (AllowSmallZombie)
+        {
+            SmallZombie.prefab = SmallZombiePrefab;
+            SmallZombie.cost = SmallZombieCost;
+            EnemyList.Add(SmallZombie);
+        }
     }
 }

@@ -187,15 +187,15 @@ MonoBehaviour:
   weaponName: Glorper
   _weaponSprite: {fileID: 0}
   shootTransform: {fileID: 1869050069726448668}
-  _maxAmmo: 500
-  _maxMagSize: 10
-  _reloadTime: 0.2
+  _maxAmmo: 300
+  _maxMagSize: 8
+  _reloadTime: 0.3
   _isAutomatic: 0
   _fireRate: 1000
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
-  _bulletSize: 1
-  _bulletSpeed: 20
+  _bulletSize: 0.66
+  _bulletSpeed: 30
   _bulletDamage: 1
   _bulletKnockback: 1
   _bulletLifetime: 3

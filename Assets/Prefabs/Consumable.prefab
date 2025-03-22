@@ -147,7 +147,7 @@ MonoBehaviour:
   - {fileID: 371254640494235405, guid: 153ad7e21ac823f4abfd9d2b903c103a, type: 3}
   - {fileID: 5283494636911096505, guid: 50621cdc9ba916842943db77af365eca, type: 3}
   _consumableType: 0
-  _ammoPercentAmount: 10
+  _ammoPercentAmount: 25
   _healthAmount: 2
 --- !u!1 &9099099682369124111
 GameObject:

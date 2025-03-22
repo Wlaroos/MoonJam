@@ -164,7 +164,7 @@ private void OnDisable()
         WeaponBase weaponToPickup = GetWeaponInRange();
         if (weaponToPickup != null)
         {
-            StopReloadCoroutine();
+            StopReloadCoroutines();
 
             // If no starter weapon is assigned, treat the first weapon picked up as the starter weapon
             if (_starterWeapon == null)
@@ -203,8 +203,6 @@ private void OnDisable()
 
     private void DropSecondaryWeapon()
     {
-        StopReloadCoroutine();
-
         _secondaryWeapon.Drop();
         _secondaryWeapon = null;
 
@@ -215,7 +213,7 @@ private void OnDisable()
         AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
     }
 
-    private void StopReloadCoroutine()
+    private void StopReloadCoroutines()
     {
         if (_reloadCoroutine != null)
         {
@@ -225,7 +223,7 @@ private void OnDisable()
 
         if (_currentWeapon != null)
         {
-            _currentWeapon.StopCoroutine(_currentWeapon.ReloadCoroutine());
+            _currentWeapon.StopReload();
         }
 
         HideReloadBar();
@@ -256,7 +254,7 @@ private void OnDisable()
 
         if (CanShoot())
         {
-            StopReloadCoroutine();
+            StopReloadCoroutines();
 
             Vector3 aimDirection = (mousePosition - _currentWeapon.transform.position).normalized;
             _currentWeapon.Shoot(aimDirection);
@@ -473,6 +471,8 @@ private void EquipStarterWeapon()
 
     private void UpdateCurrentWeapon()
     {
+        StopReloadCoroutines();
+        
         if (_currentWeaponIndex == 0)
         {
             _currentWeapon = _starterWeapon;
@@ -488,7 +488,7 @@ private void EquipStarterWeapon()
         // Trigger events for UI updates
         WeaponChangeEvent.Invoke(_currentWeapon);
         AmmoChangeEvent.Invoke(_currentWeapon.CurrentAmmo);
-        StopReloadCoroutine();
+        StopReloadCoroutines();
     }
 
     private void UpdateWeaponVisibility()

@@ -58,6 +58,8 @@ public abstract class WeaponBase : MonoBehaviour
     protected Collider2D _col;
     protected Transform _gunSprite;
 
+    private Coroutine _reloadCoroutine; // Track the reload coroutine
+
     private void Awake()
     {
         _currentAmmo = _maxAmmo;
@@ -162,6 +164,12 @@ public virtual void Aim(Vector3 targetPosition)
 
         if (CanShoot())
         {
+            // Stop reload if currently reloading
+            if (_isReloading)
+            {
+                StopReload();
+            }
+
             _currentMagAmmo--;
             Vector3 spawnPosition = shootTransform.position;
             Transform bulletInstance = Instantiate(_bulletPrefab, spawnPosition, Quaternion.identity).transform;
@@ -183,7 +191,8 @@ public virtual void Aim(Vector3 targetPosition)
         // Allow reloading if the magazine is not full and there is reserve ammo.
         if (_isReloading || _currentMagAmmo == _maxMagSize || _currentAmmo <= 0) return;
 
-        StartCoroutine(ReloadCoroutine());
+        // Start the reload coroutine and store its reference
+        _reloadCoroutine = StartCoroutine(ReloadCoroutine());
     }
 
     public IEnumerator ReloadCoroutine()
@@ -200,6 +209,7 @@ public virtual void Aim(Vector3 targetPosition)
         _currentAmmo -= ammoToReload;
 
         _isReloading = false; // Reset reloading state after reload is complete.
+        _reloadCoroutine = null; // Clear the coroutine reference
     }
 
     public void SetCurrentAmmo(int ammo)
@@ -210,5 +220,20 @@ public virtual void Aim(Vector3 targetPosition)
     protected void OnFired()
     {
         Fired?.Invoke();
+    }
+
+    public void StopReload()
+    {
+        if (_isReloading)
+        {
+            // Stop the reload coroutine if it is running
+            if (_reloadCoroutine != null)
+            {
+                StopCoroutine(_reloadCoroutine);
+                _reloadCoroutine = null;
+            }
+
+            _isReloading = false; // Reset the reloading state
+        }
     }
 }

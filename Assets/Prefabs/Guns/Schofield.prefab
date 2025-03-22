@@ -165,14 +165,14 @@ MonoBehaviour:
   weaponName: Schofield
   _weaponSprite: {fileID: 21300000, guid: d4965a13a0f5993489f75c93999c0f07, type: 3}
   shootTransform: {fileID: 1869050069726448668}
-  _maxAmmo: 200
+  _maxAmmo: 150
   _maxMagSize: 1
   _reloadTime: 0.2
   _isAutomatic: 0
   _fireRate: 4
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
-  _bulletSize: 0.75
+  _bulletSize: 0.66
   _bulletSpeed: 15
   _bulletDamage: 1
   _bulletKnockback: 1

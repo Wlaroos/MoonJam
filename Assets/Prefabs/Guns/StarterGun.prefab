@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 3
-  m_Sprite: {fileID: 1891875771, guid: b271493950958a746b33782d72e32946, type: 3}
+  m_Sprite: {fileID: 1470618657, guid: e878ad35fb4ba4e4f90f20196049d8ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -184,8 +184,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942573bb672ac4b429dfadc610331564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponName: Starter
-  _weaponSprite: {fileID: 1891875771, guid: b271493950958a746b33782d72e32946, type: 3}
+  weaponName: B.T. Gun
+  _weaponSprite: {fileID: 1470618657, guid: e878ad35fb4ba4e4f90f20196049d8ae, type: 3}
   shootTransform: {fileID: 2261283983050055533}
   _maxAmmo: 250
   _maxMagSize: 8
@@ -194,7 +194,7 @@ MonoBehaviour:
   _fireRate: 4
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
-  _bulletSize: 0.85
+  _bulletSize: 0.66
   _bulletSpeed: 20
   _bulletDamage: 1
   _bulletKnockback: 3

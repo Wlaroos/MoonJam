@@ -76,6 +76,11 @@ public class GameStateManager : MonoBehaviour
         CreateRooms();
     }
 
+    void OnEnable()
+    {
+        _playerRef.GetComponent<PlayerHealth>().PlayerDeathEvent.AddListener(OnPlayerDeath);
+    }
+
     void Update()
     {
         // Check for pause input
@@ -209,7 +214,10 @@ public class GameStateManager : MonoBehaviour
         {
             transform.position = new Vector3(transform.position.x, _cameraFollow.MaxY, transform.position.z);
             _cameraFollow.AddMinHeight(_cameraFollow.RoomHeight);
-            _pointAdmin.AddPoints(50);
+
+            // Calculate points to add based on the current wave and level
+            int pointsToAdd = 50 + (_currentWaveCount * 10) + (_currentLevel * 20);
+            _pointAdmin.AddPoints(pointsToAdd);
 
             // Check if this is the second-to-last wave of the level
             if (_currentWaveCount == GetSecondToLastWaveCount())
@@ -227,7 +235,7 @@ public class GameStateManager : MonoBehaviour
         Debug.Log("Game is in PreHorde state.");
 
         // Spawn indicators
-        GameObject hordeIndicator = Instantiate(_hordeIndicator, new Vector3(transform.position.x, transform.position.y - 4.5f, 0), Quaternion.identity);
+        GameObject hordeIndicator = Instantiate(_hordeIndicator, new Vector3(transform.position.x, transform.position.y - 5f, 0), Quaternion.identity);
         hordeIndicator.transform.parent = transform;
 
         GameObject moveUpIndicator = Instantiate(_moveUpIndicator, new Vector3(transform.position.x, transform.position.y + 4.5f, 0), Quaternion.identity);
@@ -254,7 +262,7 @@ public class GameStateManager : MonoBehaviour
     private IEnumerator CrateSpawn()
     {
         yield return new WaitForSeconds(2f);
-        Instantiate(_gunCrate, new Vector3(transform.position.x, transform.position.y, 0) , Quaternion.identity);
+        Instantiate(_gunCrate, new Vector3(_cameraFollow.MaxX, _cameraFollow.MaxY, 0) , Quaternion.identity);
     }
 
     private void HandlePostHordeState()
@@ -277,6 +285,21 @@ public class GameStateManager : MonoBehaviour
             _currentState = GameState.MapCutscene;
             _currentLevel++;
             _currentWaveCount = 0;
+
+            // Update the point pool based on the current level
+            switch (_currentLevel)
+            {
+                case 1:
+                    _pointAdmin.AllowSmallZombie = true;
+                    _pointAdmin.UpdateEnemyList();
+                    break;
+                case 2:
+                    _pointAdmin.AllowBigZombie = true;
+                    _pointAdmin.UpdateEnemyList();
+                    break;
+                default:
+                    break;
+            }
 
             // Load rooms for the next level
             CreateRooms();
@@ -322,29 +345,6 @@ public class GameStateManager : MonoBehaviour
         int[] waveCounts = { _level1WaveCount, _level2WaveCount, _level3WaveCount, _level4WaveCount };
         return waveCounts[_currentLevel] - 2; // Second-to-last wave
     }
-
-    private void PauseGame()
-    {
-        _paused = true;
-        if (_pausedCanvas != null)
-        {
-            _pausedCanvas.SetActive(true); // Enable the paused canvas
-        }
-        Cursor.visible = true;
-        Time.timeScale = 0f; // Freeze the game
-    }
-
-    public void UnpauseGame()
-    {
-        _paused = false;
-        if (_pausedCanvas != null)
-        {
-            _pausedCanvas.SetActive(false); // Disable the paused canvas
-        }
-        Cursor.visible = false;
-        Time.timeScale = 1f; // Resume the game
-    }
-
     public void TutorialEnded()
     {
         _currentState = GameState.TutorialEnd;
@@ -417,5 +417,53 @@ public class GameStateManager : MonoBehaviour
             // Add the instantiated room to the list
             _currentLevelRooms.Add(instantiatedRoom);
         }
+    }
+
+    private void PauseGame()
+    {
+        _paused = true;
+        if (_pausedCanvas != null)
+        {
+            _pausedCanvas.SetActive(true); // Enable the paused canvas
+        }
+
+        Cursor.visible = true;
+
+        _cutsceneCanvas.gameObject.SetActive(false);
+
+        Time.timeScale = 0f; // Freeze the game
+    }
+
+    public void UnpauseGame()
+    {
+        _paused = false;
+        if (_pausedCanvas != null)
+        {
+            _pausedCanvas.SetActive(false); // Disable the paused canvas
+        }
+
+        Cursor.visible = false;
+
+        _cutsceneCanvas.gameObject.SetActive(true);
+
+        Time.timeScale = 1f; // Resume the game
+    }
+
+    private void OnPlayerDeath()
+    {
+        _gameOverCanvas.SetActive(true);
+        Cursor.visible = true;
+        _cutsceneCanvas.gameObject.SetActive(false);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 }

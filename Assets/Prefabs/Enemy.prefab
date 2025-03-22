@@ -309,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e077479dc443c9046a8567c3b59600f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3
+  _speed: 3.5
   _startDelay: 0
   _enableFlocking: 1
   _flockRadius: 2

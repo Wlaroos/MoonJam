@@ -194,7 +194,7 @@ MonoBehaviour:
   _fireRate: 10
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
   _bulletParticlePrefab: {fileID: 0}
-  _bulletSize: 1
+  _bulletSize: 0.5
   _bulletSpeed: 20
   _bulletDamage: 1
   _bulletKnockback: 3

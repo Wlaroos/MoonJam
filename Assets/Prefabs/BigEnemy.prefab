@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 2010993383133134886}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.76, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -111,7 +111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _maxHealth: 10
-  _maxDownedHealth: 1
+  _maxDownedHealth: 3
   _deathBloodParticles: {fileID: 6009536360408007042, guid: ec1467be08318634186665177f7b9481, type: 3}
   _deathChunkParticles: {fileID: 6009536360408007042, guid: 34ab9b0385847c240903005af8e6d8c2, type: 3}
   _knockbackDuration: 0.25
