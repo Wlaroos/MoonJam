@@ -114,6 +114,18 @@ public class GameStateManager : MonoBehaviour
             case GameState.PostHorde:
                 HandlePostHordeState();
                 break;
+            case GameState.MapCutscene:
+                HandleMapCutsceneState();
+                break;
+            case GameState.NextLevel:
+                HandleNextLevelState();
+                break;
+            case GameState.FinalArea:
+                HandleFinalAreaState();
+                break;
+            case GameState.FinalCutscene:
+                HandleFinalCutsceneState();
+                break;
         }
     }
 
@@ -251,13 +263,19 @@ public class GameStateManager : MonoBehaviour
     }
     
     public void NextLevelTrigger()
-    {
-        _currentLevel++;
-        _currentWaveCount = 0;
-
-        _cutsceneCanvas.FadeIn();
-
-        _currentState = GameState.MapCutscene;
+    {   
+        Debug.Log("Current level: " + _currentLevel);
+        if (_currentLevel >= 3)
+        {
+            _currentState = GameState.FinalArea;
+        }
+        else
+        {
+            _cutsceneCanvas.FadeIn();
+            _currentState = GameState.MapCutscene;
+            _currentLevel++;
+            _currentWaveCount = 0;
+        }
     }
 
     private void HandleMapCutsceneState()
