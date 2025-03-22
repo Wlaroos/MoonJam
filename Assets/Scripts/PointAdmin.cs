@@ -31,6 +31,9 @@ public class PointAdmin : MonoBehaviour
     public float SpawnDelay = 1;
     public float SpawnBorderBuffer = 1f; // Buffer for spawn area
 
+    private Transform _playerRef; // Reference to the player's transform
+    private float _minDistanceFromPlayer = 2f; // Minimum distance from the player
+
     private float lastSpawnTime = 0f;
 
     private Enemy Zombie = new Enemy();
@@ -41,6 +44,7 @@ public class PointAdmin : MonoBehaviour
 
     private void Awake()
     {
+        _playerRef = FindObjectOfType<PlayerMovement>().transform;
         rand = new System.Random();
 
         if (AllowZombie)
@@ -83,9 +87,20 @@ public class PointAdmin : MonoBehaviour
                 float minX = cam.transform.position.x - cam.orthographicSize * cam.aspect + SpawnBorderBuffer;
                 float maxX = cam.transform.position.x + cam.orthographicSize * cam.aspect - SpawnBorderBuffer;
 
-                float spawnY = UnityEngine.Random.Range(minY, maxY);
-                float spawnX = UnityEngine.Random.Range(minX, maxX);
-                Vector2 spawnPosition = new Vector2(spawnX, spawnY);
+                Vector2 spawnPosition;
+                int maxAttempts = 10; // Limit attempts to find a valid spawn position
+                int attempts = 0;
+
+                do
+                {
+                    float spawnY = UnityEngine.Random.Range(minY, maxY);
+                    float spawnX = UnityEngine.Random.Range(minX, maxX);
+                    spawnPosition = new Vector2(spawnX, spawnY);
+                    attempts++;
+                }
+                while (Vector2.Distance(spawnPosition, _playerRef.position) < _minDistanceFromPlayer && attempts < maxAttempts);
+
+                if (attempts >= maxAttempts) return; // Exit if no valid position is found
 
                 if (EnemyList.Count == 0) return; // No enemies allowed to spawn
 

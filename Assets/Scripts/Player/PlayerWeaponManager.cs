@@ -80,8 +80,8 @@ private void OnDisable()
         UpdatePickupText();
         HandleWeaponPickupAndDrop();
         HandleWeaponSwitching();
-        HandleAimingAndShooting();
         HandleReloading();
+        HandleAimingAndShooting();
         UpdateAmmoUI();
     }
 
@@ -275,33 +275,30 @@ private void OnDisable()
 
 private void HandleReloading()
 {
-    if (_currentWeapon == null || !Input.GetKeyDown(KeyCode.R) || _currentWeapon.IsReloading || _reloadCoroutine != null) return;
+    if (_currentWeapon == null || _currentWeapon.IsReloading || _reloadCoroutine != null) return;
 
-    if (_currentWeapon == _starterWeapon)
+    // Allow reload if R is pressed or if left click is pressed with no ammo in the mag
+    if (Input.GetKeyDown(KeyCode.R) || (Input.GetMouseButtonDown(0) && _currentWeapon.CurrentMagAmmo <= 0))
     {
-        // Reload starter weapon without affecting global ammo
-        if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
+        if (_currentWeapon == _starterWeapon)
         {
-            //Debug.Log("Reloading starter weapon.");
-            _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo));
-        }
-    }
-    else
-    {
-        // Reload secondary weapon using global ammo
-        int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
-        int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo));
-
-        if (ammoNeeded > 0 && ammoToReload > 0)
-        {
-            //Debug.Log($"Reloading {ammoToReload} ammo.");
-            UpdateAmmoUI();
-
-            _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
+            // Reload starter weapon without affecting global ammo
+            if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
+            {
+                _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo));
+            }
         }
         else
         {
-            //Debug.Log("Not enough ammo to reload.");
+            // Reload secondary weapon using global ammo
+            int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
+            int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo));
+
+            if (ammoNeeded > 0 && ammoToReload > 0)
+            {
+                UpdateAmmoUI();
+                _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
+            }
         }
     }
 }

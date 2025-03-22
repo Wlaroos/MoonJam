@@ -20,6 +20,8 @@ public class TutorialZombie : MonoBehaviour
     {
         if (other.GetComponent<BulletBase>() != null)
         {
+            Destroy(other.gameObject);
+
             Vector3 hitPoint = other.ClosestPoint(transform.position);
             Vector3 bulletDirection = other.GetComponent<Rigidbody2D>().velocity.normalized;
             float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;

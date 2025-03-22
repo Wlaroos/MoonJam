@@ -1,7 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,6 +14,7 @@ public class CutsceneCanvas : MonoBehaviour
     [SerializeField] private Image _gaz2;
     [SerializeField] private Image _phone;
     [SerializeField] private Image _map;
+    private Vector2 _holdBarSize;
     private float _holdDuration = 1f;
     private CanvasGroup _canvasGroup; // Assign the CanvasGroup in the Inspector.
     private Sprite[] _phoneSprites;
@@ -26,9 +24,12 @@ public class CutsceneCanvas : MonoBehaviour
     void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
+        _canvasGroup.alpha = 1f;
+
         _phoneSprites = Resources.LoadAll<Sprite>("Cutscene");
         _phone.sprite = _phoneSprites[2];
 
+        _holdBarSize = _holdBar.rectTransform.sizeDelta;
         _holdBar.rectTransform.sizeDelta = Vector2.zero;
         _holdBar2.rectTransform.sizeDelta = Vector2.zero;
     }
@@ -79,12 +80,12 @@ public class CutsceneCanvas : MonoBehaviour
     {
         if (_holdBar != null)
         {
-            _holdBar.rectTransform.sizeDelta = new Vector2(fillAmount * 50, 2);
+            _holdBar.rectTransform.sizeDelta = new Vector2(fillAmount * _holdBarSize.x, _holdBarSize.y);
         }
 
                if (_holdBar2 != null)
         {
-            _holdBar2.rectTransform.sizeDelta = new Vector2(fillAmount * 50, 2);
+            _holdBar2.rectTransform.sizeDelta = new Vector2(fillAmount * _holdBarSize.x, _holdBarSize.y);
         }
     }
 
