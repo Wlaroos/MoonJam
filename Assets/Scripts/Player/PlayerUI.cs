@@ -201,7 +201,7 @@ private void InitializeAmmoBar()
             {
                 // Show ammo UI and update the text
                 SetCanvasGroupAlpha(_ammoBarContainer, 1f); // Show the ammo bar container
-                SetCanvasGroupAlpha(_ammoText.transform.parent, 1f); // Hide the horizontal container
+                SetCanvasGroupAlpha(_ammoText.transform.parent, 1f); // Show the horizontal container
 
                 if (_playerWeaponManager.CurrentWeapon == _playerWeaponManager.StarterWeapon)
                 {
@@ -221,11 +221,20 @@ private void InitializeAmmoBar()
 
         if (_showWeaponIcon && _weaponIcon != null)
         {
-            _weaponIcon.sprite = newWeapon?.WeaponSprite;
+            _weaponIcon.sprite = newWeapon.WeaponSprite;
             _weaponIcon.color = newWeapon != null ? Color.white : Color.clear;
 
-            if (newWeapon?.WeaponSprite != null)
-                AdjustIconAspectRatio(_weaponIcon, newWeapon.WeaponSprite);
+            if (newWeapon.WeaponSprite != null)
+            {
+            AdjustIconAspectRatio(_weaponIcon, newWeapon.WeaponSprite);
+
+            // Clamp the sizeDelta to prevent extreme scaling
+            RectTransform rectTransform = _weaponIcon.GetComponent<RectTransform>();
+            rectTransform.sizeDelta = new Vector2(
+                Mathf.Clamp(rectTransform.sizeDelta.x, 6f, 12f),
+                Mathf.Clamp(rectTransform.sizeDelta.y, 6f, 6f)
+            );
+            }
         }
 
         if (_showWeaponName && _weaponText != null)

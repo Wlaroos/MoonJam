@@ -29,7 +29,7 @@ public class PlayerWeaponManager : MonoBehaviour
     private Coroutine _reloadCoroutine;
     private bool _canDropWeapon = true;
 
-    private float _globalAmmoPercentage = 1f;
+    private float _globalAmmoPercentage = 100f;
 
     public float GlobalAmmoPercentage => _globalAmmoPercentage;
 
@@ -182,7 +182,7 @@ private void OnDisable()
 
             // Assign the new weapon to the secondary slot
             weaponToPickup.Pickup(_weaponHolder);
-            int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * weaponToPickup.MaxAmmo);
+            int newAmmo = Mathf.FloorToInt((_globalAmmoPercentage / 100f) * weaponToPickup.MaxAmmo);
             weaponToPickup.SetCurrentAmmo(newAmmo);
 
             _secondaryWeapon = weaponToPickup;
@@ -221,12 +221,14 @@ private void OnDisable()
         {
             StopCoroutine(_reloadCoroutine);
             _reloadCoroutine = null;
-            if (_currentWeapon != null)
-            {
-                _currentWeapon.IsReloading = false;
-            }
-            HideReloadBar();
         }
+
+        if (_currentWeapon != null)
+        {
+            _currentWeapon.StopCoroutine(_currentWeapon.ReloadCoroutine());
+        }
+
+        HideReloadBar();
     }
 
     private bool IsOverPickup()
@@ -281,24 +283,18 @@ private void HandleReloading()
     // Allow reload if R is pressed or if left click is pressed with no ammo in the mag
     if (Input.GetKeyDown(KeyCode.R) || (Input.GetMouseButtonDown(0) && _currentWeapon.CurrentMagAmmo <= 0))
     {
-        if (_currentWeapon == _starterWeapon)
+        if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
         {
-            // Reload starter weapon without affecting global ammo
-            if (_currentWeapon.CurrentMagAmmo < _currentWeapon.MaxMagSize)
-            {
-                _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo));
-            }
-        }
-        else
-        {
-            // Reload secondary weapon using global ammo
             int ammoNeeded = _currentWeapon.MaxMagSize - _currentWeapon.CurrentMagAmmo;
-            int ammoToReload = Mathf.Min(ammoNeeded, Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo));
+            int ammoAvailable = Mathf.CeilToInt((_globalAmmoPercentage / 100f) * _currentWeapon.MaxAmmo); // Adjust for 0-100 range
+            int ammoToReload = _currentWeapon == _starterWeapon
+                ? ammoNeeded // Starter weapon has infinite ammo
+                : Mathf.Min(ammoNeeded, ammoAvailable);
 
-            if (ammoNeeded > 0 && ammoToReload > 0)
+            if (ammoToReload > 0)
             {
-                UpdateAmmoUI();
                 _reloadCoroutine = StartCoroutine(ReloadWithBar(_currentWeapon.ReloadTime, ammoToReload));
+                _currentWeapon.Reload(); // Ensure the weapon's reload logic is called
             }
         }
     }
@@ -316,13 +312,13 @@ private void HandleReloading()
 
             if (_currentWeapon == null)
             {
-                //Debug.LogWarning("Weapon was dropped or swapped during reload. Stopping reload coroutine.");
+                // Weapon was dropped or swapped during reload
+                _currentWeapon.StopCoroutine(_currentWeapon.ReloadCoroutine());
                 yield break;
             }
 
             yield return null;
         }
-
         CompleteReload(ammoToReload);
     }
 
@@ -365,14 +361,11 @@ private void CompleteReload(int ammoToReload)
         else
         {
             // Reload secondary weapon and update global ammo
-            _globalAmmoPercentage -= (float)ammoToReload / _currentWeapon.MaxAmmo;
-            _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage);
-            _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f;
-
-            _currentWeapon.Reload();
+            float ammoUsedPercentage = ((float)ammoToReload / _currentWeapon.MaxAmmo) * 100f; // Adjust for 0-100 range
+            _globalAmmoPercentage -= ammoUsedPercentage;
+            _globalAmmoPercentage = Mathf.Clamp(_globalAmmoPercentage, 0f, 100f);
         }
 
-        _currentWeapon.IsReloading = false;
         UpdateAmmoUI();
     }
 }
@@ -390,18 +383,17 @@ private void UpdateAmmoUI()
     }
 }
 
-    public void AddAmmo(int percentAmount)
-    {
-        _globalAmmoPercentage = Mathf.Clamp01(_globalAmmoPercentage + percentAmount / 100f);
-        _globalAmmoPercentage = Mathf.Round(_globalAmmoPercentage * 100f) / 100f;
+public void AddAmmo(int percentAmount)
+{
+    _globalAmmoPercentage = Mathf.Clamp(_globalAmmoPercentage + percentAmount, 0f, 100f); // Adjust for 0-100 range
 
-        if (_currentWeapon != null)
-        {
-            int newAmmo = Mathf.FloorToInt(_globalAmmoPercentage * _currentWeapon.MaxAmmo);
-            _currentWeapon.SetCurrentAmmo(newAmmo);
-            UpdateAmmoUI();
-        }
+    if (_currentWeapon != null)
+    {
+        int newAmmo = Mathf.FloorToInt((_globalAmmoPercentage / 100f) * _currentWeapon.MaxAmmo); // Adjust for 0-100 range
+        _currentWeapon.SetCurrentAmmo(newAmmo);
+        UpdateAmmoUI();
     }
+}
 
     public void DisableWeaponDropTemporarily()
     {

@@ -152,7 +152,7 @@ public class CutsceneCanvas : MonoBehaviour
         }
 
         _state++;
-        Debug.Log("State: " + _state);
+        //Debug.Log("State: " + _state);
     }
 
     private IEnumerator XSlide(Image image)

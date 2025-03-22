@@ -1,60 +1,62 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 public abstract class WeaponBase : MonoBehaviour
 {
     public event Action Fired = delegate { };
 
     [Header("Weapon Properties")]
-    [SerializeField] private string weaponName = "Default Weapon";
+    [SerializeField] protected string weaponName = "Default Weapon";
     public string WeaponName => weaponName;
 
-    [SerializeField] private Sprite _weaponSprite; // Sprite for the weapon
+    [SerializeField] protected Sprite _weaponSprite; // Sprite for the weapon
     public Sprite WeaponSprite => _weaponSprite;
 
     public bool IsEquipped { get; private set; } = false;
     public Transform Owner { get; private set; }
-    [SerializeField] private Transform shootTransform;
+    [SerializeField] protected Transform shootTransform;
 
     [Header("Reload and Ammo Properties")]
-    [SerializeField] private int _maxAmmo = 100; // Total ammo the weapon can hold.
-    [SerializeField] private int _maxMagSize = 10; // Ammo capacity of the magazine.
-    [SerializeField] private float _reloadTime = 2f; // Time it takes to reload.
+    [SerializeField] protected int _maxAmmo = 100; // Total ammo the weapon can hold.
+    [SerializeField] protected int _maxMagSize = 10; // Ammo capacity of the magazine.
+    [SerializeField] protected float _reloadTime = 2f; // Time it takes to reload.
     public float ReloadTime => _reloadTime;
 
-    private int _currentAmmo; // Total ammo left.
-    private int _currentMagAmmo; // Ammo left in the magazine.
+    protected int _currentAmmo; // Total ammo left.
+    protected int _currentMagAmmo; // Ammo left in the magazine.
 
     public int MaxAmmo => _maxAmmo;
     public int MaxMagSize => _maxMagSize;
     public int CurrentAmmo { get => _currentAmmo; set => _currentAmmo = value; }
     public int CurrentMagAmmo { get => _currentMagAmmo; set => _currentMagAmmo = value; }
 
-    private bool _isReloading = false;
+    protected bool _isReloading = false;
     public bool IsReloading { get => _isReloading; set => _isReloading = value; }
 
     [Header("Fire Type")]
-    [SerializeField] private bool _isAutomatic = false;
+    [SerializeField] protected bool _isAutomatic = false;
     public bool IsAutomatic => _isAutomatic;
 
     [Tooltip("Bullets per second")]
-    [SerializeField] private float _fireRate = 4f; // Default to 4 bullets per second.
-    private float FireDelay => 1f / _fireRate; // Calculate delay dynamically.
-    private float _lastFireTime;
+    [SerializeField] protected float _fireRate = 4f; // Default to 4 bullets per second.
+    protected float FireDelay => 1f / _fireRate; // Calculate delay dynamically.
+    protected float _lastFireTime;
 
     [Header("Bullet Properties")]
-    [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private GameObject _bulletParticlePrefab;
-    [SerializeField] private float _bulletSize = 1f;
-    [SerializeField] private float _bulletSpeed = 20f;
-    [SerializeField] private int _bulletDamage = 1;
-    [SerializeField] private float _bulletKnockback = 1f;
-    [SerializeField] private float _bulletLifetime = 3f;
+    [SerializeField] protected GameObject _bulletPrefab;
+    [SerializeField] protected GameObject _bulletParticlePrefab;
+    [SerializeField] protected float _bulletSize = 1f;
+    [SerializeField] protected float _bulletSpeed = 20f;
+    [SerializeField] protected int _bulletDamage = 1;
+    [SerializeField] protected float _bulletKnockback = 1f;
+    [SerializeField] protected float _bulletLifetime = 3f;
 
-    private Animator _anim;
-    private SpriteRenderer _sr;
-    private Rigidbody2D _rb;
-    private Collider2D _col;
+    protected Animator _anim;
+    protected SpriteRenderer _sr;
+    protected Rigidbody2D _rb;
+    protected Collider2D _col;
+    protected Transform _gunSprite;
 
     private void Awake()
     {
@@ -65,6 +67,8 @@ public abstract class WeaponBase : MonoBehaviour
         _col = GetComponent<Collider2D>();
         _anim = GetComponentInChildren<Animator>();
         _sr = GetComponentInChildren<SpriteRenderer>();
+        _gunSprite = transform.Find("GunSprite");
+        
         _weaponSprite = _sr.sprite;
 
         //if (!_rb) Debug.LogWarning($"Rigidbody2D component is missing on {gameObject.name}");
@@ -95,11 +99,10 @@ public abstract class WeaponBase : MonoBehaviour
         if (_col != null) _col.enabled = false;
 
         // Ensure the sprite child (GunSprite) has no local rotation
-        Transform gunSprite = transform.Find("GunSprite");
-        if (gunSprite != null)
+        if (_gunSprite != null)
         {
-            gunSprite.localRotation = Quaternion.identity;
-            gunSprite.GetComponent<SpriteRenderer>().sortingOrder = 5;
+            _gunSprite.localRotation = Quaternion.identity;
+            _gunSprite.GetComponent<SpriteRenderer>().sortingOrder = 5;
         }
     }
 
@@ -126,10 +129,9 @@ public abstract class WeaponBase : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, randomAngle);
 
         // Ensure the sprite child (GunSprite) rotates naturally with the weapon
-        Transform gunSprite = transform.Find("GunSprite");
-        if (gunSprite != null)
+        if (_gunSprite != null)
         {
-            gunSprite.localRotation = Quaternion.identity; // Keep the sprite's local rotation consistent
+            _gunSprite.localRotation = Quaternion.identity; // Keep the sprite's local rotation consistent
         }
 
         // Ensure the weapon is visible and active
@@ -146,12 +148,11 @@ public virtual void Aim(Vector3 targetPosition)
     transform.rotation = Quaternion.Euler(0, 0, angle);
 
     // Flip the sprite vertically if aiming backward
-    Transform gunSprite = transform.Find("GunSprite");
-    if (gunSprite != null)
+    if (_gunSprite != null)
     {
-        Vector3 localScale = gunSprite.localScale;
+        Vector3 localScale = _gunSprite.localScale;
         localScale.y = Mathf.Abs(localScale.y) * ((angle > 90 || angle < -90) ? -1f : 1f);
-        gunSprite.localScale = localScale;
+        _gunSprite.localScale = localScale;
     }
 }
 
@@ -173,25 +174,41 @@ public virtual void Aim(Vector3 targetPosition)
             }
 
             _lastFireTime = Time.time;
-            Fired?.Invoke();
+            OnFired();
         }
     }
 
-    public void Reload()
+    public virtual void Reload()
     {
-        if (_isReloading || _currentAmmo <= 0 || _currentMagAmmo == _maxMagSize) return;
+        // Allow reloading if the magazine is not full and there is reserve ammo.
+        if (_isReloading || _currentMagAmmo == _maxMagSize || _currentAmmo <= 0) return;
 
-        _isReloading = true;
+        StartCoroutine(ReloadCoroutine());
+    }
+
+    public IEnumerator ReloadCoroutine()
+    {
+        _isReloading = true; // Set reloading state to true.
+
+        // Simulate reload time.
+        yield return new WaitForSeconds(_reloadTime);
 
         int ammoNeeded = _maxMagSize - _currentMagAmmo;
         int ammoToReload = Mathf.Min(ammoNeeded, _currentAmmo);
 
         _currentMagAmmo += ammoToReload;
         _currentAmmo -= ammoToReload;
+
+        _isReloading = false; // Reset reloading state after reload is complete.
     }
 
     public void SetCurrentAmmo(int ammo)
     {
         _currentAmmo = Mathf.Clamp(ammo, 0, _maxAmmo);
+    }
+
+    protected void OnFired()
+    {
+        Fired?.Invoke();
     }
 }

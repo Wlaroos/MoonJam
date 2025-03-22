@@ -36,7 +36,7 @@ public class BulletBase : MonoBehaviour
         if (Vector3.Distance(_startPosition, transform.position) >= 0.5f)
         {
             _sr.enabled = true; // Show the bullet after it has moved 1 unit
-            _tr.enabled = true; // Show the trail after it has moved 1 unit
+            //_tr.enabled = true; // Show the trail after it has moved 1 unit
             _isVisible = true;
         }
     }
