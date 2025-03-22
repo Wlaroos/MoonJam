@@ -15,6 +15,8 @@ public class GameStateManager : MonoBehaviour
     [SerializeField] private GameObject _afterTutorialRoom;
     [SerializeField] private GameObject _room;
     [SerializeField] private GameObject _checkpointRoom;
+    [SerializeField] private GameObject _finalRoom;
+    [SerializeField] private GameObject _gunCrate;
 
     private int _currentWaveCount;
     private int _currentLevel;
@@ -33,6 +35,10 @@ public class GameStateManager : MonoBehaviour
         PreHorde,
         DuringHorde,
         PostHorde,
+        MapCutscene,
+        NextLevel,
+        FinalArea,
+        FinalCutscene,
     }
 
     private GameState _currentState;
@@ -226,13 +232,40 @@ public class GameStateManager : MonoBehaviour
         
         if(_pointAdmin.LiveEnemyList.Count == 0 && _pointAdmin.HordeSpawningOver)
         {
+            StartCoroutine(CrateSpawn());
             _currentState = GameState.PostHorde;
         }
+    }
+
+    private IEnumerator CrateSpawn()
+    {
+        yield return new WaitForSeconds(2f);
+        Instantiate(_gunCrate, new Vector3(transform.position.x, transform.position.y, 0) , Quaternion.identity);
     }
 
     private void HandlePostHordeState()
     {
         Debug.Log("Game is in PostHorde state.");
+    }
+
+    private void HandleMapCutsceneState()
+    {
+        Debug.Log("Game is in MapCutscene state.");
+    }
+
+    private void HandleNextLevelState()
+    {
+        Debug.Log("Game is in NextLevel state.");
+    }
+
+    private void HandleFinalAreaState()
+    {
+        Debug.Log("Game is in FinalArea state.");
+    }
+
+    private void HandleFinalCutsceneState()
+    {
+        Debug.Log("Game is in FinalCutscene state.");
     }
 
     // Helper method to calculate the second-to-last wave count for the current level

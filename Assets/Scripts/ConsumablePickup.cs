@@ -133,5 +133,21 @@ public class ConsumablePickup : MonoBehaviour
     public void SetConsumableType(ConsumableType type)
     {
         _consumableType = type;
+
+        // Update the sprite based on the new consumable type
+        switch (_consumableType)
+        {
+            case ConsumableType.Ammo:
+                _sr.sprite = _consumableSprite[0];
+                _textSr.sprite = _consumableTextSprite[0];
+                break;
+            case ConsumableType.Health:
+                _sr.sprite = _consumableSprite[1];
+                _textSr.sprite = _consumableTextSprite[1];
+                break;
+        }
+
+        // Ensure the hover state and text sprite are reset
+        _textSr.color = Color.clear;
     }
 }
