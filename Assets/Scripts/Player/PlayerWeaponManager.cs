@@ -123,7 +123,7 @@ private void OnDisable()
         WeaponBase weaponInRange = GetWeaponInRange();
         if (_pickupText != null)
         {
-            _pickupText.text = weaponInRange != null ? $"[E] Swap to {weaponInRange.WeaponName}" : "";
+            _pickupText.text = weaponInRange != null ? $"[E] Pick up {weaponInRange.WeaponName}" : "";
         }
     }
 
