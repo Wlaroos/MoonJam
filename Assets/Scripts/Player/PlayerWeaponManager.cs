@@ -44,6 +44,7 @@ public class PlayerWeaponManager : MonoBehaviour
     {
         InitializeReferences();
         InitializeUI();
+        UpdatePickupText();
     }
 
     void Start()

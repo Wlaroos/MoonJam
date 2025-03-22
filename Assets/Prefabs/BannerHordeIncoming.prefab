@@ -359,7 +359,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 881f723db59c9b3429a53ffa787e50d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  usesLocalTime: 1
+  usesLocalTime: 0
   canRotate: 0
   degreesPerSecond: {x: 0, y: 0, z: 15}
   canHover: 1

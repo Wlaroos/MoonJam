@@ -14,12 +14,27 @@ public class CutsceneCanvas : MonoBehaviour
     [SerializeField] private Image _gaz2;
     [SerializeField] private Image _phone;
     [SerializeField] private Image _map;
+    [SerializeField] private Image _mask;
+    [SerializeField] private Image _mePage;
+    private Vector2[] _mePagePos = 
+    {
+        new Vector2(-1.6f, -5.1f),
+        new Vector2(-23.1f, 2.3f),
+        new Vector2(-34.8f, 5.5f),
+        new Vector2(-41.8f, 16.3f)
+    };    
+    private Vector2[] _maskSizes = 
+    {
+        new Vector2(5.5f, 10f),
+        new Vector2(49f, 22f),
+        new Vector2(78.96f, 24.3f),
+        new Vector2(98f, 55f)
+    };
     private Vector2 _holdBarSize;
     private float _holdDuration = 1f;
     private CanvasGroup _canvasGroup; // Assign the CanvasGroup in the Inspector.
     private Sprite[] _phoneSprites;
-    private float[] _maskX = {5.5f,49f,78.96f,98f};
-    private float[] _maskY = {10f,22f,24.3f,55f};
+    private bool _mapCutscene = false;
 
     void Awake()
     {
@@ -32,11 +47,13 @@ public class CutsceneCanvas : MonoBehaviour
         _holdBarSize = _holdBar.rectTransform.sizeDelta;
         _holdBar.rectTransform.sizeDelta = Vector2.zero;
         _holdBar2.rectTransform.sizeDelta = Vector2.zero;
+
+        Time.timeScale = 0;
     }
 
     void Update()
     {
-        if(_state >= 10) return;
+        if(Time.timeScale == 1) return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -100,37 +117,40 @@ public class CutsceneCanvas : MonoBehaviour
                 StartCoroutine(XSlide(_gaz2));
                 break;
             case 2:
-                StartCoroutine(YSlide(_phone));
+                StartCoroutine(YSlideIn(_phone));
                 break;
             case 3:
-                _phone.sprite = _phoneSprites[_state];
-                break;
             case 4:
-                _phone.sprite = _phoneSprites[_state];
-                break;
             case 5:
-                _phone.sprite = _phoneSprites[_state];
-                break;
             case 6:
-                _phone.sprite = _phoneSprites[_state];
-                break;
             case 7:
                 _phone.sprite = _phoneSprites[_state];
                 break;
             case 8:
-                StartCoroutine(YSlide(_map));
+                StartCoroutine(YSlideIn(_map));
                 break;
             case 9:
+                _gaz1.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
                 StartCoroutine(FadeOutCanvas());
+                StartCoroutine(YSlideOut(_map));
                 break;
-            default:
+            case 10:
                 Time.timeScale = 1;
                 FindObjectOfType<TutorialMessages>().ActivateGunMessage();
+                break;
+            case 11:
+                StartCoroutine(MapAnimation());
+                break;
+            case 12:
+                _state = 9;
+                AdvanceState();
+                break;
+            default:
                 break;
         }
 
         _state++;
-        //Debug.Log("State: " + _state);
+        Debug.Log("State: " + _state);
     }
 
     private IEnumerator XSlide(Image image)
@@ -154,7 +174,7 @@ public class CutsceneCanvas : MonoBehaviour
 
             while (elapsedTime < duration)
             {
-                elapsedTime += Time.deltaTime;
+                elapsedTime += Time.unscaledDeltaTime;;
 
                 // Calculate the easing factor using Mathf.SmoothStep
                 float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
@@ -182,54 +202,105 @@ public class CutsceneCanvas : MonoBehaviour
         }
     }
 
-    private IEnumerator YSlide(Image image)
+    private IEnumerator YSlideIn(Image image)
+{
+    if (image != null)
     {
-        if (image != null)
+        float duration = 1f; // Duration of the lerp in seconds
+        float elapsedTime = 0f;
+
+        // Store the initial position and rotation
+        Vector3 initialPosition = image.rectTransform.anchoredPosition;
+        Quaternion initialRotation = image.rectTransform.rotation;
+
+        // Calculate the target position (half the height of the image)
+        float halfHeight = image.rectTransform.rect.height / 2f;
+        Vector3 targetPosition = new Vector3(initialPosition.x, halfHeight, initialPosition.z);
+        Quaternion targetRotation = Quaternion.Euler(
+            initialRotation.eulerAngles.x,
+            initialRotation.eulerAngles.y,
+            0
+        );
+
+        while (elapsedTime < duration)
         {
-            float duration = 1f; // Duration of the lerp in seconds
-            float elapsedTime = 0f;
+            elapsedTime += Time.unscaledDeltaTime;
 
-            // Store the initial position and rotation
-            Vector3 initialPosition = image.rectTransform.anchoredPosition;
-            Quaternion initialRotation = image.rectTransform.rotation;
+            // Calculate the easing factor using Mathf.SmoothStep
+            float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
 
-            // Target position and rotation
-            Vector3 targetPosition = new Vector3(initialPosition.x, -initialPosition.y, initialPosition.z);
-            Quaternion targetRotation = Quaternion.Euler(
-                initialRotation.eulerAngles.x,
-                initialRotation.eulerAngles.y,
-                -initialRotation.eulerAngles.z
+            // Lerp position with easing
+            image.rectTransform.anchoredPosition = Vector3.Lerp(
+                initialPosition,
+                targetPosition,
+                t
             );
 
-            while (elapsedTime < duration)
-            {
-                elapsedTime += Time.deltaTime;
+            // Lerp rotation with easing
+            image.rectTransform.rotation = Quaternion.Lerp(
+                initialRotation,
+                targetRotation,
+                t
+            );
 
-                // Calculate the easing factor using Mathf.SmoothStep
-                float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
-
-                // Lerp position with easing
-                image.rectTransform.anchoredPosition = Vector3.Lerp(
-                    initialPosition,
-                    targetPosition,
-                    t
-                );
-
-                // Lerp rotation with easing
-                image.rectTransform.rotation = Quaternion.Lerp(
-                    initialRotation,
-                    targetRotation,
-                    t
-                );
-
-                yield return null;
-            }
-
-            // Ensure final position and rotation are set
-            image.rectTransform.anchoredPosition = targetPosition;
-            image.rectTransform.rotation = targetRotation;
+            yield return null;
         }
+
+        // Ensure final position and rotation are set
+        image.rectTransform.anchoredPosition = targetPosition;
+        image.rectTransform.rotation = targetRotation;
     }
+}
+
+private IEnumerator YSlideOut(Image image)
+{
+    if (image != null)
+    {
+        float duration = 1f; // Duration of the lerp in seconds
+        float elapsedTime = 0f;
+
+        // Store the initial position and rotation
+        Vector3 initialPosition = image.rectTransform.anchoredPosition;
+        Quaternion initialRotation = image.rectTransform.rotation;
+
+        // Calculate the target position (negative half the height of the image)
+        float halfHeight = image.rectTransform.rect.height / 2f;
+        Vector3 targetPosition = new Vector3(initialPosition.x, -halfHeight, initialPosition.z);
+        Quaternion targetRotation = Quaternion.Euler(
+            initialRotation.eulerAngles.x,
+            initialRotation.eulerAngles.y,
+            -initialRotation.eulerAngles.z
+        );
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+
+            // Calculate the easing factor using Mathf.SmoothStep
+            float t = Mathf.SmoothStep(0f, 1f, elapsedTime / duration);
+
+            // Lerp position with easing
+            image.rectTransform.anchoredPosition = Vector3.Lerp(
+                initialPosition,
+                targetPosition,
+                t
+            );
+
+            // Lerp rotation with easing
+            image.rectTransform.rotation = Quaternion.Lerp(
+                initialRotation,
+                targetRotation,
+                t
+            );
+
+            yield return null;
+        }
+
+        // Ensure final position and rotation are set
+        image.rectTransform.anchoredPosition = targetPosition;
+        image.rectTransform.rotation = targetRotation;
+    }
+}
 
     private IEnumerator FadeOutCanvas()
     {
@@ -238,36 +309,92 @@ public class CutsceneCanvas : MonoBehaviour
             float duration = 1f; // Duration of the fade in seconds
             float elapsedTime = 0f;
 
-            // Create a black overlay image
-            GameObject blackOverlay = new GameObject("BlackOverlay");
-            blackOverlay.transform.SetParent(transform, false);
-            RectTransform rectTransform = blackOverlay.AddComponent<RectTransform>();
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
-
-            Image overlayImage = blackOverlay.AddComponent<Image>();
-            overlayImage.color = new Color(0f, 0f, 0f, 0f); // Start with transparent black
-
             // Gradually reduce the alpha of the CanvasGroup and fade in the black overlay
             while (elapsedTime < duration)
             {
-                elapsedTime += Time.deltaTime;
+                elapsedTime += Time.unscaledDeltaTime;;
                 float t = elapsedTime / duration;
-
-                _canvasGroup.alpha = Mathf.Lerp(1f, 0f, t);
-                overlayImage.color = new Color(0f, 0f, 0f, Mathf.Lerp(0f, 1f, t));
 
                 yield return null;
             }
 
-            // Ensure the alpha is set to 0 and the overlay is fully black at the end
-            _canvasGroup.alpha = 0f;
-            overlayImage.color = new Color(0f, 0f, 0f, 1f);
+            _canvasGroup.alpha = 1f;
 
             // Advance to the next state
+            Time.timeScale = 1;
             AdvanceState();
         }
+    }
+
+    public void FadeIn()
+    {
+        Time.timeScale = 0;
+        _state = 11;
+        _mapCutscene = true;
+        _gaz1.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
+        StartCoroutine(YSlideIn(_map));
+        StartCoroutine(FadeInCanvas());
+    }
+
+    private IEnumerator FadeInCanvas()
+    {
+        if (_canvasGroup != null)
+        {
+            float duration = 1f; // Duration of the fade in seconds
+            float elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.unscaledDeltaTime;;
+                float t = elapsedTime / duration;
+
+                yield return null;
+            }
+
+            _canvasGroup.alpha = 1f;
+        }
+    }
+
+    private IEnumerator MapAnimation()
+    {
+        // Get the current level from the GameStateManager
+        int level = FindObjectOfType<GameStateManager>().CurrentLevel;
+
+        // Ensure the level index is within bounds
+        if (level < 0 || level >= _maskSizes.Length || level >= _mePagePos.Length)
+        {
+            Debug.LogError("Level index out of bounds for _maskSizes or _mePagePos.");
+            yield break;
+        }
+
+        // Target size for the mask and position for the mePage
+        Vector2 targetMaskSize = _maskSizes[level];
+        Vector2 targetMePagePos = _mePagePos[level];
+
+        // Initial size of the mask and position of the mePage
+        Vector2 initialMaskSize = _mask.rectTransform.sizeDelta;
+        Vector2 initialMePagePos = _mePage.rectTransform.anchoredPosition;
+
+        float duration = 2f; // Duration of the animation in seconds
+        float elapsedTime = 0f;
+
+        // Animate the size delta of the mask and the position of the mePage
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.unscaledDeltaTime;
+            float t = elapsedTime / duration;
+
+            // Lerp the size delta of the mask
+            _mask.rectTransform.sizeDelta = Vector2.Lerp(initialMaskSize, targetMaskSize, t);
+
+            // Lerp the position of the mePage
+            _mePage.rectTransform.anchoredPosition = Vector2.Lerp(initialMePagePos, targetMePagePos, t);
+
+            yield return null;
+        }
+
+        // Ensure the final size and position are set
+        _mask.rectTransform.sizeDelta = targetMaskSize;
+        _mePage.rectTransform.anchoredPosition = targetMePagePos;
     }
 }

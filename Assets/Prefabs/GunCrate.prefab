@@ -150,3 +150,5 @@ MonoBehaviour:
   _pickupPrefab: {fileID: 3168547790236937776, guid: 95e0517ff902c7f42b547f9b1c1f96d7, type: 3}
   _psLanded: {fileID: 4478317677858999953, guid: a1c23eed171ac8b468e27501acae697b, type: 3}
   _psOpened: {fileID: 799844255972675263, guid: 7fc3ceb096d332b489cfaf304e3b3b36, type: 3}
+  _arrowHover: {fileID: 2897596344500416515, guid: 03eb2f123adea3549bbd8b2bab6e40dc, type: 3}
+  _nextLevelZone: {fileID: 216438180333113442, guid: daa7d615b9243144195ebe069e50348b, type: 3}

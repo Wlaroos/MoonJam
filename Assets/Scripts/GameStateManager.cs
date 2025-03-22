@@ -6,6 +6,7 @@ public class GameStateManager : MonoBehaviour
 {
     [SerializeField] private GameObject _pausedCanvas;
     [SerializeField] private GameObject _gameOverCanvas;
+    [SerializeField] private CutsceneCanvas _cutsceneCanvas;
     [SerializeField] private GameObject _moveUpIndicator;
     [SerializeField] private GameObject _hordeIndicator;
     [SerializeField] private int _level1WaveCount;
@@ -20,6 +21,7 @@ public class GameStateManager : MonoBehaviour
 
     private int _currentWaveCount;
     private int _currentLevel;
+    public int CurrentLevel => _currentLevel;
     private float _cameraDistanceFromCenter = 0.1f;
     //private LineRenderer _waveBoundaryRenderer; // LineRenderer for wave boundary
 
@@ -246,6 +248,16 @@ public class GameStateManager : MonoBehaviour
     private void HandlePostHordeState()
     {
         Debug.Log("Game is in PostHorde state.");
+    }
+    
+    public void NextLevelTrigger()
+    {
+        _currentLevel++;
+        _currentWaveCount = 0;
+
+        _cutsceneCanvas.FadeIn();
+
+        _currentState = GameState.MapCutscene;
     }
 
     private void HandleMapCutsceneState()
