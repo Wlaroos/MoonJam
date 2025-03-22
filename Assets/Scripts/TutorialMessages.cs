@@ -14,7 +14,6 @@ public class TutorialMessages : MonoBehaviour
     private bool _dummyBool = false;
     private bool _hpBool = false;
     private bool _buttonBool = false;
-    private bool _runBool = false;
 
     private PlayerWeaponManager _pwm;
     private PlayerHealth _ph;
