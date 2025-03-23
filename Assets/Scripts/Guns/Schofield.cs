@@ -4,6 +4,7 @@ using UnityEngine;
 public class Schofield : WeaponBase
 {
     private bool _horizontal;
+    private bool _resetRotationDone = false;
 
     public override void Shoot(Vector3 aimDirection)
     {
@@ -48,8 +49,6 @@ public class Schofield : WeaponBase
     {
         base.Aim(targetPosition); // Always aim normally; rotation is handled in Update.
     }
-
-    private bool _resetRotationDone = false;
 
     void Update()
     {

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4621963263157256212}
   - component: {fileID: 2520983318697064329}
-  - component: {fileID: 6865693277673543732}
   m_Layer: 0
   m_Name: GunSprite
   m_TagString: Untagged
@@ -86,27 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &6865693277673543732
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 397662567928403363}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ede7dc4a5d880314290a3a6dc50d311a, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4079988897029473069
 GameObject:
   m_ObjectHideFlags: 0

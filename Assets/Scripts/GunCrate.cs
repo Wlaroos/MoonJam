@@ -17,11 +17,15 @@ public class GunCrate : MonoBehaviour
     {
         StartCoroutine(SpawnStuff());
     }
+    private bool _isTriggered = false; // Add a flag to prevent multiple triggers
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (_isTriggered) return; // Prevent multiple triggers
         if (other.GetComponent<BulletBase>() != null && !_invincible)
         {
+            _isTriggered = true; // Set the flag to true
+
             int randomIndex = Random.Range(0, _weaponPrefabs.Length);
 
             GameObject gun = Instantiate(_weaponPrefabs[randomIndex], transform.position, Quaternion.identity);

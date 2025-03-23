@@ -143,8 +143,9 @@ public class CutsceneCanvas : MonoBehaviour
                 StartCoroutine(MapAnimation());
                 break;
             case 12:
-                _state = 9;
-                AdvanceState();
+                _gaz1.transform.parent.GetComponent<CanvasGroup>().alpha = 0;
+                StartCoroutine(FadeOutCanvas());
+                StartCoroutine(YSlideOut(_map));
                 _gsm.NextLevel();
                 break;
             default:
