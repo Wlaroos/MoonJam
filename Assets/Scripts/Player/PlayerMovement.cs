@@ -109,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
         yield return new WaitForSeconds(duration);
 
-        _sr.color = Color.magenta;
+        _sr.color = Color.white;
         _isKnockback = false;
     }
 

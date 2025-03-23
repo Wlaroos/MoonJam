@@ -47,10 +47,10 @@ public class PlayerHealth : MonoBehaviour
     private void Update()
     {
         // For testing purposes: Press "T" to take 1 damage.
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            TakeDamage(Vector2.zero, 1); // Apply 1 damage with no knockback.
-        }
+        // if (Input.GetKeyDown(KeyCode.T))
+        // {
+        //     TakeDamage(Vector2.zero, 1); // Apply 1 damage with no knockback.
+        // }
     }
 
     public void TakeDamage(Vector2 force, int damage)

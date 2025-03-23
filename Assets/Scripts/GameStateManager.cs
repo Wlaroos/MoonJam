@@ -277,8 +277,7 @@ public class GameStateManager : MonoBehaviour
 
         if (_currentLevel >= 3)
         {
-            _cutsceneCanvas.FadeIn();
-            _currentState = GameState.FinalArea;
+            UnityEngine.SceneManagement.SceneManager.LoadScene("FinalCutscene");
         }
         else
         {
