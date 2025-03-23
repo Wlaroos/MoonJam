@@ -96,7 +96,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.4, y: 0.5}
+  m_Size: {x: 0.6, y: 0.7}
   m_Direction: 0
 --- !u!114 &9123796984408633915
 MonoBehaviour:
@@ -135,6 +135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _speed: 7
   _startDelay: 0
+  _knockbackMult: 1
   _enableFlocking: 1
   _flockRadius: 2
   _alignmentWeight: 0.5

@@ -110,7 +110,7 @@ Transform:
   m_GameObject: {fileID: 2976512099493750202}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.127, y: 0.185, z: 0}
+  m_LocalPosition: {x: 0.001, y: 0.185, z: 0}
   m_LocalScale: {x: 0.050000004, y: 0.050000004, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -165,9 +165,9 @@ MonoBehaviour:
   weaponName: Kolibri
   _weaponSprite: {fileID: 21300000, guid: aec39368c630d2a479fe5831500b60eb, type: 3}
   shootTransform: {fileID: 1869050069726448668}
-  _maxAmmo: 150
+  _maxAmmo: 300
   _maxMagSize: 8
-  _reloadTime: 0.35
+  _reloadTime: 0.3
   _isAutomatic: 0
   _fireRate: 1000
   _bulletPrefab: {fileID: 104384480508462922, guid: cd52ca37977494c4dbb702de24edc328, type: 3}
