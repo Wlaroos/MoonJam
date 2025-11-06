@@ -302,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c914d971b4ebb1547a618a9389f761a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxHealth: 3
+  _maxHealth: 2
   _maxDownedHealth: 1
   _deathBloodParticles: {fileID: 6009536360408007042, guid: ec1467be08318634186665177f7b9481, type: 3}
   _deathChunkParticles: {fileID: 0}
@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e077479dc443c9046a8567c3b59600f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 3.5
+  _speed: 5
   _startDelay: 0
   _knockbackMult: 1
   _enableFlocking: 1

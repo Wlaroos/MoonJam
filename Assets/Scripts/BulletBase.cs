@@ -53,7 +53,19 @@ public class BulletBase : MonoBehaviour
         }
         else if (collision.CompareTag("Soul"))
         {
-            HandleEnemyCollision(collision.transform.parent.parent.parent.GetComponent<Collider2D>(), 3);
+            // The soul collider might be a child object; search upwards for an ancestor that has EnemyHealth
+            Collider2D enemyCollider = FindAncestorColliderWithComponent<EnemyHealth>(collision.transform);
+            if (enemyCollider != null)
+            {
+                HandleEnemyCollision(enemyCollider, 3);
+            }
+            else
+            {
+                // Fallback: try to find any ancestor collider
+                Collider2D fallback = FindAncestorCollider(collision.transform);
+                if (fallback != null)
+                    HandleEnemyCollision(fallback, 3);
+            }
         }
     }
 
@@ -116,6 +128,37 @@ public class BulletBase : MonoBehaviour
         }
 
         Destroy();
+    }
+
+    // Helper: climb parents and return the first Transform whose GameObject has component T; then return its Collider2D
+    private Collider2D FindAncestorColliderWithComponent<T>(Transform start) where T : Component
+    {
+        Collider2D lastFound = null;
+        Transform t = start;
+        while (t != null)
+        {
+            if (t.GetComponent<T>() != null)
+            {
+                var c = t.GetComponent<Collider2D>();
+                if (c != null) lastFound = c;
+            }
+            t = t.parent;
+        }
+        return lastFound;
+    }
+
+    // Helper: climb parents and return the furthest (top-most) Collider2D found
+    private Collider2D FindAncestorCollider(Transform start)
+    {
+        Collider2D lastFound = null;
+        Transform t = start;
+        while (t != null)
+        {
+            var c = t.GetComponent<Collider2D>();
+            if (c != null) lastFound = c;
+            t = t.parent;
+        }
+        return lastFound;
     }
 
     private IEnumerator DelayedDestroy(float delay)

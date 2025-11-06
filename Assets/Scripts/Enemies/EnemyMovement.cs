@@ -186,7 +186,12 @@ public class EnemyMovement : MonoBehaviour
 
         if (other.CompareTag("Soul"))
         {
-            HandlePlayerCollision(other.transform.parent.parent.GetComponent<Collider2D>(), 3);
+            // Soul collider may be a child; find ancestor with PlayerHealth and pass its collider
+            Collider2D playerCollider = FindAncestorColliderWithComponent<PlayerHealth>(other.transform);
+            if (playerCollider != null)
+            {
+                HandlePlayerCollision(playerCollider, 3);
+            }
         }
     }
 
@@ -207,4 +212,21 @@ public class EnemyMovement : MonoBehaviour
             other.GetComponent<PlayerHealth>().TakeDamage(directionTowardsTarget, 1 * damageMultiplier);
         }
     }
+
+        // Helper: climb parents and return the first Transform whose GameObject has component T; then return its Collider2D
+        private Collider2D FindAncestorColliderWithComponent<T>(Transform start) where T : Component
+        {
+            Collider2D lastFound = null;
+            Transform t = start;
+            while (t != null)
+            {
+                if (t.GetComponent<T>() != null)
+                {
+                    var c = t.GetComponent<Collider2D>();
+                    if (c != null) lastFound = c;
+                }
+                t = t.parent;
+            }
+            return lastFound;
+        }
 }

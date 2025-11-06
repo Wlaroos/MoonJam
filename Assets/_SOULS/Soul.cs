@@ -21,43 +21,16 @@ public class Soul : MonoBehaviour
     {
         if (ParentSoulVision != null)
         {
-            switch (ParentSoulVision._soulType)
-            {
-                case SoulVision.SoulType.Player:
-                    break;
-                case SoulVision.SoulType.Chub:
-                    break;
-                case SoulVision.SoulType.Skeleton:
-                    break;
-                case SoulVision.SoulType.Eye:
-                    break;
-                case SoulVision.SoulType.Armor:
-                    break;
-            }
+            // Future logic per soul-type can be handled here. For now no continuous per-frame behavior is required.
         }
     }
 
     void OnEnable()
     {
-                if (ParentSoulVision != null)
+        if (ParentSoulVision != null && ParentSoulVision._soulType == SoulVision.SoulType.Armor)
         {
-            switch (ParentSoulVision._soulType)
-            {
-                case SoulVision.SoulType.Player:
-                    break;
-                case SoulVision.SoulType.Chub:
-                    break;
-                case SoulVision.SoulType.Skeleton:
-                    break;
-                case SoulVision.SoulType.Eye:
-                    break;
-                case SoulVision.SoulType.Armor:
-                    {
-                        _shieldLeft.SetActive(true);
-                        _shieldRight.SetActive(true); 
-                    }
-                    break;
-            }
+            _shieldLeft?.SetActive(true);
+            _shieldRight?.SetActive(true);
         }
     }
 }
