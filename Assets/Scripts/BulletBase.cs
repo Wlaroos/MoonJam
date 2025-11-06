@@ -83,7 +83,10 @@ public class BulletBase : MonoBehaviour
 
         if (Random.value < 0.2f)
         {
-            Instantiate(_psBrainDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            if (_psBrainDirectional != null)
+            {
+                Instantiate(_psBrainDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            }
         }
 
         Destroy();

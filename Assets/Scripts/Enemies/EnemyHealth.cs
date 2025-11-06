@@ -126,7 +126,9 @@ public class EnemyHealth : MonoBehaviour
 
     private void Death()
     {
+        if(_deathBloodParticles != null)
         Instantiate(_deathBloodParticles, transform.position, Quaternion.identity);
+        if(_deathChunkParticles != null)
         Instantiate(_deathChunkParticles, transform.position, Quaternion.identity);
 
         _cc.enabled = false;

@@ -32,6 +32,7 @@ public class PlayerHealth : MonoBehaviour
     {
         _sr = GetComponentInChildren<SpriteRenderer>();
         _currentHealth = _startingHealth;
+        HealthChangeEvent.Invoke();
     }
 
     private void OnEnable()
