@@ -47,9 +47,13 @@ public class BulletBase : MonoBehaviour
         {
             Destroy();
         }
-        else if (collision.GetComponent<EnemyHealth>() != null)
+        else if (collision.GetComponent<EnemyHealth>() != null && collision.CompareTag("Enemy"))
         {
             HandleEnemyCollision(collision);
+        }
+        else if (collision.CompareTag("Soul"))
+        {
+            HandleEnemyCollision(collision.transform.parent.parent.parent.GetComponent<Collider2D>(), 3);
         }
     }
 
@@ -73,6 +77,28 @@ public class BulletBase : MonoBehaviour
     private void HandleEnemyCollision(Collider2D collision)
     {
         collision.GetComponent<EnemyHealth>().TakeDamage(_rb.velocity.normalized * _knockback, _damage);
+
+        Vector3 hitPoint = collision.ClosestPoint(transform.position);
+        Vector3 bulletDirection = _rb.velocity.normalized;
+        float angle = Mathf.Atan2(bulletDirection.y, bulletDirection.x) * Mathf.Rad2Deg;
+
+        Instantiate(_psBloodDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+        Instantiate(_psBloodCircle, collision.transform.position, Quaternion.identity);
+
+        if (Random.value < 0.2f)
+        {
+            if (_psBrainDirectional != null)
+            {
+                Instantiate(_psBrainDirectional, hitPoint, Quaternion.Euler(0, 0, angle));
+            }
+        }
+
+        Destroy();
+    }
+
+        private void HandleEnemyCollision(Collider2D collision, int damageMultiplier)
+    {
+        collision.GetComponent<EnemyHealth>().TakeDamage(_rb.velocity.normalized * _knockback, _damage * damageMultiplier);
 
         Vector3 hitPoint = collision.ClosestPoint(transform.position);
         Vector3 bulletDirection = _rb.velocity.normalized;

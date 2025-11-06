@@ -179,7 +179,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.25}
+  m_Size: {x: 0.2, y: 0.2}
   m_EdgeRadius: 0
 --- !u!96 &-7840041026732721199
 TrailRenderer:
@@ -308,3 +308,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _originalSprite: {fileID: 774800991, guid: 0176de2ee1f7ebe48b724321b40c29ce, type: 3}
   _soulSprite: {fileID: 1578722406, guid: 0176de2ee1f7ebe48b724321b40c29ce, type: 3}
+  _soulPrefab: {fileID: 0}
+  _soulType: 0

@@ -15,6 +15,7 @@ public class SoulVision : MonoBehaviour
 
     private SpriteRenderer _sr;
     private Collider2D _col;
+    private Collider2D _parentCol;
 
     void OnEnable()
     {
@@ -32,11 +33,19 @@ public class SoulVision : MonoBehaviour
         _sr = GetComponent<SpriteRenderer>();
         _col = GetComponentInParent<Collider2D>();
 
-        _soul = Instantiate(_soulPrefab, transform.position, Quaternion.identity, transform).GetComponent<Soul>();
+        if (transform.parent != null && transform.parent.parent != null)
+        {
+            _parentCol = transform.parent.parent.GetComponent<Collider2D>();
+        }
 
-        _soul.ParentSoulVision = this;
+        if (_soulType != SoulType.Skeleton && _soulType != SoulType.None)
+        {
+            _soul = Instantiate(_soulPrefab, transform.position, Quaternion.identity, transform).GetComponent<Soul>();
 
-        _soul.gameObject.SetActive(false);
+            _soul.ParentSoulVision = this;
+
+            _soul.gameObject.SetActive(false);
+        }
     }
 
     void ToggleSoulVision()
@@ -54,18 +63,42 @@ public class SoulVision : MonoBehaviour
         if (VisionManager.Instance.IsSoulVisionActive)
         {
             _sr.sprite = _soulSprite;
-            
-            if (_soulType != SoulType.Skeleton || _soulType != SoulType.None)
+
+            if (_soulType != SoulType.Skeleton && _soulType != SoulType.None)
             {
                 _col.enabled = false;
+                _col.tag = "Untagged";
+
+                if (_parentCol != null)
+                    _parentCol.tag = "Untagged";
+
                 _soul.gameObject.SetActive(true);
             }
         }
         else
         {
             _sr.sprite = _originalSprite;
-            _col.enabled = true;
-            _soul.gameObject.SetActive(false);
+
+            if (_soulType != SoulType.Skeleton && _soulType != SoulType.None && _soulType != SoulType.Player)
+            {
+                _col.enabled = true;
+                _col.tag = "Enemy";
+
+                if (_parentCol != null)
+                    _parentCol.tag = "Enemy";
+
+                _soul.gameObject.SetActive(false);
+            }
+            else if (_soulType == SoulType.Player)
+            {
+                _col.enabled = true;
+                _col.tag = "Player";
+
+                if (_parentCol != null)
+                    _parentCol.tag = "Player";
+
+                _soul.gameObject.SetActive(false);
+            }
         }
     }
 }

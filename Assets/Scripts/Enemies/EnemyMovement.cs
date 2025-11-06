@@ -183,6 +183,11 @@ public class EnemyMovement : MonoBehaviour
         {
             HandlePlayerCollision(other);
         }
+
+        if (other.CompareTag("Soul"))
+        {
+            HandlePlayerCollision(other.transform.parent.parent.GetComponent<Collider2D>(), 3);
+        }
     }
 
     protected virtual void HandlePlayerCollision(Collider2D other)
@@ -191,6 +196,15 @@ public class EnemyMovement : MonoBehaviour
         {
             Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
             other.GetComponent<PlayerHealth>().TakeDamage(directionTowardsTarget, 1);
+        }
+    }
+
+        protected virtual void HandlePlayerCollision(Collider2D other, int damageMultiplier)
+    {
+        if (other.GetComponent<PlayerHealth>() != null && !_enemyHealth.IsDowned)
+        {
+            Vector2 directionTowardsTarget = (_playerTransform.position - transform.position).normalized;
+            other.GetComponent<PlayerHealth>().TakeDamage(directionTowardsTarget, 1 * damageMultiplier);
         }
     }
 }

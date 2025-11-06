@@ -7,6 +7,7 @@ TagManager:
   - BulletBounds
   - Enemy
   - Waypoint
+  - Soul
   layers:
   - Default
   - TransparentFX
